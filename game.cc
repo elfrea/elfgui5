@@ -33,16 +33,21 @@ void Game::init()
 
 	panel=new ePanel("panel1",10,10,300,300);
 	panel->can_be_resized=true;
+	panel->set_custom_cursor("gfx/elements/cursor_edit.png",2,7);
+	panel->set_text("Testing Two es wo");
 	ElfGui5::base->add_child(panel);
 
-	panel2=new ePanel("panel2",10,10,80,80);
+	panel2=new ePanel("panel2",10,30,80,80);
 	panel2->can_be_moved=true;
-	panel2->set_move_area(0,0,10,10);
+	panel2->set_move_area(0,0,80,20);
+	panel2->move_area_auto_width=true;
 	panel2->can_be_resized=true;
 	panel2->mouse_down_bring_to_front=true;
 	panel->add_child(panel2);
 
-	panel3=new ePanel("panel3",220,20,50,50);
+	panel3=new ePanel("panel3",220,30,50,50,true);
+	panel3->move_area_auto_width=true;
+	panel3->move_area_auto_height=true;
 	panel3->can_be_moved=true;
 	panel3->can_be_resized=true;
 	panel3->mouse_down_bring_to_front=true;

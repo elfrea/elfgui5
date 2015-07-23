@@ -11,6 +11,20 @@
 
 
 
+
+#define ALIGN_TOPLEFT 		0
+#define ALIGN_TOP 			1
+#define ALIGN_TOPRIGHT 		2
+#define ALIGN_LEFT 			3
+#define ALIGN_MIDDLE 		4
+#define ALIGN_RIGHT 		5
+#define ALIGN_BOTTOMLEFT 	6
+#define ALIGN_BOTTOM 		7
+#define ALIGN_BOTTOMRIGHT 	8
+
+
+
+
 //***** MY EVENT HANDLER
 class MyEventHandler:public EventHandler
 {
@@ -63,13 +77,15 @@ public:
 	static int resizing_h;
 
 	static Str current_cursor_type;
+	static int cursor_custom_hx;
+	static int cursor_custom_hy;
 
 	//gfx
 	static Texture* resize_gizmo;
 	static Texture* cursor_arrow;
 	static Texture* cursor_resize;
 	static Texture* cursor_move;
-	static Texture* cursor_edit;
+	static Texture* cursor_custom;
 
 	//main functions
 	static void init();

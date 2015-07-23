@@ -7,9 +7,15 @@
 class ePanel:public Element
 {
 public:
+	//own vars
+	bool inverted;
+	
+	bool show_text;
+	int text_align;
+	Str text;
 
 	//constructor
-	ePanel(const Str& ename,int ex,int ey,int ew,int eh);
+	ePanel(const Str& ename,int ex,int ey,int ew,int eh,bool invert=false);
 	//destructor
 	~ePanel();
 
@@ -35,6 +41,9 @@ public:
 	void on_text(const Str& text);
 
 	void on_resize(int width,int height);
+
+	//own functions
+	void set_text(const Str& txt);
 };
 
 

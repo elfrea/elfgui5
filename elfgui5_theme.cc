@@ -19,6 +19,16 @@ Color Theme::color::d_editing;
 Color Theme::color::d_selection;
 Color Theme::color::d_extra;
 
+Font* Theme::font::tiny;
+Font* Theme::font::tiny_mono;
+Font* Theme::font::small;
+Font* Theme::font::small_mono;
+Font* Theme::font::normal;
+Font* Theme::font::normal_mono;
+Font* Theme::font::big;
+Font* Theme::font::big_mono;
+Font* Theme::font::huge;
+Font* Theme::font::huge_mono;
 
 
 namespace Theme
@@ -27,6 +37,7 @@ namespace Theme
 	{
 		if(theme=="default")
 		{
+			//colors
 			Theme::color::light=Color::ubyte(220,220,220);
 			Theme::color::medium=Color::ubyte(170,170,170);
 			Theme::color::dark=Color::ubyte(120,120,120);
@@ -42,6 +53,25 @@ namespace Theme
 			Theme::color::d_editing=Color::ubyte(200,200,200);
 			Theme::color::d_selection=Color::ubyte(50,50,50);
 			Theme::color::d_extra=Color::ubyte(120,0,0);
+
+
+
+
+			//fonts
+			font::tiny=Font::load("fonts/DejaVuSans.ttf",8);
+			font::tiny_mono=Font::load("fonts/DejaVuSansMono.ttf",8);
+
+			font::small=Font::load("fonts/DejaVuSans.ttf",12);
+			font::small_mono=Font::load("fonts/DejaVuSansMono.ttf",12);
+
+			font::normal=Font::load("fonts/DejaVuSans.ttf",16);
+			font::normal_mono=Font::load("fonts/DejaVuSansMono.ttf",16);
+
+			font::big=Font::load("fonts/DejaVuSans.ttf",20);
+			font::big_mono=Font::load("fonts/DejaVuSansMono.ttf",20);
+			
+			font::huge=Font::load("fonts/DejaVuSans.ttf",24);
+			font::huge_mono=Font::load("fonts/DejaVuSansMono.ttf",24);
 		}
 	}
 

@@ -30,13 +30,15 @@ int ElfGui5::resizing_w;
 int ElfGui5::resizing_h;
 
 Str ElfGui5::current_cursor_type;
+int ElfGui5::cursor_custom_hx;
+int ElfGui5::cursor_custom_hy;
 
 //gfx
 Texture* ElfGui5::resize_gizmo;
 Texture* ElfGui5::cursor_arrow;
 Texture* ElfGui5::cursor_resize;
 Texture* ElfGui5::cursor_move;
-Texture* ElfGui5::cursor_edit;
+Texture* ElfGui5::cursor_custom;
 
 //********************************************************************************************
 
@@ -69,6 +71,8 @@ void ElfGui5::init()
 	resizing_h=0;
 
 	current_cursor_type="";
+	cursor_custom_hx=0;
+	cursor_custom_hy=0;
 	
 	//semi-intern vars
 	ready_to_quit=false;
@@ -81,7 +85,7 @@ void ElfGui5::init()
 	cursor_arrow=Cache::texture("gfx/cursor_arrow.png");	//hotspot=0,0
 	cursor_resize=Cache::texture("gfx/cursor_resize.png");	//hotspot=8,8
 	cursor_move=Cache::texture("gfx/cursor_move.png");		//hotspot=8,8
-	cursor_edit=Cache::texture("gfx/cursor_edit.png");		//hotspot=2,7
+	cursor_custom=NULL;
 
 	//init code
 	VideoMode vm=Display::get_mode();
@@ -324,12 +328,21 @@ void MyEventHandler::on_mouse_move(Mouse& mouse)
 
 	//set appropriate mouse cursor
 	//resize cursor
-	if(ElfGui5::current_element_is_resizing || (eum->can_be_resized && m.x-eum->get_true_x()>=eum->w-ElfGui5::resize_gizmo->width() && m.y-eum->get_true_y()>=eum->h-ElfGui5::resize_gizmo->height()))
+	if(ElfGui5::current_element_is_resizing || (eum->enabled && eum->can_be_resized && m.x-eum->get_true_x()>=eum->w-ElfGui5::resize_gizmo->width() && m.y-eum->get_true_y()>=eum->h-ElfGui5::resize_gizmo->height()))
 		ElfGui5::set_mouse_cursor("resize");
 
 	//move cursor
-	else if(ElfGui5::current_element_is_moving || (eum->can_be_moved && eum->move_area.contains(m.x-eum->get_true_x(),m.y-eum->get_true_y())))
+	else if(ElfGui5::current_element_is_moving || (eum->enabled && eum->can_be_moved && eum->move_area.contains(m.x-eum->get_true_x(),m.y-eum->get_true_y())))
 		ElfGui5::set_mouse_cursor("move");
+
+	//custom cursor
+	else if(eum->use_custom_cursor && eum->custom_cursor && eum->enabled)
+	{
+		ElfGui5::cursor_custom=eum->custom_cursor;
+		ElfGui5::cursor_custom_hx=eum->custom_cursor_hx;
+		ElfGui5::cursor_custom_hy=eum->custom_cursor_hy;
+		ElfGui5::set_mouse_cursor("custom");
+	}
 
 	//arrow
 	else
@@ -579,13 +592,13 @@ void ElfGui5::set_mouse_cursor(const Str& cursor)
 		}
 	}
 
-	//edit
-	else if(cursor=="edit")
+	//custom
+	else if(cursor=="custom")
 	{
-		if(ElfGui5::current_cursor_type!="edit")
+		if(ElfGui5::current_cursor_type!="custom")
 		{
-			Input::set_cursor(ElfGui5::cursor_edit,2,7,true);
-			ElfGui5::current_cursor_type="edit";
+			Input::set_cursor(ElfGui5::cursor_custom,ElfGui5::cursor_custom_hx,ElfGui5::cursor_custom_hy,true);
+			ElfGui5::current_cursor_type="custom";
 		}
 	}
 

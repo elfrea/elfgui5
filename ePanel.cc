@@ -4,13 +4,17 @@
 
 
 //constructor
-ePanel::ePanel(const Str& ename,int ex,int ey,int ew,int eh):Element(ename,ex,ey,ew,eh)
+ePanel::ePanel(const Str& ename,int ex,int ey,int ew,int eh,bool invert):Element(ename,ex,ey,ew,eh)
 {
 	//parent class vars
 	type="panel";
 	
 	//own vars
-	
+	inverted=invert;
+
+	show_text=false;
+	text_align=ALIGN_TOP;
+	text="";
 
 	
 	draw();
@@ -43,7 +47,15 @@ void ePanel::loop()
 //***** DRAW
 void ePanel::draw()
 {
-	draw_panel(image,false,enabled);
+	draw_panel(image,inverted,enabled);
+
+	if(show_text)
+	{
+		if(enabled)
+			draw_text_align(image,text_align,0,0,Theme::font::normal,Theme::color::text,text);
+		else
+			draw_text_align(image,text_align,0,0,Theme::font::normal,Theme::color::d_text,text);
+	}
 }
 
 
@@ -78,6 +90,21 @@ void ePanel::on_resize(int width,int height){}
 
 
 
+
+
+
+
+
+//****************************************************************
+//OWN FUNCTIONS
+//****************************************************************
+
+void ePanel::set_text(const Str& txt)
+{
+	show_text=true;
+	text=txt;
+	draw();
+}
 
 
 

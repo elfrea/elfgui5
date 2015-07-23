@@ -30,8 +30,15 @@ Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 	send_keyboard_events_to_parent=false;
 	always_on_top=false;
 	always_on_bottom=false;
+	use_custom_cursor=false;
+	move_area_auto_width=false;
+	move_area_auto_height=false;
 
 	image=NULL;
+	custom_cursor=NULL;
+
+	custom_cursor_hx=0;
+	custom_cursor_hy=0;
 
 	parent=NULL;
 
@@ -48,7 +55,10 @@ Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 //destructor
 Element::~Element()
 {
+	//free non-cached textures
 	delete image;
+
+	//free lists
 	children.clear_del();
 
 	#ifdef DBG
@@ -296,12 +306,12 @@ void Element::resize(int width,int height)
 	if(width==w && height==h)
 		return;
 
-	//set move area if it was full width
-	if(move_area.w==w)
+	//set move area width if necessary
+	if(move_area_auto_width)
 		move_area.w=width;
 
-	//set move area if it was full height
-	if(move_area.h==h)
+	//set move area height if necessary
+	if(move_area_auto_height)
 		move_area.h=height;
 
 	//resize texture
@@ -467,6 +477,24 @@ void Element::set_move_area(int mx,int my,int mw,int mh)
 
 	move_area=Rect(mx,my,mw,mh);
 }
+
+
+
+
+//***** SET CUSTOM CURSOR
+void Element::set_custom_cursor(const Str& filename,int hx,int hy)
+{
+	custom_cursor=Cache::texture(filename);
+	custom_cursor_hx=hx;
+	custom_cursor_hy=hy;
+	use_custom_cursor=true;
+}
+
+
+
+
+
+
 
 
 

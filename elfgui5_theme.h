@@ -25,5 +25,23 @@ namespace Theme
 	};
 
 
+
+	class font
+	{
+	public:
+		static Font* tiny;
+		static Font* tiny_mono;
+		static Font* small;
+		static Font* small_mono;
+		static Font* normal;
+		static Font* normal_mono;
+		static Font* big;
+		static Font* big_mono;
+		static Font* huge;
+		static Font* huge_mono;
+	};
+
+
+
 	void set(const Str& theme);
 }

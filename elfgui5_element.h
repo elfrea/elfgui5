@@ -40,8 +40,15 @@ public:
 	bool send_keyboard_events_to_parent;
 	bool always_on_bottom;
 	bool always_on_top;
+	bool use_custom_cursor;
+	bool move_area_auto_width;
+	bool move_area_auto_height;
 
 	Texture* image;
+	Texture* custom_cursor;
+
+	int custom_cursor_hx;
+	int custom_cursor_hy;
 
 	Element* parent;
 	List<Element*> children;
@@ -95,6 +102,7 @@ public:
 	void set_max_size(int maxw,int maxh);
 	void set_minmax_size(int minw,int minh,int maxw,int maxh);
 	void set_move_area(int mx,int my,int mw,int mh);
+	void set_custom_cursor(const Str& filename,int hx,int hy);
 
 	Element* find_element_at(int x,int y);
 	Element* find_element_under_mouse();
