@@ -5,7 +5,7 @@ TARGET = main
 
 ####################################################################
 HDRS = game.h
-HDRS+= elfgui5.h elfgui5_drawing.h elfgui5_theme.h elfgui5_dragpacket.h 
+HDRS+= elfgui5.h elfgui5_enums.h elfgui5_drawing.h elfgui5_theme.h elfgui5_dragpacket.h elfgui5_event.h
 HDRS+= elfgui5_element.h
 HDRS+= eBase.h ePanel.h
 ####################################################################
@@ -14,7 +14,7 @@ HDRS+= eBase.h ePanel.h
 
 ####################################################################
 SRCS = main.cc game.cc
-SRCS+= elfgui5.cc elfgui5_drawing.cc elfgui5_theme.cc elfgui5_dragpacket.cc
+SRCS+= elfgui5.cc elfgui5_drawing.cc elfgui5_theme.cc elfgui5_dragpacket.cc elfgui5_event.cc
 SRCS+= elfgui5_element.cc
 SRCS+= eBase.cc ePanel.cc
 ####################################################################

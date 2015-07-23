@@ -22,6 +22,9 @@ public:
 	void draw();
 
 	//event functions
+	
+	//void on_event(Event* ev);
+
 	void on_mouse_enter(int mx,int my);
 	void on_mouse_leave();
 	void on_mouse_move(int mx,int my);

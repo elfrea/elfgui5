@@ -58,20 +58,20 @@ namespace Theme
 
 
 			//fonts
-			font::tiny=Font::load("fonts/DejaVuSans.ttf",8);
-			font::tiny_mono=Font::load("fonts/DejaVuSansMono.ttf",8);
+			font::tiny=Cache::font("fonts/DejaVuSans.ttf",6);
+			font::tiny_mono=Cache::font("fonts/DejaVuSansMono.ttf",6);
 
-			font::small=Font::load("fonts/DejaVuSans.ttf",12);
-			font::small_mono=Font::load("fonts/DejaVuSansMono.ttf",12);
+			font::small=Cache::font("fonts/DejaVuSans.ttf",8);
+			font::small_mono=Cache::font("fonts/DejaVuSansMono.ttf",8);
 
-			font::normal=Font::load("fonts/DejaVuSans.ttf",16);
-			font::normal_mono=Font::load("fonts/DejaVuSansMono.ttf",16);
+			font::normal=Cache::font("fonts/DejaVuSans.ttf",11);
+			font::normal_mono=Cache::font("fonts/DejaVuSansMono.ttf",11);
 
-			font::big=Font::load("fonts/DejaVuSans.ttf",20);
-			font::big_mono=Font::load("fonts/DejaVuSansMono.ttf",20);
+			font::big=Cache::font("fonts/DejaVuSans.ttf",16);
+			font::big_mono=Cache::font("fonts/DejaVuSansMono.ttf",16);
 			
-			font::huge=Font::load("fonts/DejaVuSans.ttf",24);
-			font::huge_mono=Font::load("fonts/DejaVuSansMono.ttf",24);
+			font::huge=Cache::font("fonts/DejaVuSans.ttf",22);
+			font::huge_mono=Cache::font("fonts/DejaVuSansMono.ttf",22);
 		}
 	}
 

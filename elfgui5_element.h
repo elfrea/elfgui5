@@ -4,13 +4,6 @@
 #include "elfgui5.h"
 
 
-//namespace ElementLayer { enum Layer
-//{
-//	Bottom,Normal,Top
-//};}
-#define LAYER_BOTTOM 0
-#define LAYER_NORMAL 1
-#define LAYER_TOP 2
 
 
 
@@ -43,6 +36,7 @@ public:
 	bool use_custom_cursor;
 	bool move_area_auto_width;
 	bool move_area_auto_height;
+	bool forward_event_to_parent;
 
 	Texture* image;
 	Texture* custom_cursor;
@@ -66,6 +60,8 @@ public:
 	virtual void draw();
 
 	//event functions
+	virtual void on_event(Event* ev);
+
 	virtual void on_mouse_enter(int mx,int my);
 	virtual void on_mouse_leave();
 	virtual void on_mouse_move(int mx,int my);
@@ -108,4 +104,8 @@ public:
 	Element* find_element_under_mouse();
 
 	DragPacket* start_drag(const Str& icon_path,int offx=0,int offy=0);
+
+	void send_event(Element* sndr,const Str& cmd);
+	void send_event(Event* ev);
+	void send_event(const Str& cmd);
 };

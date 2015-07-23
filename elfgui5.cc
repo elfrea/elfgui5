@@ -8,6 +8,8 @@ bool ElfGui5::ready_to_quit;
 TexRenderer ElfGui5::texture_renderer;
 MyEventHandler ElfGui5::event_handler;
 
+List<Event*> ElfGui5::events;
+
 eBase* ElfGui5::base;
 
 int64_t ElfGui5::doubleclick_timer;
@@ -158,6 +160,7 @@ void ElfGui5::shutdown()
 	#endif
 
 	delete base;
+	events.clear_del();
 
 	#ifdef DBG
 	Log::debug("ElfGui5 shutdown complete!");
@@ -609,6 +612,27 @@ void ElfGui5::set_mouse_cursor(const Str& cursor)
 		ElfGui5::current_cursor_type="arrow";
 	}
 }
+
+
+
+
+//FETCH EVENT
+Event* ElfGui5::fetch_event()
+{
+	Event* ev=NULL;
+
+	//check if there is any events in the list
+	if(events.size()>0)
+	{
+		ev=events[0];
+		events.remove_nodel(0);
+	}
+
+	return ev;
+}
+
+
+
 
 
 

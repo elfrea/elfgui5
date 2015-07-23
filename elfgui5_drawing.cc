@@ -71,12 +71,17 @@ void draw_panel(Texture* tex,bool inverted,bool disabled)
 
 
 
+
+
+
+
+
 //***** DRAW TEXT ALIGN
-void draw_text_align(Texture* tex,int align,int offx,int offy,Font *font,const Color& col,const Str& text,BlendMode::Type blend)
+void draw_text_align(Texture* tex,Align::Type align,int offx,int offy,Font *font,const Color& col,const Str& text,bool kerning,BlendMode::Type blend)
 {
 	int w=tex->width();
 	int h=tex->height();
-	int tw=font->len(text);
+	int tw=font->len(text,kerning);
 	int th=font->height();
 
 	int x=0;
@@ -86,62 +91,143 @@ void draw_text_align(Texture* tex,int align,int offx,int offy,Font *font,const C
 	switch(align)
 	{
 		//top left
-		case ALIGN_TOPLEFT:
+		case Align::TopLeft:
 			x=offx;
 			y=offy;
 		break;
 
 		//top
-		case ALIGN_TOP:
+		case Align::Top:
 			x=(w-tw)/2+offx;
 			y=offy;
 		break;
 
 		//top right
-		case ALIGN_TOPRIGHT:
+		case Align::TopRight:
 			x=w-tw+offx;
 			y=offy;
 		break;
 
 		//left
-		case ALIGN_LEFT:
+		case Align::Left:
 			x=offx;
 			y=(h-th)/2+offy;
 		break;
 
 		//middle
-		case ALIGN_MIDDLE:
+		case Align::Middle:
 			x=(w-tw)/2+offx;
 			y=(h-th)/2+offy;
 		break;
 
 		//right
-		case ALIGN_RIGHT:
+		case Align::Right:
 			x=w-tw+offx;
 			y=(h-th)/2+offy;
 		break;
 
 		//bottom left
-		case ALIGN_BOTTOMLEFT:
+		case Align::BottomLeft:
 			x=offx;
 			y=h-th+offy;
 		break;
 
 		//bottom
-		case ALIGN_BOTTOM:
+		case Align::Bottom:
 			x=(w-tw)/2+offx;
 			y=h-th+offy;
 		break;
 
 		//bottom right
-		case ALIGN_BOTTOMRIGHT:
+		case Align::BottomRight:
 			x=w-tw+offx;
 			y=h-th+offy;
 		break;
 	}
 
 	//draw text on texture
-	tex->print(font,x,y,col,text,blend);
+	tex->print(font,x,y,col,text,kerning,blend);
 }
+
+
+
+
+
+
+
+
+//***** DRAW TEXTURE ALIGN
+void draw_texture_align(Texture* dest,Align::Type align,int offx,int offy,Texture* src,bool alpha)
+{
+	int w=dest->width();
+	int h=dest->height();
+	int tw=src->width();
+	int th=src->height();
+
+	int x=0;
+	int y=0;
+
+	//set text coordonates
+	switch(align)
+	{
+		//top left
+		case Align::TopLeft:
+			x=offx;
+			y=offy;
+		break;
+
+		//top
+		case Align::Top:
+			x=(w-tw)/2+offx;
+			y=offy;
+		break;
+
+		//top right
+		case Align::TopRight:
+			x=w-tw+offx;
+			y=offy;
+		break;
+
+		//left
+		case Align::Left:
+			x=offx;
+			y=(h-th)/2+offy;
+		break;
+
+		//middle
+		case Align::Middle:
+			x=(w-tw)/2+offx;
+			y=(h-th)/2+offy;
+		break;
+
+		//right
+		case Align::Right:
+			x=w-tw+offx;
+			y=(h-th)/2+offy;
+		break;
+
+		//bottom left
+		case Align::BottomLeft:
+			x=offx;
+			y=h-th+offy;
+		break;
+
+		//bottom
+		case Align::Bottom:
+			x=(w-tw)/2+offx;
+			y=h-th+offy;
+		break;
+
+		//bottom right
+		case Align::BottomRight:
+			x=w-tw+offx;
+			y=h-th+offy;
+		break;
+	}
+
+	//draw text on texture
+	dest->blit(x,y,src,alpha);
+}
+
 
 

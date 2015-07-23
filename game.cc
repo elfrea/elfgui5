@@ -51,6 +51,8 @@ void Game::init()
 	panel3->can_be_moved=true;
 	panel3->can_be_resized=true;
 	panel3->mouse_down_bring_to_front=true;
+	panel3->set_tex("gfx/cursor_move.png",Align::Middle);
+	panel3->forward_event_to_parent=false;
 	panel->add_child(panel3);
 
 
@@ -67,7 +69,14 @@ void Game::init()
 //***** LOOP
 int Game::loop()
 {
+	//fetch elfgui5 events
+	while(Event* ev=ElfGui5::fetch_event())
+	{
+		manage_event(ev);
+		delete ev;
+	}
 
+	//elfgui5 main loop
 	if(ElfGui5::loop())
 		return 1;
 
@@ -107,3 +116,16 @@ void Game::shutdown()
 
 
 //********************************************************************************************
+
+
+
+//***** MANAGE EVENT
+void Game::manage_event(Event* ev)
+{
+	Log::log("GLOBAL EVENT RECEIVED: Sender: %s    Command: %s",ev->sender->name.ptr(),ev->command.ptr());
+}
+
+
+
+
+

@@ -33,6 +33,7 @@ Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 	use_custom_cursor=false;
 	move_area_auto_width=false;
 	move_area_auto_height=false;
+	forward_event_to_parent=true;
 
 	image=NULL;
 	custom_cursor=NULL;
@@ -104,6 +105,10 @@ void Element::draw()
 //EVENTS FUNCTIONS
 //****************************************************************
 
+void Element::on_event(Event* ev)
+{
+	send_event(ev);
+}
 
 void Element::on_mouse_enter(int mx,int my){}
 void Element::on_mouse_leave(){}
@@ -584,6 +589,55 @@ DragPacket* Element::start_drag(const Str& icon_path,int offx,int offy)
 	}
 
 	return NULL;
+}
+
+
+
+
+
+//***** SEND EVENT
+void Element::send_event(Element* sndr,const Str& cmd)
+{
+	//create new event
+	Event* ev=new Event(sndr,cmd);
+
+	//check if we forward event to parent
+	if(parent && forward_event_to_parent)
+	{
+		#ifdef DBG
+			Log::debug("New event sent from '%s' of type '%s' forwarded to parent '%s'",name.ptr(),cmd.ptr(),parent->name.ptr());
+		#endif
+
+		parent->on_event(ev);
+	}
+
+	//send event globally
+	else
+	{
+		
+		#ifdef DBG
+			if(forward_event_to_parent)
+				Log::debug("New global event sent from '%s' of type '%s' forwarded from '%s'",ev->sender->name.ptr(),cmd.ptr(),name.ptr());
+			else
+				Log::debug("New global event sent from '%s' of type '%s'",ev->sender->name.ptr(),cmd.ptr());
+		#endif
+
+		ElfGui5::events.add(ev);
+	}
+
+}
+
+
+//***** SEND EVENT
+void Element::send_event(Event* ev)
+{
+	send_event(ev->sender,ev->command);
+}
+
+//***** SEND EVENT
+void Element::send_event(const Str& cmd)
+{
+	send_event(this,cmd);
 }
 
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <pix5.h>
-
+#include "elfgui5.h"
 
 
 
@@ -20,6 +20,8 @@ public:
 	static int loop();
 	static void draw();
 	static void shutdown();
+
+	static void manage_event(Event* ev);
 
 };
 

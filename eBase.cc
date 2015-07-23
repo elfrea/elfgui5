@@ -61,6 +61,8 @@ void eBase::draw()
 //****************************************************************
 
 
+//void eBase::on_event(Event* ev){}
+
 void eBase::on_mouse_enter(int mx,int my){}
 void eBase::on_mouse_leave(){}
 void eBase::on_mouse_move(int mx,int my){}
@@ -80,6 +82,15 @@ void eBase::on_text(const Str& text){}
 void eBase::on_resize(int width,int height){}
 
 
+
+
+
+
+
+
+//****************************************************************
+//OWN FUNCTIONS
+//****************************************************************
 
 
 

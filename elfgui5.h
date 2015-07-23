@@ -1,9 +1,13 @@
 #pragma once
 
 #include <pix5.h>
+
+#include "elfgui5_enums.h"
+
 #include "elfgui5_drawing.h"
 #include "elfgui5_theme.h"
 #include "elfgui5_dragpacket.h"
+#include "elfgui5_event.h"
 
 #include "elfgui5_element.h"
 #include "eBase.h"
@@ -11,16 +15,6 @@
 
 
 
-
-#define ALIGN_TOPLEFT 		0
-#define ALIGN_TOP 			1
-#define ALIGN_TOPRIGHT 		2
-#define ALIGN_LEFT 			3
-#define ALIGN_MIDDLE 		4
-#define ALIGN_RIGHT 		5
-#define ALIGN_BOTTOMLEFT 	6
-#define ALIGN_BOTTOM 		7
-#define ALIGN_BOTTOMRIGHT 	8
 
 
 
@@ -54,6 +48,7 @@ public:
 	static bool ready_to_quit;
 	static MyEventHandler event_handler;
 	static TexRenderer texture_renderer;
+	static List<Event*> events;
 	
 	static eBase* base;
 
@@ -95,6 +90,7 @@ public:
 
 	//functions
 	static void set_mouse_cursor(const Str& cursor);
+	static Event* fetch_event();
 };
 
 
