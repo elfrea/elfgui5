@@ -240,6 +240,21 @@ void Element::remove_child(Element* child)
 
 
 
+//***** LOOPS
+void Element::loops()
+{
+	if(enabled)
+	{
+		//loop self
+		loop();
+
+		//loops children
+		for(int a=0;a<children.size();a++)
+			children[a]->loops();
+	}
+}
+
+
 //***** DISPLAY
 void Element::display()
 {

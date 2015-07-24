@@ -4,20 +4,33 @@
 #include "elfgui5.h"
 
 
-class eBase:public Element
+class eButton:public Element
 {
 public:
 
 	//own vars
-	bool use_bgcolor;
-	Color bgcolor;
+	bool pushed;
+
+	bool show_text;
+	Align::Type text_align;
+	int text_offx;
+	int text_offy;
+	Str text;
+
+	bool show_tex;
+	Align::Type tex_align;
+	int tex_offx;
+	int tex_offy;
+	Texture* tex;
+
+	bool pushed_and_left;
 
 	//own elements
 
 	//constructor
-	eBase(const Str& ename,int ex,int ey,int ew,int eh);
+	eButton(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt);
 	//destructor
-	~eBase();
+	~eButton();
 
 	//basic functions
 	void loop();
@@ -48,9 +61,13 @@ public:
 
 
 	//own functions
+	void set_text(const Str& txt,Align::Type align=Align::Middle,int offx=0,int offy=0);
+	void set_tex(Texture* src,Align::Type align=Align::Middle,int offx=0,int offy=0);
+	void set_tex(const Str& filename,Align::Type align=Align::Middle,int offx=0,int offy=0);
 
 
 };
+
 
 
 

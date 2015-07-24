@@ -14,6 +14,7 @@ eWindow* win1;
 ePanel* panel;
 ePanel* panel2;
 ePanel* panel3;
+eButton* but1;
 
 
 
@@ -34,6 +35,9 @@ void Game::init()
 
 	win1=new eWindow("window1",340,50,200,240,"Test Window");
 	ElfGui5::base->add_child(win1);
+
+	but1=new eButton("button1",10,80,80,25,"Button");
+	win1->add_child(but1);
 
 	panel=new ePanel("panel1",10,10,300,300);
 	panel->can_be_resized=true;

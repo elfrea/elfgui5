@@ -37,7 +37,7 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	body->set_anchor(true,true,true,true);
 
 
-	//tweak
+	//other
 	set_min_size(150,100);
 	set_title(etitle);
 	set_icon("gfx/elements/icon_window.png");

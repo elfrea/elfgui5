@@ -89,6 +89,7 @@ public:
 	virtual void remove_child(Element* child);
 
 	//functions
+	void loops();
 	void display();
 	void replace_elements();
 	void resize(int width,int height);

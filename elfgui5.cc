@@ -114,6 +114,9 @@ int ElfGui5::loop()
 	//process events
 	event_handler.process_events();
 
+	//loop elements
+	base->loops();
+
 	//check if quit has been requested
 	if(ready_to_quit)
 		return 1;

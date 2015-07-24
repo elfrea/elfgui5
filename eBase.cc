@@ -15,6 +15,7 @@ eBase::eBase(const Str& ename,int ex,int ey,int ew,int eh):Element(ename,ex,ey,e
 	
 	//own elements
 
+	//other
 	
 
 	

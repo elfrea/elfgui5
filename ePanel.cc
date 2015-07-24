@@ -28,6 +28,7 @@ ePanel::ePanel(const Str& ename,int ex,int ey,int ew,int eh,bool invert):Element
 
 	//own elements
 
+	//other
 
 	
 
