@@ -7,6 +7,7 @@
 eCheckbox::eCheckbox(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt,bool echecked):Element(ename,ex,ey,ew,eh)
 {
 	#define DEFAULT_CHECK_SIZE 13
+	#define DEFAULT_CHECK_OFFSET 3
 
 	//parent class vars
 	type="checkbox";
@@ -90,13 +91,13 @@ void eCheckbox::draw()
 	{
 		if(enabled)
 		{
-			image->line(2,(h-check_size)/2+2,check_size-2,(h-check_size)/2+check_size-2,Theme::color::text);
-			image->line(2,(h-check_size)/2+check_size-2,check_size-2,(h-check_size)/2+2,Theme::color::text);
+			image->line(DEFAULT_CHECK_OFFSET,(h-check_size)/2+DEFAULT_CHECK_OFFSET,check_size-DEFAULT_CHECK_OFFSET,(h-check_size)/2+check_size-DEFAULT_CHECK_OFFSET,Theme::color::text);
+			image->line(DEFAULT_CHECK_OFFSET,(h-check_size)/2+check_size-DEFAULT_CHECK_OFFSET,check_size-DEFAULT_CHECK_OFFSET,(h-check_size)/2+DEFAULT_CHECK_OFFSET,Theme::color::text);
 		}
 		else
 		{
-			image->line(2,(h-check_size)/2+2,check_size-2,(h-check_size)/2+check_size-2,Theme::color::d_text);
-			image->line(2,(h-check_size)/2+check_size-2,check_size-2,(h-check_size)/2+2,Theme::color::d_text);
+			image->line(DEFAULT_CHECK_OFFSET,(h-check_size)/2+DEFAULT_CHECK_OFFSET,check_size-DEFAULT_CHECK_OFFSET,(h-check_size)/2+check_size-DEFAULT_CHECK_OFFSET,Theme::color::d_text);
+			image->line(DEFAULT_CHECK_OFFSET,(h-check_size)/2+check_size-DEFAULT_CHECK_OFFSET,check_size-DEFAULT_CHECK_OFFSET,(h-check_size)/2+DEFAULT_CHECK_OFFSET,Theme::color::d_text);
 		}
 	}
 }
