@@ -6,7 +6,7 @@
 
 
 //***** DRAW PANEL
-void draw_panel(Texture* tex,int x,int y,int w,int h,bool inverted,bool enabled)
+void draw_panel(Texture* tex,int x,int y,int w,int h,bool inverted,bool enabled,const Color& clight,const Color& cmedium,const Color& cdark,const Color& cdlight,const Color& cdmedium,const Color& cddark)
 {
 	if(tex==NULL)
 		return;
@@ -17,36 +17,37 @@ void draw_panel(Texture* tex,int x,int y,int w,int h,bool inverted,bool enabled)
 	{
 		if(inverted)
 		{
-			col[0]=Theme::color::d_dark;
-			col[1]=Theme::color::d_medium;
-			col[2]=Theme::color::d_light;
+			col[0]=cddark;
+			col[1]=cdmedium;
+			col[2]=cdlight;
 		}
 		else
 		{
-			col[0]=Theme::color::d_light;
-			col[1]=Theme::color::d_medium;
-			col[2]=Theme::color::d_dark;
+			col[0]=cdlight;
+			col[1]=cdmedium;
+			col[2]=cddark;
 		}
 	}
 	else
 	{
 		if(inverted)
 		{
-			col[0]=Theme::color::dark;
-			col[1]=Theme::color::medium;
-			col[2]=Theme::color::light;
+			col[0]=cdark;
+			col[1]=cmedium;
+			col[2]=clight;
 		}
 		else
 		{
-			col[0]=Theme::color::light;
-			col[1]=Theme::color::medium;
-			col[2]=Theme::color::dark;
+			col[0]=clight;
+			col[1]=cmedium;
+			col[2]=cdark;
 		}
 	}
 
 
 	//draw panel
-	tex->clear(col[1]);
+	tex->clear(Color(0,0,0,0));
+	tex->rect_fill(Rect(x,y,w,h),col[1]);
 	tex->line(x,y,x+w-1,y,col[0]);
 	tex->line(x,y,x,y+h-2,col[0]);
 	tex->line(x,y+h-1,x+w-1,y+h-1,col[2]);
@@ -56,15 +57,33 @@ void draw_panel(Texture* tex,int x,int y,int w,int h,bool inverted,bool enabled)
 
 
 //***** DRAW PANEL
-void draw_panel(Texture* tex,bool inverted,bool disabled)
+void draw_panel(Texture* tex,bool inverted,bool disabled,int x,int y,int w,int h)
 {
 	if(tex==NULL)
 		return;
 
-	int w=tex->width();
-	int h=tex->height();
+	if(w==0)
+		w=tex->width();
+	if(h==0)
+		h=tex->height();
 
-	draw_panel(tex,0,0,w,h,inverted,disabled);
+	draw_panel(tex,x,y,w,h,inverted,disabled,Theme::color::light,Theme::color::medium,Theme::color::dark,Theme::color::d_light,Theme::color::d_medium,Theme::color::d_dark);
+}
+
+
+
+//***** DRAW EDIT PANEL
+void draw_edit_panel(Texture* tex,bool disabled,int x,int y,int w,int h)
+{
+	if(tex==NULL)
+		return;
+
+	if(w==0)
+		w=tex->width();
+	if(h==0)
+		h=tex->height();
+
+	draw_panel(tex,x,y,w,h,true,disabled,Theme::color::light,Theme::color::editing,Theme::color::dark,Theme::color::d_light,Theme::color::d_editing,Theme::color::d_dark);
 }
 
 

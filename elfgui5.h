@@ -15,6 +15,7 @@
 #include "eWindow.h"
 #include "ePanel.h"
 #include "eButton.h"
+#include "eCheckbox.h"
 
 
 

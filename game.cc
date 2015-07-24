@@ -15,6 +15,7 @@ ePanel* panel;
 ePanel* panel2;
 ePanel* panel3;
 eButton* but1;
+eCheckbox* check1;
 
 
 
@@ -38,6 +39,9 @@ void Game::init()
 
 	but1=new eButton("button1",10,80,80,25,"Button");
 	win1->add_child(but1);
+
+	check1=new eCheckbox("checkbox1",10,120,100,20,"Checkbox",false);
+	win1->add_child(check1);
 
 	panel=new ePanel("panel1",10,10,300,300);
 	panel->can_be_resized=true;
