@@ -13,6 +13,9 @@ eBase::eBase(const Str& ename,int ex,int ey,int ew,int eh):Element(ename,ex,ey,e
 	use_bgcolor=true;
 	bgcolor=Color::ubyte(30,60,100);
 	
+	//own elements
+
+	
 
 	
 	draw();
@@ -80,6 +83,7 @@ void eBase::on_key_up(Key& key){}
 void eBase::on_text(const Str& text){}
 
 void eBase::on_resize(int width,int height){}
+void eBase::on_parent_resize(){}
 
 
 

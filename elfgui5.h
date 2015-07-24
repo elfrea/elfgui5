@@ -8,9 +8,11 @@
 #include "elfgui5_theme.h"
 #include "elfgui5_dragpacket.h"
 #include "elfgui5_event.h"
+#include "elfgui5_anchor.h"
 
 #include "elfgui5_element.h"
 #include "eBase.h"
+#include "eWindow.h"
 #include "ePanel.h"
 
 

@@ -23,6 +23,7 @@ public:
 	int min_w,max_w;
 	int min_h,max_h;
 	Rect move_area;
+	Anchor* anchor;
 
 	bool mouse_down_bring_to_front;
 	bool can_be_dragged;
@@ -37,6 +38,7 @@ public:
 	bool move_area_auto_width;
 	bool move_area_auto_height;
 	bool forward_event_to_parent;
+	bool use_anchor;
 
 	Texture* image;
 	Texture* custom_cursor;
@@ -79,11 +81,12 @@ public:
 	virtual void on_text(const Str& text);
 
 	virtual void on_resize(int width,int height);
+	virtual void on_parent_resize();
 	
 	//family functions
-	void add_child(Element* child);
-	void insert_child(Element* child,int index);
-	void remove_child(Element* child);
+	virtual void add_child(Element* child);
+	virtual void insert_child(Element* child,int index);
+	virtual void remove_child(Element* child);
 
 	//functions
 	void display();
@@ -108,4 +111,7 @@ public:
 	void send_event(Element* sndr,const Str& cmd);
 	void send_event(Event* ev);
 	void send_event(const Str& cmd);
+
+	void set_anchor(bool t,bool b,bool l,bool r,bool use=true);
+	void apply_anchor();
 };

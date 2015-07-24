@@ -20,6 +20,7 @@ Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 	min_h=10;
 	max_h=0;
 	move_area=Rect(0,0,ew,eh);
+	anchor=new Anchor();
 
 	mouse_down_bring_to_front=false;
 	can_be_dragged=false;
@@ -34,6 +35,7 @@ Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 	move_area_auto_width=false;
 	move_area_auto_height=false;
 	forward_event_to_parent=true;
+	use_anchor=false;
 
 	image=NULL;
 	custom_cursor=NULL;
@@ -61,6 +63,9 @@ Element::~Element()
 
 	//free lists
 	children.clear_del();
+
+	//free misc
+	delete anchor;
 
 	#ifdef DBG
 	Log::debug("##### Element deleted: %s",name.ptr());
@@ -127,6 +132,7 @@ void Element::on_key_up(Key& key){}
 void Element::on_text(const Str& text){}
 
 void Element::on_resize(int width,int height){}
+void Element::on_parent_resize(){}
 
 
 
@@ -329,6 +335,13 @@ void Element::resize(int width,int height)
 	//call on_resize
 	on_resize(width,height);
 
+	//apply children anchors and send on_parent_resize
+	for(int a=0;a<children.size();a++)
+	{
+		children[a]->apply_anchor();
+		children[a]->on_parent_resize();
+	}
+
 	//redraw texture
 	draw();
 }
@@ -410,9 +423,9 @@ void Element::set_enabled(bool enbl)
 //***** SET MIN SIZE
 void Element::set_min_size(int minw,int minh)
 {
-	if(minw>max_w)
+	if(max_w!=0 && minw>max_w)
 		minw=max_w;
-	if(minh>max_h)
+	if(max_h!=0 && minh>max_h)
 		minh=max_h;
 	
 	min_w=minw;
@@ -639,6 +652,85 @@ void Element::send_event(const Str& cmd)
 {
 	send_event(this,cmd);
 }
+
+
+
+
+
+
+
+
+
+
+//***** SET ANCHOR
+void Element::set_anchor(bool t,bool b,bool l,bool r,bool use)
+{
+	if(parent)
+		anchor->set(t,y,b,parent->h-(y+h),l,x,r,parent->w-(x+w));
+	else
+		anchor->set(t,0,b,0,l,0,r,0);
+	
+	use_anchor=use;
+}
+
+
+
+
+
+//***** APPLY ANCHOR
+void Element::apply_anchor()
+{
+	if(use_anchor && parent)
+	{
+		//left + right
+		if(anchor->left && anchor->right)
+		{
+			x=anchor->left_x;
+			resize(parent->w-x-anchor->right_x,h);
+		}
+
+		//right
+		else if(anchor->right)
+		{
+			x=parent->w-w-anchor->right_x;
+		}
+
+		//left
+		else if(anchor->left)
+		{
+			x=anchor->left_x;
+		}
+
+
+
+
+		//top+bottom
+		if(anchor->top && anchor->bottom)
+		{
+			y=anchor->top_y;
+			resize(w,parent->h-y-anchor->bottom_y);
+		}
+
+		//bottom
+		else if(anchor->bottom)
+		{
+			y=parent->h-h-anchor->bottom_y;
+		}
+
+		//top
+		else if(anchor->top)
+		{
+			y=anchor->top_y;
+		}
+
+	}
+
+
+}
+
+
+
+
 
 
 

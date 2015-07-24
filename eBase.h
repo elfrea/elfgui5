@@ -12,6 +12,8 @@ public:
 	bool use_bgcolor;
 	Color bgcolor;
 
+	//own elements
+
 	//constructor
 	eBase(const Str& ename,int ex,int ey,int ew,int eh);
 	//destructor
@@ -42,6 +44,7 @@ public:
 	void on_text(const Str& text);
 	
 	void on_resize(int width,int height);
+	void on_parent_resize();
 };
 
 

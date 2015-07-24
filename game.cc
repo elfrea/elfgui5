@@ -10,6 +10,7 @@ Str Game::name;
 
 
 //temp variables
+eWindow* win1;
 ePanel* panel;
 ePanel* panel2;
 ePanel* panel3;
@@ -31,13 +32,16 @@ void Game::init()
 	Display::set_mode(VideoMode::resizable(1366,768,false));
 	ElfGui5::init();
 
+	win1=new eWindow("window1",340,50,200,240,"Test Window");
+	ElfGui5::base->add_child(win1);
+
 	panel=new ePanel("panel1",10,10,300,300);
 	panel->can_be_resized=true;
 	panel->set_custom_cursor("gfx/elements/cursor_edit.png",2,7);
-	panel->set_text("Testing Two es wo");
+	panel->set_text("Testing Two es wo",Align::Left);
 	ElfGui5::base->add_child(panel);
 
-	panel2=new ePanel("panel2",10,30,80,80);
+	panel2=new ePanel("panel2",10,30,80,11);
 	panel2->can_be_moved=true;
 	panel2->set_move_area(0,0,80,20);
 	panel2->move_area_auto_width=true;
@@ -45,7 +49,7 @@ void Game::init()
 	panel2->mouse_down_bring_to_front=true;
 	panel->add_child(panel2);
 
-	panel3=new ePanel("panel3",220,30,50,50,true);
+	panel3=new ePanel("panel3",10,10,50,50,true);
 	panel3->move_area_auto_width=true;
 	panel3->move_area_auto_height=true;
 	panel3->can_be_moved=true;
@@ -53,7 +57,7 @@ void Game::init()
 	panel3->mouse_down_bring_to_front=true;
 	panel3->set_tex("gfx/cursor_move.png",Align::Middle);
 	panel3->forward_event_to_parent=false;
-	panel->add_child(panel3);
+	win1->add_child(panel3);
 
 
 	#ifdef DBG

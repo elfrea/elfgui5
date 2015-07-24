@@ -12,12 +12,8 @@ namespace Align
 
 
 
-//EVENTTYPE
-namespace EventType
-{
-	enum Type
-	{
-		Trigger
-	};
-}
+
+
+
+
 

@@ -11,6 +11,8 @@ ePanel::ePanel(const Str& ename,int ex,int ey,int ew,int eh,bool invert):Element
 	
 	//own vars
 	inverted=invert;
+	plain=false;
+	plain_color=0;
 
 	show_text=false;
 	text_align=Align::Top;
@@ -23,6 +25,11 @@ ePanel::ePanel(const Str& ename,int ex,int ey,int ew,int eh,bool invert):Element
 	tex_offx=0;
 	tex_offy=0;
 	tex=NULL;
+
+	//own elements
+
+
+	
 
 	
 	draw();
@@ -55,7 +62,10 @@ void ePanel::loop()
 //***** DRAW
 void ePanel::draw()
 {
-	draw_panel(image,inverted,enabled);
+	if(plain)
+		image->clear(plain_color);
+	else
+		draw_panel(image,inverted,enabled);
 
 
 	//show tex
@@ -91,7 +101,7 @@ void ePanel::on_mouse_move(int mx,int my){}
 void ePanel::on_mouse_down(int but,int mx,int my){}
 void ePanel::on_mouse_up(int but,int mx,int my){}
 void ePanel::on_mouse_click(int but,int mx,int my){}
-void ePanel::on_mouse_doubleclick(int but,int mx,int my){send_event("trigger");}
+void ePanel::on_mouse_doubleclick(int but,int mx,int my){}
 void ePanel::on_mouse_wheel_down(int mx,int my){}
 void ePanel::on_mouse_wheel_up(int mx,int my){}
 void ePanel::on_mouse_drag_out(){}
@@ -102,6 +112,7 @@ void ePanel::on_key_up(Key& key){}
 void ePanel::on_text(const Str& text){}
 
 void ePanel::on_resize(int width,int height){}
+void ePanel::on_parent_resize(){}
 
 
 
@@ -151,6 +162,17 @@ void ePanel::set_tex(const Str& filename,Align::Type align,int offx,int offy)
 }
 
 
+
+
+
+//SET PLAIN
+void ePanel::set_plain(const Color& col)
+{
+	plain_color=col;
+	plain=true;
+
+	draw();
+}
 
 
 

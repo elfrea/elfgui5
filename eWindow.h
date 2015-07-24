@@ -4,32 +4,21 @@
 #include "elfgui5.h"
 
 
-class ePanel:public Element
+class eWindow:public Element
 {
 public:
-	//own vars
-	bool inverted;
-	bool plain;
-	Color plain_color;
-	
-	bool show_text;
-	Align::Type text_align;
-	int text_offx;
-	int text_offy;
-	Str text;
 
-	bool show_tex;
-	Align::Type tex_align;
-	int tex_offx;
-	int tex_offy;
-	Texture* tex;
+	//own vars
 
 	//own elements
+	class ePanel* titlebar;
+	class ePanel* statusbar;
+	class ePanel* body;
 
 	//constructor
-	ePanel(const Str& ename,int ex,int ey,int ew,int eh,bool invert=false);
+	eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle);
 	//destructor
-	~ePanel();
+	~eWindow();
 
 	//basic functions
 	void loop();
@@ -58,12 +47,22 @@ public:
 	void on_resize(int width,int height);
 	void on_parent_resize();
 
-	//own functions
-	void set_text(const Str& txt,Align::Type align=Align::Top,int offx=0,int offy=0);
-	void set_tex(Texture* src,Align::Type align=Align::Top,int offx=0,int offy=0);
-	void set_tex(const Str& filename,Align::Type align=Align::Top,int offx=0,int offy=0);
+	//family functions
+	void add_child(Element* child);
+	void insert_child(Element* child,int index);
+	void remove_child(Element* child);
 
-	void set_plain(const Color& col);
+	void add_child_on_window(Element* child);
+	void insert_child_on_window(Element* child,int index);
+	void remove_child_on_window(Element* child);
+
+	//own functions
+	void set_title(const Str& etitle,Align::Type align=Align::Left,int offx=25,int offy=0);
+	void set_icon(Texture* tex,Align::Type align=Align::Left,int offx=2,int offy=0);
+	void set_icon(const Str& filename,Align::Type align=Align::Left,int offx=2,int offy=0);
+
+	void set_titlebar_height(int th);
+	void set_statusbar_height(int sh);
 };
 
 

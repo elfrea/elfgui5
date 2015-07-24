@@ -359,19 +359,6 @@ void MyEventHandler::on_mouse_move(Mouse& mouse)
 		int nw=ElfGui5::resizing_w+mouse.x-ElfGui5::resizing_offx;
 		int nh=ElfGui5::resizing_h+mouse.y-ElfGui5::resizing_offy;
 
-		//make sure element's size is within min/max size
-		if(nw<ele->min_w)
-			nw=ele->min_w;
-		if(ele->max_w>0)
-			if(nw>ele->max_w)
-				nw=ele->max_w;
-
-		if(nh<ele->min_h)
-			nh=ele->min_h;
-		if(ele->max_h>0)
-			if(nh>ele->max_h)
-				nh=ele->max_h;
-
 		//make sure the element stays within it's parent
 		if(ElfGui5::current_element->can_be_moved_outside_parent==false)
 		{
@@ -387,10 +374,20 @@ void MyEventHandler::on_mouse_move(Mouse& mouse)
 		//make sure there is enough room for children
 		int maxx=0;
 		int maxy=0;
-		for(int a=0;a<ele->children.size();a++)
+		List<Element*> ch;
+		if(ele->type=="window")
+			ch=((eWindow*)ele)->body->children;
+		else
+			ch=ele->children;
+
+		for(int a=0;a<ch.size();a++)
 		{
-			int cx=ele->children[a]->x+ele->children[a]->w;
-			int cy=ele->children[a]->y+ele->children[a]->h;
+			//disregard if child use an anchor
+			if(ch[a]->use_anchor)
+				continue;
+
+			int cx=ch[a]->x+ch[a]->w;
+			int cy=ch[a]->y+ch[a]->h+(ele->type=="window"?((eWindow*)ele)->titlebar->h+((eWindow*)ele)->statusbar->h:0);
 
 			if(cx>maxx)
 				maxx=cx;
@@ -401,6 +398,21 @@ void MyEventHandler::on_mouse_move(Mouse& mouse)
 			nw=maxx;
 		if(nh<maxy)
 			nh=maxy;
+
+		ch.clear_nodel();
+
+		//make sure element's size is within min/max size
+		if(nw<ele->min_w)
+			nw=ele->min_w;
+		if(ele->max_w>0)
+			if(nw>ele->max_w)
+				nw=ele->max_w;
+
+		if(nh<ele->min_h)
+			nh=ele->min_h;
+		if(ele->max_h>0)
+			if(nh>ele->max_h)
+				nh=ele->max_h;
 
 		//resize element
 		ele->resize(nw,nh);
