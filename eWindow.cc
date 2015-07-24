@@ -17,8 +17,11 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	set_move_area(0,0,ew,DEFAULT_TITLEBAR_H);
 	move_area_auto_width=true;
 	
-	//own vars
+	//own config vars
 
+	//own internal config vars (use config functions to modify)
+
+	//own internal vars
 
 	//own elements
 	titlebar=new ePanel("titlebar",0,0,ew,DEFAULT_TITLEBAR_H);
@@ -36,14 +39,10 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	add_child_on_window(body);
 	body->set_anchor(true,true,true,true);
 
-
 	//other
 	set_min_size(150,100);
 	set_title(etitle);
 	set_icon("gfx/elements/icon_window.png");
-	
-	
-	draw();
 }
 
 
@@ -52,6 +51,8 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 eWindow::~eWindow()
 {
 }
+
+
 
 
 
@@ -83,13 +84,13 @@ void eWindow::draw()
 
 
 
+
 //****************************************************************
 //EVENTS FUNCTIONS
 //****************************************************************
 
 
 //void eWindow::on_event(Event* ev){}
-
 void eWindow::on_mouse_enter(int mx,int my){}
 void eWindow::on_mouse_leave(){}
 void eWindow::on_mouse_move(int mx,int my){}
@@ -101,13 +102,13 @@ void eWindow::on_mouse_wheel_down(int mx,int my){}
 void eWindow::on_mouse_wheel_up(int mx,int my){}
 void eWindow::on_mouse_drag_out(){}
 void eWindow::on_mouse_drag_in(DragPacket* dragpacket){}
-
 void eWindow::on_key_down(Key& key){}
 void eWindow::on_key_up(Key& key){}
 void eWindow::on_text(const Str& text){}
-
 void eWindow::on_resize(int width,int height){}
 void eWindow::on_parent_resize(){}
+
+
 
 
 
@@ -119,19 +120,21 @@ void eWindow::on_parent_resize(){}
 //****************************************************************
 
 
-
-
 //***** ADD CHILD (ON BODY)
 void eWindow::add_child(Element* child)
 {
 	body->insert_child(child,body->children.size());
 }
 
+
+
 //***** INSERT CHILD (OVERRIDE)
 void eWindow::insert_child(Element* child,int index)
 {
 	body->insert_child(child,index);
 }
+
+
 
 //***** REMOVE CHILD (OVERRIDE)
 void eWindow::remove_child(Element* child)
@@ -143,11 +146,13 @@ void eWindow::remove_child(Element* child)
 
 
 
+
 //***** ADD CHILD (ON WINDOW)
 void eWindow::add_child_on_window(Element* child)
 {
 	insert_child_on_window(child,children.size());
 }
+
 
 
 //***** INSERT CHILD (ON WINDOW)
@@ -229,11 +234,11 @@ void eWindow::remove_child_on_window(Element* child)
 
 
 
-//****************************************************************
-//OWN FUNCTIONS
-//****************************************************************
 
 
+//****************************************************************
+//OWN CONFIG FUNCTIONS
+//****************************************************************
 
 
 //SET TITLE
@@ -243,6 +248,7 @@ void eWindow::set_title(const Str& etitle,Align::Type align,int offx,int offy)
 }
 
 
+
 //SET ICON
 void eWindow::set_icon(Texture* tex,Align::Type align,int offx,int offy)
 {
@@ -250,13 +256,12 @@ void eWindow::set_icon(Texture* tex,Align::Type align,int offx,int offy)
 }
 
 
+
 //SET ICON
 void eWindow::set_icon(const Str& filename,Align::Type align,int offx,int offy)
 {
 	titlebar->set_tex(filename,align,offx,offy);
 }
-
-
 
 
 
@@ -282,6 +287,19 @@ void eWindow::set_statusbar_height(int sh)
 	statusbar->resize(w,sh);
 	statusbar->set_anchor(false,true,true,true);
 }
+
+
+
+
+
+
+
+
+//****************************************************************
+//OWN INTERNAL FUNCTIONS
+//****************************************************************
+
+
 
 
 

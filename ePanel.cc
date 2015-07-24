@@ -9,30 +9,31 @@ ePanel::ePanel(const Str& ename,int ex,int ey,int ew,int eh,bool invert):Element
 	//parent class vars
 	type="panel";
 	
-	//own vars
+	//own config vars
+	
+	//own internal config vars (use config functions to modify)
 	inverted=invert;
+	show_text=false;
+	show_tex=false;
+
 	plain=false;
 	plain_color=0;
 
-	show_text=false;
 	text_align=Align::Top;
 	text_offx=0;
 	text_offy=0;
 	text="";
 
-	show_tex=false;
 	tex_align=Align::Top;
 	tex_offx=0;
 	tex_offy=0;
 	tex=NULL;
 
+	//own internal vars
+
 	//own elements
 
 	//other
-
-	
-
-	
 	draw();
 }
 
@@ -42,6 +43,8 @@ ePanel::ePanel(const Str& ename,int ex,int ey,int ew,int eh,bool invert):Element
 ePanel::~ePanel()
 {
 }
+
+
 
 
 
@@ -89,13 +92,13 @@ void ePanel::draw()
 
 
 
+
 //****************************************************************
 //EVENTS FUNCTIONS
 //****************************************************************
 
 
 //void ePanel::on_event(Event* ev){}
-
 void ePanel::on_mouse_enter(int mx,int my){}
 void ePanel::on_mouse_leave(){}
 void ePanel::on_mouse_move(int mx,int my){}
@@ -107,11 +110,9 @@ void ePanel::on_mouse_wheel_down(int mx,int my){}
 void ePanel::on_mouse_wheel_up(int mx,int my){}
 void ePanel::on_mouse_drag_out(){}
 void ePanel::on_mouse_drag_in(DragPacket* dragpacket){}
-
 void ePanel::on_key_down(Key& key){}
 void ePanel::on_key_up(Key& key){}
 void ePanel::on_text(const Str& text){}
-
 void ePanel::on_resize(int width,int height){}
 void ePanel::on_parent_resize(){}
 
@@ -124,7 +125,7 @@ void ePanel::on_parent_resize(){}
 
 
 //****************************************************************
-//OWN FUNCTIONS
+//OWN CONFIG FUNCTIONS
 //****************************************************************
 
 
@@ -155,14 +156,13 @@ void ePanel::set_tex(Texture* src,Align::Type align,int offx,int offy)
 }
 
 
+
 //SET TEX
 void ePanel::set_tex(const Str& filename,Align::Type align,int offx,int offy)
 {
 	Texture* t=Cache::texture(filename);
 	set_tex(t,align,offx,offy);
 }
-
-
 
 
 
@@ -174,6 +174,21 @@ void ePanel::set_plain(const Color& col)
 
 	draw();
 }
+
+
+
+
+
+
+
+
+//****************************************************************
+//OWN INTERNAL FUNCTIONS
+//****************************************************************
+
+
+
+
 
 
 

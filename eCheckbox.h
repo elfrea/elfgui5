@@ -8,39 +8,45 @@ class eCheckbox:public Element
 {
 public:
 
-	//own vars
-	bool checked;
-	int check_size;
+	//own config vars
 
+	//own internal config vars (use config functions to modify)
+	int check_size;
 	bool show_text;
+	bool show_tex;
+
 	Align::Type text_align;
 	int text_offx;
 	int text_offy;
 	Str text;
 
-	bool show_tex;
 	Align::Type tex_align;
 	int tex_offx;
 	int tex_offy;
 	Texture* tex;
 
+	bool checked;
 	bool ready_to_check;
 
+	//own internal vars
+
 	//own elements
+
+
 
 	//constructor
 	eCheckbox(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt,bool echecked);
 	//destructor
 	~eCheckbox();
 
+
+
 	//basic functions
 	void loop();
 	void draw();
 
-	//event functions
-	
+	//event functions	
 	//void on_event(Event* ev);
-
 	void on_mouse_enter(int mx,int my);
 	void on_mouse_leave();
 	void on_mouse_move(int mx,int my);
@@ -52,19 +58,18 @@ public:
 	void on_mouse_wheel_up(int mx,int my);
 	void on_mouse_drag_out();
 	void on_mouse_drag_in(DragPacket* dragpacket);
-	
 	void on_key_down(Key& key);
 	void on_key_up(Key& key);
 	void on_text(const Str& text);
-	
 	void on_resize(int width,int height);
 	void on_parent_resize();
 
-
-	//own functions
+	//own config functions
 	void set_text(const Str& txt,Align::Type align=Align::Left,int offx=20,int offy=0);
 	void set_tex(Texture* src,Align::Type align=Align::Left,int offx=20,int offy=0);
 	void set_tex(const Str& filename,Align::Type align=Align::Left,int offx=20,int offy=0);
+
+	//own internal functions
 
 
 };

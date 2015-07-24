@@ -9,31 +9,31 @@ eButton::eButton(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt):El
 	//parent class vars
 	type="button";
 	
-	//own vars
-	pushed=false;
+	//own config vars
 
+	//own internal config vars (use config functions to modify)
+	use_custom_textures=false;
 	show_text=true;
+	show_tex=false;
+
 	text_align=Align::Middle;
 	text_offx=0;
 	text_offy=0;
 	text="";
 
-	show_tex=false;
 	tex_align=Align::Middle;
 	tex_offx=0;
 	tex_offy=0;
 	tex=NULL;
 
+	//own internal vars
+	pushed=false;
 	pushed_and_left=false;
 	
 	//own elements
 
 	//other
 	set_text(txt);
-	
-
-	
-	draw();
 }
 
 
@@ -42,6 +42,8 @@ eButton::eButton(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt):El
 eButton::~eButton()
 {
 }
+
+
 
 
 
@@ -97,6 +99,9 @@ void eButton::draw()
 
 //void eButton::on_event(Event* ev){}
 
+
+
+//***** ON MOUSE ENTER
 void eButton::on_mouse_enter(int mx,int my)
 {
 	Mouse m=Input::get_mouse();
@@ -110,6 +115,9 @@ void eButton::on_mouse_enter(int mx,int my)
 	pushed_and_left=false;
 }
 
+
+
+//***** ON MOUSE LEAVE
 void eButton::on_mouse_leave()
 {
 	if(pushed)
@@ -120,8 +128,13 @@ void eButton::on_mouse_leave()
 	}
 }
 
+
+
 void eButton::on_mouse_move(int mx,int my){}
 
+
+
+//***** ON MOUSE DOWN
 void eButton::on_mouse_down(int but,int mx,int my)
 {
 	if(but==1)
@@ -131,6 +144,9 @@ void eButton::on_mouse_down(int but,int mx,int my)
 	}
 }
 
+
+
+//***** ON MOUSE UP
 void eButton::on_mouse_up(int but,int mx,int my)
 {
 	if(but==1)
@@ -145,17 +161,17 @@ void eButton::on_mouse_up(int but,int mx,int my)
 	}
 }
 
+
+
 void eButton::on_mouse_click(int but,int mx,int my){}
 void eButton::on_mouse_doubleclick(int but,int mx,int my){}
 void eButton::on_mouse_wheel_down(int mx,int my){}
 void eButton::on_mouse_wheel_up(int mx,int my){}
 void eButton::on_mouse_drag_out(){}
 void eButton::on_mouse_drag_in(DragPacket* dragpacket){}
-
 void eButton::on_key_down(Key& key){}
 void eButton::on_key_up(Key& key){}
 void eButton::on_text(const Str& text){}
-
 void eButton::on_resize(int width,int height){}
 void eButton::on_parent_resize(){}
 
@@ -167,10 +183,8 @@ void eButton::on_parent_resize(){}
 
 
 //****************************************************************
-//OWN FUNCTIONS
+//OWN CONFIG FUNCTIONS
 //****************************************************************
-
-
 
 
 //SET TEXT
@@ -200,12 +214,25 @@ void eButton::set_tex(Texture* src,Align::Type align,int offx,int offy)
 }
 
 
+
 //SET TEX
 void eButton::set_tex(const Str& filename,Align::Type align,int offx,int offy)
 {
 	Texture* t=Cache::texture(filename);
 	set_tex(t,align,offx,offy);
 }
+
+
+
+
+
+
+
+
+//****************************************************************
+//OWN INTERNAL FUNCTIONS
+//****************************************************************
+
 
 
 

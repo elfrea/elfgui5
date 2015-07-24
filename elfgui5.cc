@@ -209,9 +209,6 @@ void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 		if(eum->mouse_down_bring_to_front)
 			eum->bring_to_front();
 			
-		//send on_mouse_down event
-		eum->on_mouse_down(but,mx,my);
-
 		//set current active element
 		ElfGui5::current_element=eum;
 
@@ -238,6 +235,11 @@ void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 				ElfGui5::moving_offy=my;
 			}
 		}
+		
+		//send on_mouse_down event
+		else
+			eum->on_mouse_down(but,mx,my);
+
 	}
 	
 }
@@ -251,7 +253,7 @@ void MyEventHandler::on_mouse_up(int but,Mouse& mouse)
 	
 	Element* eum=ElfGui5::element_under_mouse;
 
-	//stop moving element
+	//stop moving/resizing element
 	ElfGui5::current_element_is_moving=false;
 	ElfGui5::current_element_is_resizing=false;
 

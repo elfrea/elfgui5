@@ -38,9 +38,11 @@ void Game::init()
 	ElfGui5::base->add_child(win1);
 
 	but1=new eButton("button1",10,80,80,25,"Button");
+	but1->can_be_resized=true;
 	win1->add_child(but1);
 
 	check1=new eCheckbox("checkbox1",10,120,100,20,"Checkbox",false);
+	check1->can_be_resized=true;
 	win1->add_child(check1);
 
 	panel=new ePanel("panel1",10,10,300,300);

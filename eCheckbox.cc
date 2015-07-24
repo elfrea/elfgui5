@@ -12,32 +12,31 @@ eCheckbox::eCheckbox(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt
 	//parent class vars
 	type="checkbox";
 	
-	//own vars
+	//own config vars
+	
+	//own internal config vars (use config functions to modify)
 	checked=echecked;
 	check_size=DEFAULT_CHECK_SIZE;
-
 	show_text=true;
+	show_tex=false;
+
 	text_align=Align::Middle;
 	text_offx=0;
 	text_offy=0;
 	text="";
 
-	show_tex=false;
 	tex_align=Align::Middle;
 	tex_offx=0;
 	tex_offy=0;
 	tex=NULL;
 
+	//own internal vars
 	ready_to_check=false;
 	
 	//own elements
 
 	//other
 	set_text(txt);
-	
-
-	
-	draw();
 }
 
 
@@ -46,6 +45,8 @@ eCheckbox::eCheckbox(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt
 eCheckbox::~eCheckbox()
 {
 }
+
+
 
 
 
@@ -116,21 +117,23 @@ void eCheckbox::draw()
 
 //void eCheckbox::on_event(Event* ev){}
 
-void eCheckbox::on_mouse_enter(int mx,int my)
-{
-}
 
-void eCheckbox::on_mouse_leave()
-{
-}
 
+void eCheckbox::on_mouse_enter(int mx,int my){}
+void eCheckbox::on_mouse_leave(){}
 void eCheckbox::on_mouse_move(int mx,int my){}
 
+
+
+//***** ON MOUSE DOWN
 void eCheckbox::on_mouse_down(int but,int mx,int my)
 {
 	ready_to_check=true;
 }
 
+
+
+//***** ON MOUSE UP
 void eCheckbox::on_mouse_up(int but,int mx,int my)
 {
 	if(but==1 && ready_to_check)
@@ -144,17 +147,17 @@ void eCheckbox::on_mouse_up(int but,int mx,int my)
 	ready_to_check=false;
 }
 
+
+
 void eCheckbox::on_mouse_click(int but,int mx,int my){}
 void eCheckbox::on_mouse_doubleclick(int but,int mx,int my){}
 void eCheckbox::on_mouse_wheel_down(int mx,int my){}
 void eCheckbox::on_mouse_wheel_up(int mx,int my){}
 void eCheckbox::on_mouse_drag_out(){}
 void eCheckbox::on_mouse_drag_in(DragPacket* dragpacket){}
-
 void eCheckbox::on_key_down(Key& key){}
 void eCheckbox::on_key_up(Key& key){}
 void eCheckbox::on_text(const Str& text){}
-
 void eCheckbox::on_resize(int width,int height){}
 void eCheckbox::on_parent_resize(){}
 
@@ -166,10 +169,8 @@ void eCheckbox::on_parent_resize(){}
 
 
 //****************************************************************
-//OWN FUNCTIONS
+//OWN CONFIG FUNCTIONS
 //****************************************************************
-
-
 
 
 //SET TEXT
@@ -206,6 +207,16 @@ void eCheckbox::set_tex(const Str& filename,Align::Type align,int offx,int offy)
 	set_tex(t,align,offx,offy);
 }
 
+
+
+
+
+
+
+
+//****************************************************************
+//OWN INTERNAL FUNCTIONS
+//****************************************************************
 
 
 

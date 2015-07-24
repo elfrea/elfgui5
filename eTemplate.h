@@ -4,28 +4,13 @@
 #include "elfgui5.h"
 
 
-class ePanel:public Element
+class eTemplate:public Element
 {
 public:
+
 	//own config vars
 
 	//own internal config vars (use config functions to modify)
-	bool inverted;
-	bool plain;
-	bool show_text;
-	bool show_tex;
-	
-	Align::Type text_align;
-	int text_offx;
-	int text_offy;
-	Str text;
-
-	Align::Type tex_align;
-	int tex_offx;
-	int tex_offy;
-	Texture* tex;
-
-	Color plain_color;
 
 	//own internal vars
 
@@ -34,16 +19,16 @@ public:
 
 
 	//constructor
-	ePanel(const Str& ename,int ex,int ey,int ew,int eh,bool invert=false);
+	eTemplate(const Str& ename,int ex,int ey,int ew,int eh);
 	//destructor
-	~ePanel();
+	~eTemplate();
 
 
 
 	//basic functions
 	void loop();
 	void draw();
-	
+
 	//event functions
 	//void on_event(Event* ev);
 	void on_mouse_enter(int mx,int my);
@@ -64,15 +49,12 @@ public:
 	void on_parent_resize();
 
 	//own config functions
-	void set_text(const Str& txt,Align::Type align=Align::Top,int offx=0,int offy=0);
-	void set_tex(Texture* src,Align::Type align=Align::Top,int offx=0,int offy=0);
-	void set_tex(const Str& filename,Align::Type align=Align::Top,int offx=0,int offy=0);
-	void set_plain(const Color& col);
 
 	//own internal functions
 
 
 };
+
 
 
 

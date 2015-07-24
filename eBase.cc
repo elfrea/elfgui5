@@ -9,16 +9,17 @@ eBase::eBase(const Str& ename,int ex,int ey,int ew,int eh):Element(ename,ex,ey,e
 	//parent class vars
 	type="base";
 	
-	//own vars
+	//own config vars
+	
+	//own internal config vars (use config functions to modify)
 	use_bgcolor=true;
 	bgcolor=Color::ubyte(30,60,100);
+
+	//own internal vars
 	
 	//own elements
 
-	//other
-	
-
-	
+	//other	
 	draw();
 }
 
@@ -28,6 +29,8 @@ eBase::eBase(const Str& ename,int ex,int ey,int ew,int eh):Element(ename,ex,ey,e
 eBase::~eBase()
 {
 }
+
+
 
 
 
@@ -94,7 +97,18 @@ void eBase::on_parent_resize(){}
 
 
 //****************************************************************
-//OWN FUNCTIONS
+//OWN CONFIG FUNCTIONS
+//****************************************************************
+
+
+
+
+
+
+
+
+//****************************************************************
+//OWN INTERNAL FUNCTIONS
 //****************************************************************
 
 
