@@ -8,20 +8,12 @@
 //constructor
 Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 {
-
+	//config vars
 	type="unknown";
 	name=ename;
-	enabled=true;
-	visible=true;
 	x=ex;
 	y=ey;
-	min_w=10;
-	max_w=0;
-	min_h=10;
-	max_h=0;
-	move_area=Rect(0,0,ew,eh);
-	anchor=new Anchor();
-
+	visible=true;
 	mouse_down_bring_to_front=false;
 	can_be_dragged=false;
 	can_be_moved=false;
@@ -32,20 +24,28 @@ Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 	always_on_top=false;
 	always_on_bottom=false;
 	use_custom_cursor=false;
-	move_area_auto_width=false;
-	move_area_auto_height=false;
 	forward_event_to_parent=true;
 	use_anchor=false;
 
-	image=NULL;
+	//internal config vars (use config functions to modify)
+	enabled=true;
+	min_w=10;
+	max_w=0;
+	min_h=10;
+	max_h=0;
+	move_area=Rect(0,0,ew,eh);
+	anchor=new Anchor();
+	move_area_auto_width=false;
+	move_area_auto_height=false;
 	custom_cursor=NULL;
-
 	custom_cursor_hx=0;
 	custom_cursor_hy=0;
 
+	//internal vars
+	image=NULL;
 	parent=NULL;
 
-	//...
+	//other
 	resize(ew,eh);
 
 	#ifdef DBG
@@ -79,9 +79,6 @@ Element::~Element()
 
 
 
-
-
-
 //****************************************************************
 //BASIC FUNCTIONS
 //****************************************************************
@@ -91,6 +88,7 @@ Element::~Element()
 void Element::loop()
 {
 }
+
 
 
 //***** DRAW
@@ -110,10 +108,14 @@ void Element::draw()
 //EVENTS FUNCTIONS
 //****************************************************************
 
+
+//***** ON EVENT
 void Element::on_event(Event* ev)
 {
 	send_event(ev);
 }
+
+
 
 void Element::on_mouse_enter(int mx,int my){}
 void Element::on_mouse_leave(){}
@@ -126,11 +128,9 @@ void Element::on_mouse_wheel_down(int mx,int my){}
 void Element::on_mouse_wheel_up(int mx,int my){}
 void Element::on_mouse_drag_out(){}
 void Element::on_mouse_drag_in(DragPacket* dragpacket){}
-
 void Element::on_key_down(Key& key){}
 void Element::on_key_up(Key& key){}
 void Element::on_text(const Str& text){}
-
 void Element::on_resize(int width,int height){}
 void Element::on_parent_resize(){}
 
@@ -151,6 +151,7 @@ void Element::add_child(Element* child)
 {
 	insert_child(child,children.size());
 }
+
 
 
 //***** INSERT CHILD
@@ -235,9 +236,290 @@ void Element::remove_child(Element* child)
 
 
 //****************************************************************
-//FUNCTIONS
+//CONFIG FUNCTIONS
 //****************************************************************
 
+
+//***** RESIZE
+void Element::resize(int width,int height)
+{
+	//check if new size is too small
+	if(width<1 || height<1)
+		return;
+	
+	//check if new size is the same as current size
+	if(width==w && height==h)
+		return;
+
+	//set move area width if necessary
+	if(move_area_auto_width)
+		move_area.w=width;
+
+	//set move area height if necessary
+	if(move_area_auto_height)
+		move_area.h=height;
+
+	//resize texture
+	if(image!=NULL)
+		delete image;
+	image=Texture::create(width,height,false);
+	w=width;
+	h=height;
+
+	//call on_resize
+	on_resize(width,height);
+
+	//apply children anchors and send on_parent_resize
+	for(int a=0;a<children.size();a++)
+	{
+		children[a]->apply_anchor();
+		children[a]->on_parent_resize();
+	}
+
+	//redraw texture
+	draw();
+}
+
+
+
+//***** BRING TO FRONT
+void Element::bring_to_front()
+{
+	if(parent==NULL)
+		return;
+
+	Element* p=parent;
+	
+	p->remove_child(this);
+	p->add_child(this);
+}
+
+
+
+//***** SEND TO BACK
+void Element::send_to_back()
+{
+	if(parent==NULL)
+		return;
+
+	Element* p=parent;
+	
+	p->remove_child(this);
+	p->insert_child(this,0);
+}
+
+
+
+//***** SET ENABLED
+void Element::set_enabled(bool enbl)
+{
+	enabled=enbl;
+	draw();
+}
+
+
+
+//***** SET MIN SIZE
+void Element::set_min_size(int minw,int minh)
+{
+	if(max_w!=0 && minw>max_w)
+		minw=max_w;
+	if(max_h!=0 && minh>max_h)
+		minh=max_h;
+	
+	min_w=minw;
+	min_h=minh;
+}
+
+
+
+//***** SET MAX SIZE
+void Element::set_max_size(int maxw,int maxh)
+{
+	if(maxw>0)
+		if(maxw<min_w)
+			maxw=min_w;
+	if(maxh>0)
+		if(maxh<min_h)
+			maxh=min_h;
+	
+	max_w=maxw;
+	max_h=maxh;
+}
+
+
+
+//***** SET MINMAX SIZE
+void Element::set_minmax_size(int minw,int minh,int maxw,int maxh)
+{
+	if(maxw>0)
+		if(maxw<minw)
+			maxw=minw;
+	if(maxh>0)
+		if(maxh<minh)
+			maxh=minh;
+	
+	min_w=minw;
+	min_h=minh;
+	max_w=maxw;
+	max_h=maxh;
+}
+
+
+
+//***** SET MOVE AREA
+void Element::set_move_area(int mx,int my,int mw,int mh)
+{
+	//check mx
+	if(mx<0)
+		mx=0;
+	if(mx>=w)
+		mx=w-1;
+
+	//check my
+	if(my<0)
+		my=0;
+	if(my>=h)
+		my=h-1;
+	
+	//check mw
+	if(mw<0)
+		mw=0;
+	if(mw>w-mx)
+		mw=w-mx;
+	
+	//check mh
+	if(mh<0)
+		mh=0;
+	if(mh>h-my)
+		mh=h-my;
+
+	move_area=Rect(mx,my,mw,mh);
+}
+
+
+
+//***** SET MOVE AREA AUTOSIZE
+void Element::set_move_area_autosize(bool autow,bool autoh)
+{
+	move_area_auto_width=autow;
+	move_area_auto_height=autoh;
+	
+	//set move area width if necessary
+	if(move_area_auto_width)
+		move_area.w=w;
+
+	//set move area height if necessary
+	if(move_area_auto_height)
+		move_area.h=h;
+
+}
+
+
+
+//***** SET CUSTOM CURSOR
+void Element::set_custom_cursor(const Str& filename,int hx,int hy)
+{
+	custom_cursor=Cache::texture(filename);
+	custom_cursor_hx=hx;
+	custom_cursor_hy=hy;
+	use_custom_cursor=true;
+}
+
+
+
+//***** START DRAG
+DragPacket* Element::start_drag(const Str& icon_path,int offx,int offy)
+{
+	if(can_be_dragged)
+	{
+		//delete current dragpacket if not null
+		if(ElfGui5::current_dragpacket!=NULL)
+			delete ElfGui5::current_dragpacket;
+
+		//create new dragpacket
+		DragPacket* dp=new DragPacket(icon_path,offx,offy);
+		ElfGui5::current_dragpacket=dp;
+
+		return dp;
+	}
+
+	return NULL;
+}
+
+
+
+//***** SEND EVENT
+void Element::send_event(Element* sndr,const Str& cmd)
+{
+	//create new event
+	Event* ev=new Event(sndr,cmd);
+
+	//check if we forward event to parent
+	if(parent && forward_event_to_parent)
+	{
+		#ifdef DBG
+			Log::debug("New event sent from '%s' of type '%s' forwarded to parent '%s'",name.ptr(),cmd.ptr(),parent->name.ptr());
+		#endif
+
+		parent->on_event(ev);
+	}
+
+	//send event globally
+	else
+	{
+		
+		#ifdef DBG
+			if(forward_event_to_parent)
+				Log::debug("New global event sent from '%s' of type '%s' forwarded from '%s'",ev->sender->name.ptr(),cmd.ptr(),name.ptr());
+			else
+				Log::debug("New global event sent from '%s' of type '%s'",ev->sender->name.ptr(),cmd.ptr());
+		#endif
+
+		ElfGui5::events.add(ev);
+	}
+
+}
+
+
+
+//***** SEND EVENT
+void Element::send_event(Event* ev)
+{
+	send_event(ev->sender,ev->command);
+}
+
+
+
+//***** SEND EVENT
+void Element::send_event(const Str& cmd)
+{
+	send_event(this,cmd);
+}
+
+
+
+//***** SET ANCHOR
+void Element::set_anchor(bool t,bool b,bool l,bool r,bool use)
+{
+	if(parent)
+		anchor->set(t,y,b,parent->h-(y+h),l,x,r,parent->w-(x+w));
+	else
+		anchor->set(t,0,b,0,l,0,r,0);
+	
+	use_anchor=use;
+}
+
+
+
+
+
+
+
+
+//****************************************************************
+//INTERNAL FUNCTIONS
+//****************************************************************
 
 
 //***** LOOPS
@@ -253,6 +535,7 @@ void Element::loops()
 			children[a]->loops();
 	}
 }
+
 
 
 //***** DISPLAY
@@ -321,46 +604,6 @@ void Element::replace_elements()
 
 }
 
-//***** RESIZE
-void Element::resize(int width,int height)
-{
-	//check if new size is too small
-	if(width<1 || height<1)
-		return;
-	
-	//check if new size is the same as current size
-	if(width==w && height==h)
-		return;
-
-	//set move area width if necessary
-	if(move_area_auto_width)
-		move_area.w=width;
-
-	//set move area height if necessary
-	if(move_area_auto_height)
-		move_area.h=height;
-
-	//resize texture
-	if(image!=NULL)
-		delete image;
-	image=Texture::create(width,height,false);
-	w=width;
-	h=height;
-
-	//call on_resize
-	on_resize(width,height);
-
-	//apply children anchors and send on_parent_resize
-	for(int a=0;a<children.size();a++)
-	{
-		children[a]->apply_anchor();
-		children[a]->on_parent_resize();
-	}
-
-	//redraw texture
-	draw();
-}
-
 
 
 //***** GET TRUE X
@@ -380,7 +623,6 @@ int Element::get_true_x()
 
 
 
-
 //***** GET TRUE Y
 int Element::get_true_y()
 {
@@ -395,144 +637,6 @@ int Element::get_true_y()
 
 	return ty;
 }
-
-
-
-
-//***** BRING TO FRONT
-void Element::bring_to_front()
-{
-	if(parent==NULL)
-		return;
-
-	Element* p=parent;
-	
-	p->remove_child(this);
-	p->add_child(this);
-}
-
-
-//***** SEND TO BACK
-void Element::send_to_back()
-{
-	if(parent==NULL)
-		return;
-
-	Element* p=parent;
-	
-	p->remove_child(this);
-	p->insert_child(this,0);
-}
-
-
-
-//***** SET ENABLED
-void Element::set_enabled(bool enbl)
-{
-	enabled=enbl;
-	draw();
-}
-
-
-
-//***** SET MIN SIZE
-void Element::set_min_size(int minw,int minh)
-{
-	if(max_w!=0 && minw>max_w)
-		minw=max_w;
-	if(max_h!=0 && minh>max_h)
-		minh=max_h;
-	
-	min_w=minw;
-	min_h=minh;
-}
-
-
-//***** SET MAX SIZE
-void Element::set_max_size(int maxw,int maxh)
-{
-	if(maxw>0)
-		if(maxw<min_w)
-			maxw=min_w;
-	if(maxh>0)
-		if(maxh<min_h)
-			maxh=min_h;
-	
-	max_w=maxw;
-	max_h=maxh;
-}
-
-
-//***** SET MINMAX SIZE
-void Element::set_minmax_size(int minw,int minh,int maxw,int maxh)
-{
-	if(maxw>0)
-		if(maxw<minw)
-			maxw=minw;
-	if(maxh>0)
-		if(maxh<minh)
-			maxh=minh;
-	
-	min_w=minw;
-	min_h=minh;
-	max_w=maxw;
-	max_h=maxh;
-}
-
-
-
-//***** SET MOVE AREA
-void Element::set_move_area(int mx,int my,int mw,int mh)
-{
-	//check mx
-	if(mx<0)
-		mx=0;
-	if(mx>=w)
-		mx=w-1;
-
-	//check my
-	if(my<0)
-		my=0;
-	if(my>=h)
-		my=h-1;
-	
-	//check mw
-	if(mw<0)
-		mw=0;
-	if(mw>w-mx)
-		mw=w-mx;
-	
-	//check mh
-	if(mh<0)
-		mh=0;
-	if(mh>h-my)
-		mh=h-my;
-
-	move_area=Rect(mx,my,mw,mh);
-}
-
-
-
-
-//***** SET CUSTOM CURSOR
-void Element::set_custom_cursor(const Str& filename,int hx,int hy)
-{
-	custom_cursor=Cache::texture(filename);
-	custom_cursor_hx=hx;
-	custom_cursor_hy=hy;
-	use_custom_cursor=true;
-}
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -587,108 +691,14 @@ Element* Element::find_element_at(int x,int y)
 	return ele;
 }
 
+
+
 //***** FIND_ELEMENT_UNDER_MOUSE
 Element* Element::find_element_under_mouse()
 {
 	Mouse m=Input::get_mouse();
 	return find_element_at(m.x,m.y);
 }
-
-
-
-
-
-
-
-//***** START DRAG
-DragPacket* Element::start_drag(const Str& icon_path,int offx,int offy)
-{
-	if(can_be_dragged)
-	{
-		//delete current dragpacket if not null
-		if(ElfGui5::current_dragpacket!=NULL)
-			delete ElfGui5::current_dragpacket;
-
-		//create new dragpacket
-		DragPacket* dp=new DragPacket(icon_path,offx,offy);
-		ElfGui5::current_dragpacket=dp;
-
-		return dp;
-	}
-
-	return NULL;
-}
-
-
-
-
-
-//***** SEND EVENT
-void Element::send_event(Element* sndr,const Str& cmd)
-{
-	//create new event
-	Event* ev=new Event(sndr,cmd);
-
-	//check if we forward event to parent
-	if(parent && forward_event_to_parent)
-	{
-		#ifdef DBG
-			Log::debug("New event sent from '%s' of type '%s' forwarded to parent '%s'",name.ptr(),cmd.ptr(),parent->name.ptr());
-		#endif
-
-		parent->on_event(ev);
-	}
-
-	//send event globally
-	else
-	{
-		
-		#ifdef DBG
-			if(forward_event_to_parent)
-				Log::debug("New global event sent from '%s' of type '%s' forwarded from '%s'",ev->sender->name.ptr(),cmd.ptr(),name.ptr());
-			else
-				Log::debug("New global event sent from '%s' of type '%s'",ev->sender->name.ptr(),cmd.ptr());
-		#endif
-
-		ElfGui5::events.add(ev);
-	}
-
-}
-
-
-//***** SEND EVENT
-void Element::send_event(Event* ev)
-{
-	send_event(ev->sender,ev->command);
-}
-
-//***** SEND EVENT
-void Element::send_event(const Str& cmd)
-{
-	send_event(this,cmd);
-}
-
-
-
-
-
-
-
-
-
-
-//***** SET ANCHOR
-void Element::set_anchor(bool t,bool b,bool l,bool r,bool use)
-{
-	if(parent)
-		anchor->set(t,y,b,parent->h-(y+h),l,x,r,parent->w-(x+w));
-	else
-		anchor->set(t,0,b,0,l,0,r,0);
-	
-	use_anchor=use;
-}
-
-
 
 
 

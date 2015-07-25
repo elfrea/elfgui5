@@ -17,6 +17,7 @@ eCheckbox::eCheckbox(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt
 	//own internal config vars (use config functions to modify)
 	checked=echecked;
 	check_size=DEFAULT_CHECK_SIZE;
+	check_offset=DEFAULT_CHECK_OFFSET;
 	show_text=true;
 	show_tex=false;
 
@@ -32,6 +33,8 @@ eCheckbox::eCheckbox(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt
 
 	//own internal vars
 	ready_to_check=false;
+	custom_box=NULL;
+	custom_mark=NULL;
 	
 	//own elements
 
@@ -72,7 +75,42 @@ void eCheckbox::loop()
 //***** DRAW
 void eCheckbox::draw()
 {
-	draw_edit_panel(image,enabled,0,(h-check_size)/2,check_size,check_size);
+
+	//check box
+	if(custom_box)
+	{
+		image->clear(Color(0,0,0,0));
+		image->blit(0,(h-custom_box->height())/2,custom_box,false);
+	}
+	else
+	{
+		draw_edit_panel(image,enabled,0,(h-check_size)/2,check_size,check_size);
+	}
+
+	//check mark
+	if(custom_mark)
+	{
+		if(checked)
+		{
+			image->blit(0,(h-custom_mark->height())/2,custom_mark,true);
+		}
+	}
+	else
+	{
+		if(checked)
+		{
+			if(enabled)
+			{
+				image->line(check_offset,(h-check_size)/2+check_offset,check_size-check_offset,(h-check_size)/2+check_size-check_offset,Theme::color::text);
+				image->line(check_offset,(h-check_size)/2+check_size-check_offset,check_size-check_offset,(h-check_size)/2+check_offset,Theme::color::text);
+			}
+			else
+			{
+				image->line(check_offset,(h-check_size)/2+check_offset,check_size-check_offset,(h-check_size)/2+check_size-check_offset,Theme::color::d_text);
+				image->line(check_offset,(h-check_size)/2+check_size-check_offset,check_size-check_offset,(h-check_size)/2+check_offset,Theme::color::d_text);
+			}
+		}
+	}
 	
 	//show tex
 	if(show_tex)
@@ -82,25 +120,12 @@ void eCheckbox::draw()
 	if(show_text)
 	{
 		if(enabled)
-			draw_text_align(image,text_align,text_offx,text_offy,Theme::font::normal,Theme::color::text,text,true,BlendMode::Copy);
+			draw_text_align(image,text_align,check_size+text_offx,text_offy,Theme::font::normal,Theme::color::text,text,true,BlendMode::Copy);
 		else
-			draw_text_align(image,text_align,text_offx,text_offy,Theme::font::normal,Theme::color::d_text,text,true,BlendMode::Copy);
+			draw_text_align(image,text_align,check_size+text_offx,text_offy,Theme::font::normal,Theme::color::d_text,text,true,BlendMode::Copy);
 	}
 
-	//checked
-	if(checked)
-	{
-		if(enabled)
-		{
-			image->line(DEFAULT_CHECK_OFFSET,(h-check_size)/2+DEFAULT_CHECK_OFFSET,check_size-DEFAULT_CHECK_OFFSET,(h-check_size)/2+check_size-DEFAULT_CHECK_OFFSET,Theme::color::text);
-			image->line(DEFAULT_CHECK_OFFSET,(h-check_size)/2+check_size-DEFAULT_CHECK_OFFSET,check_size-DEFAULT_CHECK_OFFSET,(h-check_size)/2+DEFAULT_CHECK_OFFSET,Theme::color::text);
-		}
-		else
-		{
-			image->line(DEFAULT_CHECK_OFFSET,(h-check_size)/2+DEFAULT_CHECK_OFFSET,check_size-DEFAULT_CHECK_OFFSET,(h-check_size)/2+check_size-DEFAULT_CHECK_OFFSET,Theme::color::d_text);
-			image->line(DEFAULT_CHECK_OFFSET,(h-check_size)/2+check_size-DEFAULT_CHECK_OFFSET,check_size-DEFAULT_CHECK_OFFSET,(h-check_size)/2+DEFAULT_CHECK_OFFSET,Theme::color::d_text);
-		}
-	}
+
 }
 
 
@@ -173,7 +198,7 @@ void eCheckbox::on_parent_resize(){}
 //****************************************************************
 
 
-//SET TEXT
+//***** SET TEXT
 void eCheckbox::set_text(const Str& txt,Align::Type align,int offx,int offy)
 {
 	text=txt;
@@ -187,7 +212,7 @@ void eCheckbox::set_text(const Str& txt,Align::Type align,int offx,int offy)
 
 
 
-//SET TEX
+//***** SET TEX
 void eCheckbox::set_tex(Texture* src,Align::Type align,int offx,int offy)
 {
 	tex=src;
@@ -200,11 +225,97 @@ void eCheckbox::set_tex(Texture* src,Align::Type align,int offx,int offy)
 }
 
 
-//SET TEX
+//***** SET TEX
 void eCheckbox::set_tex(const Str& filename,Align::Type align,int offx,int offy)
 {
 	Texture* t=Cache::texture(filename);
 	set_tex(t,align,offx,offy);
+}
+
+
+
+//***** SHOW TEXT
+void eCheckbox::set_show_text(bool show)
+{
+	show_text=show;
+	draw();
+}
+
+
+
+//***** SHOW TEX
+void eCheckbox::set_show_tex(bool show)
+{
+	show_tex=show;
+	draw();
+}
+
+
+
+//***** SET CHECKED
+void eCheckbox::set_checked(bool check)
+{
+	checked=check;
+	draw();
+}
+
+
+
+//***** SET CHECK SIZE
+void eCheckbox::set_check_size(int size)
+{
+	check_size=size;
+	draw();
+}
+
+
+
+//***** SET CHECK OFFSET
+void eCheckbox::set_check_offset(int off)
+{
+	check_offset=off;
+	draw();
+}
+
+
+
+//***** SET CUSTOM
+void eCheckbox::set_custom(Texture* box,Texture* mark,bool autosize,bool sh_text)
+{
+	custom_box=box;
+	custom_mark=mark;
+
+	show_text=sh_text;
+
+	//adjust checksize if needed
+	if(box)
+		check_size=box->width();
+
+	
+	//check if we need to resize the checkbox
+	if(autosize)
+	{
+		//set width
+		int tw=check_size+(sh_text?text_offx+Theme::font::normal->len(text):0);
+
+		//set height
+		int th=(sh_text?Theme::font::normal->height():(box?box->height():check_size));
+		if(box && th<box->height())
+			th=box->height();
+		if(mark && th<mark->height())
+			th=mark->height();
+
+		resize(tw,th);
+	}
+	draw();
+}
+
+
+
+//***** SET CUSTOM
+void eCheckbox::set_custom(const Str& box,const Str& mark,bool autosize,bool sh_text)
+{
+	set_custom(Cache::texture(box),Cache::texture(mark),autosize,sh_text);
 }
 
 

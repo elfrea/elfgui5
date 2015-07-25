@@ -12,6 +12,7 @@ ePanel::ePanel(const Str& ename,int ex,int ey,int ew,int eh,bool invert):Element
 	//own config vars
 	
 	//own internal config vars (use config functions to modify)
+	customized=false;
 	inverted=invert;
 	show_text=false;
 	show_tex=false;
@@ -28,6 +29,8 @@ ePanel::ePanel(const Str& ename,int ex,int ey,int ew,int eh,bool invert):Element
 	tex_offx=0;
 	tex_offy=0;
 	tex=NULL;
+
+	custom_layout=NULL;
 
 	//own internal vars
 
@@ -66,7 +69,13 @@ void ePanel::loop()
 //***** DRAW
 void ePanel::draw()
 {
-	if(plain)
+	if(customized)
+	{
+		image->clear(Color(0,0,0,0));
+		if(custom_layout)
+			image->blit(0,0,custom_layout,false);
+	}
+	else if(plain)
 		image->clear(plain_color);
 	else
 		draw_panel(image,inverted,enabled);
@@ -129,7 +138,7 @@ void ePanel::on_parent_resize(){}
 //****************************************************************
 
 
-//SET TEXT
+//***** SET TEXT
 void ePanel::set_text(const Str& txt,Align::Type align,int offx,int offy)
 {
 	text=txt;
@@ -143,21 +152,21 @@ void ePanel::set_text(const Str& txt,Align::Type align,int offx,int offy)
 
 
 
-//SET TEX
+//***** SET TEX
 void ePanel::set_tex(Texture* src,Align::Type align,int offx,int offy)
 {
 	tex=src;
 	tex_align=align;
 	tex_offx=offx;
 	tex_offy=offy;
-	
+
 	show_tex=true;
 	draw();
 }
 
 
 
-//SET TEX
+//***** SET TEX
 void ePanel::set_tex(const Str& filename,Align::Type align,int offx,int offy)
 {
 	Texture* t=Cache::texture(filename);
@@ -166,13 +175,75 @@ void ePanel::set_tex(const Str& filename,Align::Type align,int offx,int offy)
 
 
 
-//SET PLAIN
-void ePanel::set_plain(const Color& col)
+//***** SHOW TEXT
+void ePanel::set_show_text(bool show)
+{
+	show_text=show;
+	draw();
+}
+
+
+
+//***** SHOW TEX
+void ePanel::set_show_tex(bool show)
+{
+	show_tex=show;
+	draw();
+}
+
+
+
+//***** SET INVERTED
+void ePanel::set_inverted(bool invert)
+{
+	inverted=invert;
+	draw();
+}
+
+
+
+//***** SET PLAIN
+void ePanel::set_plain(bool show,const Color& col)
 {
 	plain_color=col;
-	plain=true;
+	plain=show;
+	draw();
+}
+
+
+
+//***** SET CUSTOMIZED
+void ePanel::set_customized(bool custom)
+{
+	customized=custom;
+	draw();
+}
+
+
+
+//***** SET CUSTOM
+void ePanel::set_custom(Texture* lay,bool autosize,bool sh_text,bool sh_tex)
+{
+	custom_layout=lay;
+
+	show_text=sh_text;
+	show_tex=sh_tex;
+
+	//check if we need to resize the panel
+	if(autosize)
+		resize(lay->width(),lay->height());
+
+	customized=true;
 
 	draw();
+}
+
+
+
+//***** SET CUSTOM
+void ePanel::set_custom(const Str& lay,bool autosize,bool sh_text,bool sh_tex)
+{
+	set_custom(Cache::texture(lay),autosize,sh_text,sh_tex);
 }
 
 

@@ -10,6 +10,7 @@ public:
 	//own config vars
 
 	//own internal config vars (use config functions to modify)
+	bool customized;
 	bool inverted;
 	bool plain;
 	bool show_text;
@@ -26,6 +27,7 @@ public:
 	Texture* tex;
 
 	Color plain_color;
+	Texture* custom_layout;
 
 	//own internal vars
 
@@ -67,7 +69,14 @@ public:
 	void set_text(const Str& txt,Align::Type align=Align::Top,int offx=0,int offy=0);
 	void set_tex(Texture* src,Align::Type align=Align::Top,int offx=0,int offy=0);
 	void set_tex(const Str& filename,Align::Type align=Align::Top,int offx=0,int offy=0);
-	void set_plain(const Color& col);
+	void set_show_text(bool show);
+	void set_show_tex(bool show);
+	void set_inverted(bool invert);
+	void set_plain(bool show,const Color& col);
+
+	void set_customized(bool custom);
+	void set_custom(Texture* lay,bool autosize=true,bool sh_text=false,bool sh_tex=false);
+	void set_custom(const Str& lay,bool autosize=true,bool sh_text=false,bool sh_tex=false);
 
 	//own internal functions
 

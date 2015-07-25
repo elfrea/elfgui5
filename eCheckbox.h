@@ -12,8 +12,10 @@ public:
 
 	//own internal config vars (use config functions to modify)
 	int check_size;
+	int check_offset;
 	bool show_text;
 	bool show_tex;
+	bool checked;
 
 	Align::Type text_align;
 	int text_offx;
@@ -25,10 +27,10 @@ public:
 	int tex_offy;
 	Texture* tex;
 
-	bool checked;
-	bool ready_to_check;
-
 	//own internal vars
+	bool ready_to_check;
+	Texture* custom_box;
+	Texture* custom_mark;
 
 	//own elements
 
@@ -65,9 +67,16 @@ public:
 	void on_parent_resize();
 
 	//own config functions
-	void set_text(const Str& txt,Align::Type align=Align::Left,int offx=20,int offy=0);
-	void set_tex(Texture* src,Align::Type align=Align::Left,int offx=20,int offy=0);
-	void set_tex(const Str& filename,Align::Type align=Align::Left,int offx=20,int offy=0);
+	void set_text(const Str& txt,Align::Type align=Align::Left,int offx=4,int offy=0);
+	void set_tex(Texture* src,Align::Type align=Align::Left,int offx=4,int offy=0);
+	void set_tex(const Str& filename,Align::Type align=Align::Left,int offx=4,int offy=0);
+	void set_show_text(bool show);
+	void set_show_tex(bool show);
+	void set_checked(bool check);
+	void set_check_size(int size);
+	void set_check_offset(int off);
+	void set_custom(Texture* box,Texture* mark,bool autosize=true,bool sh_text=true);
+	void set_custom(const Str& box,const Str& mark,bool autosize=true,bool sh_text=true);
 
 	//own internal functions
 

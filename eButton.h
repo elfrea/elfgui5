@@ -11,7 +11,7 @@ public:
 	//own config vars
 
 	//own internal config vars (use config functions to modify)
-	bool use_custom_textures;
+	bool customized;
 	bool show_text;
 	bool show_tex;
 
@@ -25,9 +25,14 @@ public:
 	int tex_offy;
 	Texture* tex;
 
+	Texture* custom_layout;
+	Texture* custom_layout_pushed;
+	Texture* custom_layout_hover;
+
 	//own internal vars
 	bool pushed;
 	bool pushed_and_left;
+	Texture* custom_img;
 
 	//own elements
 
@@ -67,6 +72,12 @@ public:
 	void set_text(const Str& txt,Align::Type align=Align::Middle,int offx=0,int offy=0);
 	void set_tex(Texture* src,Align::Type align=Align::Middle,int offx=0,int offy=0);
 	void set_tex(const Str& filename,Align::Type align=Align::Middle,int offx=0,int offy=0);
+	void set_show_text(bool show);
+	void set_show_tex(bool show);
+
+	void set_customized(bool custom);
+	void set_custom(Texture* lay,Texture* lay_pushed,Texture* lay_hover,bool autosize=true,bool sh_text=false,bool sh_tex=false);
+	void set_custom(const Str& lay,const Str& lay_pushed,const Str& lay_hover,bool autosize=true,bool sh_text=false,bool sh_tex=false);
 
 	//own internal functions
 
