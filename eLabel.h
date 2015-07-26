@@ -4,6 +4,33 @@
 #include "elfgui5.h"
 
 
+
+/*
+class Label
+{
+   TextFormat _tf;
+
+public:
+
+   void set(const TextFormat &tf)
+   {
+      _tf = tf;
+      draw();
+   }
+
+   void set(const Str&s, TextAlign::Type align = TextAlign::Center, VertTextAlign::Type valign = VertTextAlign::Middle)
+   {
+      TextFormat tf;
+      tf.set_align(align);
+      tf.set_valign(valign);
+      tf.add_text(s);
+
+      set(tf);
+   }
+};
+
+*/
+
 class eLabel:public Element
 {
 public:
@@ -11,10 +38,12 @@ public:
 	//own config vars
 
 	//own internal config vars (use config functions to modify)
-	Str text;
-	Align::Type text_align;
-	int text_offx;
-	int text_offy;
+	TextFormat text_format;
+
+//	Str text;
+//	Align::Type text_align;
+//	int text_offx;
+//	int text_offy;
 
 	//own internal vars
 
@@ -23,7 +52,7 @@ public:
 
 
 	//constructor
-	eLabel(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt);
+	eLabel(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt,bool autowidth=false,bool autoheight=false);
 	//destructor
 	~eLabel();
 
@@ -53,7 +82,8 @@ public:
 	void on_parent_resize();
 
 	//own config functions
-	void set_text(const Str& txt,bool autosize=true,Align::Type align=Align::Middle,int offx=0,int offy=0);
+	void set_text(const Str& txt,const Color& col,Font* fnt,bool autowidth=true,bool autoheight=true,TextAlign::Type align=TextAlign::Center,VertTextAlign::Type valign=VertTextAlign::Middle);
+	void set_text_format(TextFormat& tf,bool autowidth=true,bool autoheight=true);
 
 	//own internal functions
 

@@ -70,8 +70,9 @@ void Game::init()
 	check1->can_be_resized=true;
 	win1->add_child(check1);
 
-	label1=new eLabel("label1",10,320,200,25,"Test Label");
+	label1=new eLabel("label1",10,320,200,10,"Test Label, you can try and resize it and the text will be juunified!",false,true);
 	label1->can_be_resized=true;
+	label1->set_move_area_autosize(true,true);
 	label1->can_be_moved=true;
 	win1->add_child(label1);
 
