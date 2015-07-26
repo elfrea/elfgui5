@@ -20,7 +20,7 @@ eBase::eBase(const Str& ename,int ex,int ey,int ew,int eh):Element(ename,ex,ey,e
 	//own elements
 
 	//other	
-	draw();
+	dirty=true;
 }
 
 
@@ -69,16 +69,15 @@ void eBase::draw()
 
 
 //void eBase::on_event(Event* ev){}
-
 void eBase::on_mouse_enter(int mx,int my){}
 void eBase::on_mouse_leave(){}
 void eBase::on_mouse_move(int mx,int my){}
 void eBase::on_mouse_down(int but,int mx,int my){}
 void eBase::on_mouse_up(int but,int mx,int my){}
-void eBase::on_mouse_click(int but,int mx,int my){}
-void eBase::on_mouse_doubleclick(int but,int mx,int my){}
-void eBase::on_mouse_wheel_down(int mx,int my){}
-void eBase::on_mouse_wheel_up(int mx,int my){}
+//void eBase::on_mouse_click(int but,int mx,int my){}
+//void eBase::on_mouse_doubleclick(int but,int mx,int my){}
+//void eBase::on_mouse_wheel_down(int mx,int my){}
+//void eBase::on_mouse_wheel_up(int mx,int my){}
 void eBase::on_mouse_drag_out(){}
 void eBase::on_mouse_drag_in(DragPacket* dragpacket){}
 

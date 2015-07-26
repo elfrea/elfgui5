@@ -4,13 +4,17 @@
 #include "elfgui5.h"
 
 
-class eTemplate:public Element
+class eLabel:public Element
 {
 public:
 
 	//own config vars
 
 	//own internal config vars (use config functions to modify)
+	Str text;
+	Align::Type text_align;
+	int text_offx;
+	int text_offy;
 
 	//own internal vars
 
@@ -19,9 +23,9 @@ public:
 
 
 	//constructor
-	eTemplate(const Str& ename,int ex,int ey,int ew,int eh);
+	eLabel(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt);
 	//destructor
-	~eTemplate();
+	~eLabel();
 
 
 
@@ -49,11 +53,13 @@ public:
 	void on_parent_resize();
 
 	//own config functions
+	void set_text(const Str& txt,bool autosize=true,Align::Type align=Align::Middle,int offx=0,int offy=0);
 
 	//own internal functions
 
 
 };
+
 
 
 

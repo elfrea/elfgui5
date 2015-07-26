@@ -24,18 +24,18 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	//own internal vars
 
 	//own elements
-	titlebar=new ePanel("titlebar",0,0,ew,DEFAULT_TITLEBAR_H);
+	titlebar=new ePanel(ename+".titlebar",0,0,ew,DEFAULT_TITLEBAR_H);
 	titlebar->can_be_clicked_through=true;
 	add_child_on_window(titlebar);
 	titlebar->set_anchor(true,false,true,true);
 
-	statusbar=new ePanel("statusbar",0,eh-DEFAULT_STATUSBAR_H,ew,DEFAULT_STATUSBAR_H);
+	statusbar=new ePanel(ename+".statusbar",0,eh-DEFAULT_STATUSBAR_H,ew,DEFAULT_STATUSBAR_H);
 	statusbar->can_be_clicked_through=true;
 	statusbar->can_be_resized=true;
 	add_child_on_window(statusbar);
 	statusbar->set_anchor(false,true,true,true);
 
-	body=new ePanel("body",0,DEFAULT_TITLEBAR_H,ew,eh-(DEFAULT_TITLEBAR_H+DEFAULT_STATUSBAR_H));
+	body=new ePanel(ename+".body",0,DEFAULT_TITLEBAR_H,ew,eh-(DEFAULT_TITLEBAR_H+DEFAULT_STATUSBAR_H));
 	add_child_on_window(body);
 	body->set_anchor(true,true,true,true);
 
@@ -43,6 +43,7 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	set_min_size(150,100);
 	set_title(etitle);
 	set_icon("gfx/elements/icon_window.png");
+	dirty=true;
 }
 
 
@@ -74,7 +75,7 @@ void eWindow::loop()
 //***** DRAW
 void eWindow::draw()
 {
-	draw_panel(image,false,enabled);
+	draw_panel(image,color,false,enabled);
 
 }
 
@@ -96,10 +97,10 @@ void eWindow::on_mouse_leave(){}
 void eWindow::on_mouse_move(int mx,int my){}
 void eWindow::on_mouse_down(int but,int mx,int my){}
 void eWindow::on_mouse_up(int but,int mx,int my){}
-void eWindow::on_mouse_click(int but,int mx,int my){}
-void eWindow::on_mouse_doubleclick(int but,int mx,int my){}
-void eWindow::on_mouse_wheel_down(int mx,int my){}
-void eWindow::on_mouse_wheel_up(int mx,int my){}
+//void eWindow::on_mouse_click(int but,int mx,int my){}
+//void eWindow::on_mouse_doubleclick(int but,int mx,int my){}
+//void eWindow::on_mouse_wheel_down(int mx,int my){}
+//void eWindow::on_mouse_wheel_up(int mx,int my){}
 void eWindow::on_mouse_drag_out(){}
 void eWindow::on_mouse_drag_in(DragPacket* dragpacket){}
 void eWindow::on_key_down(Key& key){}

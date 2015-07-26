@@ -57,7 +57,7 @@ void draw_panel(Texture* tex,int x,int y,int w,int h,bool inverted,bool enabled,
 
 
 //***** DRAW PANEL
-void draw_panel(Texture* tex,bool inverted,bool disabled,int x,int y,int w,int h)
+void draw_panel(Texture* tex,Colors* colors,bool inverted,bool enabled,int x,int y,int w,int h)
 {
 	if(tex==NULL)
 		return;
@@ -67,13 +67,13 @@ void draw_panel(Texture* tex,bool inverted,bool disabled,int x,int y,int w,int h
 	if(h==0)
 		h=tex->height();
 
-	draw_panel(tex,x,y,w,h,inverted,disabled,Theme::color::light,Theme::color::medium,Theme::color::dark,Theme::color::d_light,Theme::color::d_medium,Theme::color::d_dark);
+	draw_panel(tex,x,y,w,h,inverted,enabled,colors->light,colors->medium,colors->dark,colors->d_light,colors->d_medium,colors->d_dark);
 }
 
 
 
 //***** DRAW EDIT PANEL
-void draw_edit_panel(Texture* tex,bool disabled,int x,int y,int w,int h)
+void draw_edit_panel(Texture* tex,Colors* colors,bool enabled,int x,int y,int w,int h)
 {
 	if(tex==NULL)
 		return;
@@ -83,7 +83,7 @@ void draw_edit_panel(Texture* tex,bool disabled,int x,int y,int w,int h)
 	if(h==0)
 		h=tex->height();
 
-	draw_panel(tex,x,y,w,h,true,disabled,Theme::color::light,Theme::color::editing,Theme::color::dark,Theme::color::d_light,Theme::color::d_editing,Theme::color::d_dark);
+	draw_panel(tex,x,y,w,h,true,enabled,colors->light,colors->editing,colors->dark,colors->d_light,colors->d_editing,colors->d_dark);
 }
 
 
@@ -96,7 +96,7 @@ void draw_edit_panel(Texture* tex,bool disabled,int x,int y,int w,int h)
 
 
 //***** DRAW TEXT ALIGN
-void draw_text_align(Texture* tex,Align::Type align,int offx,int offy,Font *font,const Color& col,const Str& text,bool kerning,BlendMode::Type blend)
+void draw_text_align(Texture* tex,Align::Type align,int offx,int offy,Font *font,const Color& col,const Str& text,bool kerning)
 {
 	int w=tex->width();
 	int h=tex->height();
@@ -165,7 +165,7 @@ void draw_text_align(Texture* tex,Align::Type align,int offx,int offy,Font *font
 	}
 
 	//draw text on texture
-	tex->print(font,x,y,col,text,kerning,blend);
+	tex->print(font,x,y,col,text,kerning);
 }
 
 

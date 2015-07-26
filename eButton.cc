@@ -39,6 +39,7 @@ eButton::eButton(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt):El
 
 	//other
 	set_text(txt);
+	dirty=true;
 }
 
 
@@ -77,7 +78,7 @@ void eButton::loop()
 			if(custom_img!=custom_layout_pushed)
 			{
 				custom_img=custom_layout_pushed;
-				draw();
+				dirty=true;
 			}
 		}
 
@@ -87,7 +88,7 @@ void eButton::loop()
 			if(custom_img!=custom_layout_hover)
 			{
 				custom_img=custom_layout_hover;
-				draw();
+				dirty=true;
 			}
 		}
 
@@ -95,7 +96,7 @@ void eButton::loop()
 		else if(custom_img!=custom_layout)
 		{
 			custom_img=custom_layout;
-			draw();
+			dirty=true;
 		}
 	}
 }
@@ -114,7 +115,7 @@ void eButton::draw()
 			image->blit(0,0,custom_img,false);
 	}
 	else
-		draw_panel(image,pushed,enabled);
+		draw_panel(image,color,pushed,enabled);
 	
 	//show tex
 	if(show_tex)
@@ -124,9 +125,9 @@ void eButton::draw()
 	if(show_text)
 	{
 		if(enabled)
-			draw_text_align(image,text_align,text_offx+(pushed?1:0),text_offy+(pushed?1:0),Theme::font::normal,Theme::color::text,text);
+			draw_text_align(image,text_align,text_offx+(pushed?1:0),text_offy+(pushed?1:0),font,color->text,text);
 		else
-			draw_text_align(image,text_align,text_offx+(pushed?1:0),text_offy+(pushed?1:0),Theme::font::normal,Theme::color::d_text,text);
+			draw_text_align(image,text_align,text_offx+(pushed?1:0),text_offy+(pushed?1:0),font,color->d_text,text);
 	}
 }
 
@@ -154,7 +155,7 @@ void eButton::on_mouse_enter(int mx,int my)
 	if(pushed_and_left && m.button(1))
 	{
 		pushed=true;
-		draw();
+		dirty=true;
 	}
 
 	pushed_and_left=false;
@@ -169,7 +170,7 @@ void eButton::on_mouse_leave()
 	{
 		pushed_and_left=true;
 		pushed=false;
-		draw();
+		dirty=true;
 	}
 }
 
@@ -185,7 +186,7 @@ void eButton::on_mouse_down(int but,int mx,int my)
 	if(but==1)
 	{
 		pushed=true;
-		draw();
+		dirty=true;
 	}
 }
 
@@ -202,16 +203,16 @@ void eButton::on_mouse_up(int but,int mx,int my)
 		}
 
 		pushed=false;
-		draw();
+		dirty=true;
 	}
 }
 
 
 
-void eButton::on_mouse_click(int but,int mx,int my){}
-void eButton::on_mouse_doubleclick(int but,int mx,int my){}
-void eButton::on_mouse_wheel_down(int mx,int my){}
-void eButton::on_mouse_wheel_up(int mx,int my){}
+//void eButton::on_mouse_click(int but,int mx,int my){}
+//void eButton::on_mouse_doubleclick(int but,int mx,int my){}
+//void eButton::on_mouse_wheel_down(int mx,int my){}
+//void eButton::on_mouse_wheel_up(int mx,int my){}
 void eButton::on_mouse_drag_out(){}
 void eButton::on_mouse_drag_in(DragPacket* dragpacket){}
 void eButton::on_key_down(Key& key){}
@@ -241,7 +242,7 @@ void eButton::set_text(const Str& txt,Align::Type align,int offx,int offy)
 	text_offy=offy;
 	
 	show_text=true;
-	draw();
+	dirty=true;
 }
 
 
@@ -255,7 +256,7 @@ void eButton::set_tex(Texture* src,Align::Type align,int offx,int offy)
 	tex_offy=offy;
 	
 	show_tex=true;
-	draw();
+	dirty=true;
 }
 
 
@@ -273,7 +274,7 @@ void eButton::set_tex(const Str& filename,Align::Type align,int offx,int offy)
 void eButton::set_show_text(bool show)
 {
 	show_text=show;
-	draw();
+	dirty=true;
 }
 
 
@@ -282,7 +283,7 @@ void eButton::set_show_text(bool show)
 void eButton::set_show_tex(bool show)
 {
 	show_tex=show;
-	draw();
+	dirty=true;
 }
 
 
@@ -291,7 +292,7 @@ void eButton::set_show_tex(bool show)
 void eButton::set_customized(bool custom)
 {
 	customized=custom;
-	draw();
+	dirty=true;
 }
 
 
@@ -313,7 +314,7 @@ void eButton::set_custom(Texture* lay,Texture* lay_pushed,Texture* lay_hover,boo
 	customized=true;
 	custom_img=custom_layout;
 
-	draw();
+	dirty=true;
 }
 
 

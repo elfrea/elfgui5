@@ -37,7 +37,7 @@ ePanel::ePanel(const Str& ename,int ex,int ey,int ew,int eh,bool invert):Element
 	//own elements
 
 	//other
-	draw();
+	dirty=true;
 }
 
 
@@ -78,7 +78,7 @@ void ePanel::draw()
 	else if(plain)
 		image->clear(plain_color);
 	else
-		draw_panel(image,inverted,enabled);
+		draw_panel(image,color,inverted,enabled);
 
 
 	//show tex
@@ -89,9 +89,9 @@ void ePanel::draw()
 	if(show_text)
 	{
 		if(enabled)
-			draw_text_align(image,text_align,text_offx,text_offy,Theme::font::normal,Theme::color::text,text);
+			draw_text_align(image,text_align,text_offx,text_offy,font,color->text,text);
 		else
-			draw_text_align(image,text_align,text_offx,text_offy,Theme::font::normal,Theme::color::d_text,text);
+			draw_text_align(image,text_align,text_offx,text_offy,font,color->d_text,text);
 	}
 }
 
@@ -113,10 +113,10 @@ void ePanel::on_mouse_leave(){}
 void ePanel::on_mouse_move(int mx,int my){}
 void ePanel::on_mouse_down(int but,int mx,int my){}
 void ePanel::on_mouse_up(int but,int mx,int my){}
-void ePanel::on_mouse_click(int but,int mx,int my){}
-void ePanel::on_mouse_doubleclick(int but,int mx,int my){}
-void ePanel::on_mouse_wheel_down(int mx,int my){}
-void ePanel::on_mouse_wheel_up(int mx,int my){}
+//void ePanel::on_mouse_click(int but,int mx,int my){}
+//void ePanel::on_mouse_doubleclick(int but,int mx,int my){}
+//void ePanel::on_mouse_wheel_down(int mx,int my){}
+//void ePanel::on_mouse_wheel_up(int mx,int my){}
 void ePanel::on_mouse_drag_out(){}
 void ePanel::on_mouse_drag_in(DragPacket* dragpacket){}
 void ePanel::on_key_down(Key& key){}
@@ -147,7 +147,7 @@ void ePanel::set_text(const Str& txt,Align::Type align,int offx,int offy)
 	text_offy=offy;
 	
 	show_text=true;
-	draw();
+	dirty=true;
 }
 
 
@@ -161,7 +161,7 @@ void ePanel::set_tex(Texture* src,Align::Type align,int offx,int offy)
 	tex_offy=offy;
 
 	show_tex=true;
-	draw();
+	dirty=true;
 }
 
 
@@ -179,7 +179,7 @@ void ePanel::set_tex(const Str& filename,Align::Type align,int offx,int offy)
 void ePanel::set_show_text(bool show)
 {
 	show_text=show;
-	draw();
+	dirty=true;
 }
 
 
@@ -188,7 +188,7 @@ void ePanel::set_show_text(bool show)
 void ePanel::set_show_tex(bool show)
 {
 	show_tex=show;
-	draw();
+	dirty=true;
 }
 
 
@@ -197,7 +197,7 @@ void ePanel::set_show_tex(bool show)
 void ePanel::set_inverted(bool invert)
 {
 	inverted=invert;
-	draw();
+	dirty=true;
 }
 
 
@@ -207,7 +207,7 @@ void ePanel::set_plain(bool show,const Color& col)
 {
 	plain_color=col;
 	plain=show;
-	draw();
+	dirty=true;
 }
 
 
@@ -216,7 +216,7 @@ void ePanel::set_plain(bool show,const Color& col)
 void ePanel::set_customized(bool custom)
 {
 	customized=custom;
-	draw();
+	dirty=true;
 }
 
 
@@ -235,7 +235,7 @@ void ePanel::set_custom(Texture* lay,bool autosize,bool sh_text,bool sh_tex)
 
 	customized=true;
 
-	draw();
+	dirty=true;
 }
 
 

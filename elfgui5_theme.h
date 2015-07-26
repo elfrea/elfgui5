@@ -2,46 +2,66 @@
 #include <pix5.h>
 #include "elfgui5.h"
 
-namespace Theme
+
+
+
+
+class Colors
 {
+public:
 
-	class color
-	{
-	public:
+	//normal
+	Color light,medium,dark;
+	Color text;
+	Color editing;
+	Color selection;
+	Color extra;
 
-		//normal
-		static Color light,medium,dark;
-		static Color text;
-		static Color editing;
-		static Color selection;
-		static Color extra;
-
-		//disabled
-		static Color d_light,d_medium,d_dark;
-		static Color d_text;
-		static Color d_editing;
-		static Color d_selection;
-		static Color d_extra;
-	};
+	//disabled
+	Color d_light,d_medium,d_dark;
+	Color d_text;
+	Color d_editing;
+	Color d_selection;
+	Color d_extra;
+};
 
 
 
-	class font
-	{
-	public:
-		static Font* tiny;
-		static Font* tiny_mono;
-		static Font* small;
-		static Font* small_mono;
-		static Font* normal;
-		static Font* normal_mono;
-		static Font* big;
-		static Font* big_mono;
-		static Font* huge;
-		static Font* huge_mono;
-	};
+
+
+class Fonts
+{
+public:
+
+	Font* tiny;
+	Font* tiny_mono;
+	Font* small;
+	Font* small_mono;
+	Font* normal;
+	Font* normal_mono;
+	Font* big;
+	Font* big_mono;
+	Font* huge;
+	Font* huge_mono;
+};
 
 
 
-	void set(const Str& theme);
-}
+
+
+class Theme
+{
+public:
+
+	static Colors* color;
+	static Fonts* font;
+
+	static void set(const Str& theme);
+	static void kill();
+};
+
+
+
+
+
+

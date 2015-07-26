@@ -4,24 +4,32 @@
 #include "elfgui5.h"
 
 
-class eTemplate:public Element
+
+class eGroupbox:public Element
 {
 public:
 
 	//own config vars
 
 	//own internal config vars (use config functions to modify)
+	GroupboxAppearance::Type appearance;
+	bool show_text;
+	Str text;
+	Align::Type text_align;
+	int text_offx;
+	int text_offy;
 
 	//own internal vars
+	int box_offy;
 
 	//own elements
 
 
 
 	//constructor
-	eTemplate(const Str& ename,int ex,int ey,int ew,int eh);
+	eGroupbox(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt);
 	//destructor
-	~eTemplate();
+	~eGroupbox();
 
 
 
@@ -49,11 +57,15 @@ public:
 	void on_parent_resize();
 
 	//own config functions
+	void set_appearance(GroupboxAppearance::Type appear);
+	void set_text(const Str& txt,Align::Type align=Align::Top,int offx=0,int offy=0);
+	void set_show_text(bool sh_text);
 
 	//own internal functions
 
 
 };
+
 
 
 

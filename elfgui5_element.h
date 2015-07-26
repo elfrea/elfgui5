@@ -7,7 +7,6 @@
 
 
 
-
 class Element
 {
 
@@ -16,6 +15,7 @@ public:
 	//config vars
 	Str type;
 	Str name;
+	Font* font;
 	int x,y;
 	bool visible;
 	bool mouse_down_bring_to_front;
@@ -32,7 +32,9 @@ public:
 	bool use_custom_cursor;
 	bool use_anchor;
 
+
 	//internal config vars (use config functions to modify)
+	Colors* color;
 	bool enabled;
 	int w,h;
 	int min_w,max_w;
@@ -49,6 +51,7 @@ public:
 	Texture* image;
 	Element* parent;
 	List<Element*> children;
+	bool dirty;
 
 
 	
@@ -88,6 +91,11 @@ public:
 	virtual void remove_child(Element* child);
 
 	//config functions
+	void set_font(Font* fnt,bool propagate=false);
+	void set_color(Color& col,const Color& newcol);
+	void set_colors_enabled(const Color& c_light,const Color& c_medium,const Color& c_dark,const Color& c_text,const Color& c_editing,const Color& c_selection,const Color& c_extra,bool propagate=false);
+	void set_colors_disabled(const Color& c_light,const Color& c_medium,const Color& c_dark,const Color& c_text,const Color& c_editing,const Color& c_selection,const Color& c_extra,bool propagate=false);
+	void set_theme_colors(bool propagate=false);
 	void resize(int width,int height);
 	void bring_to_front();
 	void send_to_back();

@@ -53,10 +53,10 @@ public:
 	void on_mouse_move(int mx,int my);
 	void on_mouse_down(int but,int mx,int my);
 	void on_mouse_up(int but,int mx,int my);
-	void on_mouse_click(int but,int mx,int my);
-	void on_mouse_doubleclick(int but,int mx,int my);
-	void on_mouse_wheel_down(int mx,int my);
-	void on_mouse_wheel_up(int mx,int my);
+//	void on_mouse_click(int but,int mx,int my);
+//	void on_mouse_doubleclick(int but,int mx,int my);
+//	void on_mouse_wheel_down(int mx,int my);
+//	void on_mouse_wheel_up(int mx,int my);
 	void on_mouse_drag_out();
 	void on_mouse_drag_in(DragPacket* dragpacket);
 	void on_key_down(Key& key);

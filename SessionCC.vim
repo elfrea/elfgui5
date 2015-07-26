@@ -280,12 +280,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 34 - ((27 * winheight(0) + 29) / 59)
+let s:l = 101 - ((47 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-34
-normal! 0
+101
+normal! 051|
 tabedit elfgui5.cc
 set splitbelow splitright
 set nosplitbelow
@@ -400,12 +400,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 405 - ((41 * winheight(0) + 29) / 59)
+let s:l = 215 - ((24 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-405
-normal! 09|
+215
+normal! 0
 tabedit elfgui5_drawing.cc
 set splitbelow splitright
 set nosplitbelow
@@ -520,12 +520,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 115 - ((57 * winheight(0) + 29) / 59)
+let s:l = 118 - ((39 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-115
-normal! 09|
+118
+normal! 013|
 tabedit elfgui5_theme.cc
 set splitbelow splitright
 set nosplitbelow
@@ -640,12 +640,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 74 - ((43 * winheight(0) + 29) / 59)
+let s:l = 37 - ((21 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-74
-normal! 013|
+37
+normal! 042|
 tabedit elfgui5_dragpacket.cc
 set splitbelow splitright
 set nosplitbelow
@@ -1006,7 +1006,7 @@ exe s:l
 normal! zt
 47
 normal! 03|
-tabnext 3
+tabnext 2
 set stal=1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

@@ -4,8 +4,8 @@
 
 #include "elfgui5_enums.h"
 
-#include "elfgui5_drawing.h"
 #include "elfgui5_theme.h"
+#include "elfgui5_drawing.h"
 #include "elfgui5_dragpacket.h"
 #include "elfgui5_event.h"
 #include "elfgui5_anchor.h"
@@ -16,6 +16,8 @@
 #include "ePanel.h"
 #include "eButton.h"
 #include "eCheckbox.h"
+#include "eLabel.h"
+#include "eGroupbox.h"
 
 
 
@@ -48,8 +50,12 @@ public:
 class ElfGui5
 {
 public:
-	
+
+	//config vars
 	static bool ready_to_quit;
+	static int64_t doubleclick_delay;
+
+	//internal vars
 	static MyEventHandler event_handler;
 	static TexRenderer texture_renderer;
 	static List<Event*> events;
@@ -57,7 +63,6 @@ public:
 	static eBase* base;
 
 	static int64_t doubleclick_timer;
-	static int64_t doubleclick_delay;
 
 	static Element* element_under_mouse;
 	static int mouse_is_down;
@@ -79,7 +84,7 @@ public:
 	static int cursor_custom_hx;
 	static int cursor_custom_hy;
 
-	//gfx
+	//internal gfx vars
 	static Texture* resize_gizmo;
 	static Texture* cursor_arrow;
 	static Texture* cursor_resize;
@@ -91,10 +96,11 @@ public:
 	static int loop();
 	static void draw();
 	static void shutdown();
-
-	//functions
-	static void set_mouse_cursor(const Str& cursor);
 	static Event* fetch_event();
+
+	//internal functions
+	static void set_mouse_cursor(const Str& cursor);
+
 };
 
 

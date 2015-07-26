@@ -42,9 +42,16 @@ Texture* ElfGui5::cursor_resize;
 Texture* ElfGui5::cursor_move;
 Texture* ElfGui5::cursor_custom;
 
-//********************************************************************************************
 
 
+
+
+
+
+
+//****************************************************************
+//MAIN FUNCTIONS
+//****************************************************************
 
 
 //***** INIT
@@ -54,7 +61,11 @@ void ElfGui5::init()
 	Log::debug("ElfGui5 initializing...");
 	#endif
 
-	//intern vars
+	//config vars
+	ready_to_quit=false;
+	doubleclick_delay=250;
+
+	//internal vars
 	element_under_mouse=NULL;
 	mouse_is_down=0;
 	last_mouse_click_but=0;
@@ -76,13 +87,7 @@ void ElfGui5::init()
 	cursor_custom_hx=0;
 	cursor_custom_hy=0;
 	
-	//semi-intern vars
-	ready_to_quit=false;
-
-	//config vars
-	doubleclick_delay=250;
-
-	//gfx vars
+	//internal gfx vars
 	resize_gizmo=Cache::texture("gfx/resize_gizmo.png");
 	cursor_arrow=Cache::texture("gfx/cursor_arrow.png");	//hotspot=0,0
 	cursor_resize=Cache::texture("gfx/cursor_resize.png");	//hotspot=8,8
@@ -103,11 +108,6 @@ void ElfGui5::init()
 
 
 
-
-
-
-
-
 //***** LOOP
 int ElfGui5::loop()
 {
@@ -123,11 +123,6 @@ int ElfGui5::loop()
 
 	return 0;
 }
-
-
-
-
-
 
 
 
@@ -150,11 +145,6 @@ void ElfGui5::draw()
 
 
 
-
-
-
-
-
 //***** SHUTDOWN
 void ElfGui5::shutdown()
 {
@@ -164,6 +154,7 @@ void ElfGui5::shutdown()
 
 	delete base;
 	events.clear_del();
+	Theme::kill();
 
 	#ifdef DBG
 	Log::debug("ElfGui5 shutdown complete!");
@@ -172,27 +163,34 @@ void ElfGui5::shutdown()
 
 
 
+//***** FETCH EVENT
+Event* ElfGui5::fetch_event()
+{
+	Event* ev=NULL;
+
+	//check if there is any events in the list
+	if(events.size()>0)
+	{
+		ev=events[0];
+		events.remove_nodel(0);
+	}
+
+	return ev;
+}
 
 
 
-//********************************************************************************************
 
 
 
 
 
+//****************************************************************
+//EVENT FUNCTIONS
+//****************************************************************
 
 
-
-//********************************************************************************************
-
-
-
-
-
-
-
-//ON MOUSE DOWN
+//***** ON MOUSE DOWN
 void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 {
 	//set mouse_is_down for on_click event
@@ -246,8 +244,7 @@ void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 
 
 
-
-//ON MOUSE UP
+//***** ON MOUSE UP
 void MyEventHandler::on_mouse_up(int but,Mouse& mouse)
 {
 	
@@ -268,7 +265,7 @@ void MyEventHandler::on_mouse_up(int but,Mouse& mouse)
 		{
 			//check if it's a doubleclick event
 			int64_t ms=get_ms();
-			if((ms-ElfGui5::doubleclick_timer)<=ElfGui5::doubleclick_delay && ElfGui5::last_mouse_click_but==but)
+			if(but==1 && (ms-ElfGui5::doubleclick_timer)<=ElfGui5::doubleclick_delay && ElfGui5::last_mouse_click_but==but)
 			{
 				//send mouse_doubleclick event
 				eum->on_mouse_doubleclick(but,mouse.x-eum->get_true_x(),mouse.y-eum->get_true_y());
@@ -304,8 +301,7 @@ void MyEventHandler::on_mouse_up(int but,Mouse& mouse)
 
 
 
-
-//ON MOUSE WHEEL DOWN
+//***** ON MOUSE WHEEL DOWN
 void MyEventHandler::on_mouse_wheel_down(Mouse& mouse)
 {
 	Element* eum=ElfGui5::element_under_mouse;
@@ -316,8 +312,7 @@ void MyEventHandler::on_mouse_wheel_down(Mouse& mouse)
 
 
 
-
-//ON MOUSE WHEEL UP
+//***** ON MOUSE WHEEL UP
 void MyEventHandler::on_mouse_wheel_up(Mouse& mouse)
 {
 	Element* eum=ElfGui5::element_under_mouse;
@@ -328,7 +323,7 @@ void MyEventHandler::on_mouse_wheel_up(Mouse& mouse)
 
 
 
-//ON MOUSE MOVE
+//***** ON MOUSE MOVE
 void MyEventHandler::on_mouse_move(Mouse& mouse)
 {
 	Mouse m=Input::get_mouse();
@@ -489,11 +484,7 @@ void MyEventHandler::on_mouse_move(Mouse& mouse)
 
 
 
-
-
-
-
-//ON KEY DOWN
+//***** ON KEY DOWN
 void MyEventHandler::on_key_down(Key& key)
 {
 	Element* ele=ElfGui5::current_element;
@@ -515,7 +506,9 @@ void MyEventHandler::on_key_down(Key& key)
 
 }
 
-//ON KEY UP
+
+
+//***** ON KEY UP
 void MyEventHandler::on_key_up(Key& key)
 {
 	Element* ele=ElfGui5::current_element;
@@ -537,7 +530,9 @@ void MyEventHandler::on_key_up(Key& key)
 
 }
 
-//ON TEXT
+
+
+//***** ON TEXT
 void MyEventHandler::on_text(const Str& text)
 {
 	Element* ele=ElfGui5::current_element;
@@ -560,16 +555,15 @@ void MyEventHandler::on_text(const Str& text)
 
 
 
-
-
-
-
-//ON WINDOW RESIZE
+//***** ON WINDOW RESIZE
 void MyEventHandler::on_window_resize(int width, int height)
 {
+	ElfGui5::base->resize(width,height);
 }
 
-//ON QUIT
+
+
+//***** ON QUIT
 void MyEventHandler::on_quit()
 {
 	ElfGui5::ready_to_quit=true;
@@ -582,14 +576,12 @@ void MyEventHandler::on_quit()
 
 
 
-
-//********************************************************************************************
-
-
-
+//****************************************************************
+//INTERNAL FUNCTIONS
+//****************************************************************
 
 
-//SET MOUSE CURSOR
+//***** SET MOUSE CURSOR
 void ElfGui5::set_mouse_cursor(const Str& cursor)
 {
 	//resize
@@ -628,24 +620,6 @@ void ElfGui5::set_mouse_cursor(const Str& cursor)
 		Input::set_cursor(ElfGui5::cursor_arrow,0,0,true);
 		ElfGui5::current_cursor_type="arrow";
 	}
-}
-
-
-
-
-//FETCH EVENT
-Event* ElfGui5::fetch_event()
-{
-	Event* ev=NULL;
-
-	//check if there is any events in the list
-	if(events.size()>0)
-	{
-		ev=events[0];
-		events.remove_nodel(0);
-	}
-
-	return ev;
 }
 
 

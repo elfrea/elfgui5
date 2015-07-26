@@ -84,7 +84,7 @@ void eCheckbox::draw()
 	}
 	else
 	{
-		draw_edit_panel(image,enabled,0,(h-check_size)/2,check_size,check_size);
+		draw_edit_panel(image,color,enabled,0,(h-check_size)/2,check_size,check_size);
 	}
 
 	//check mark
@@ -101,13 +101,13 @@ void eCheckbox::draw()
 		{
 			if(enabled)
 			{
-				image->line(check_offset,(h-check_size)/2+check_offset,check_size-check_offset,(h-check_size)/2+check_size-check_offset,Theme::color::text);
-				image->line(check_offset,(h-check_size)/2+check_size-check_offset,check_size-check_offset,(h-check_size)/2+check_offset,Theme::color::text);
+				image->line(check_offset,(h-check_size)/2+check_offset,check_size-check_offset,(h-check_size)/2+check_size-check_offset,color->text);
+				image->line(check_offset,(h-check_size)/2+check_size-check_offset,check_size-check_offset,(h-check_size)/2+check_offset,color->text);
 			}
 			else
 			{
-				image->line(check_offset,(h-check_size)/2+check_offset,check_size-check_offset,(h-check_size)/2+check_size-check_offset,Theme::color::d_text);
-				image->line(check_offset,(h-check_size)/2+check_size-check_offset,check_size-check_offset,(h-check_size)/2+check_offset,Theme::color::d_text);
+				image->line(check_offset,(h-check_size)/2+check_offset,check_size-check_offset,(h-check_size)/2+check_size-check_offset,color->d_text);
+				image->line(check_offset,(h-check_size)/2+check_size-check_offset,check_size-check_offset,(h-check_size)/2+check_offset,color->d_text);
 			}
 		}
 	}
@@ -120,9 +120,9 @@ void eCheckbox::draw()
 	if(show_text)
 	{
 		if(enabled)
-			draw_text_align(image,text_align,check_size+text_offx,text_offy,Theme::font::normal,Theme::color::text,text,true,BlendMode::Copy);
+			draw_text_align(image,text_align,check_size+text_offx,text_offy,font,color->text,text,true);
 		else
-			draw_text_align(image,text_align,check_size+text_offx,text_offy,Theme::font::normal,Theme::color::d_text,text,true,BlendMode::Copy);
+			draw_text_align(image,text_align,check_size+text_offx,text_offy,font,color->d_text,text,true);
 	}
 
 
@@ -166,7 +166,7 @@ void eCheckbox::on_mouse_up(int but,int mx,int my)
 		checked=!checked;
 		send_event("trigger");
 
-		draw();
+		dirty=true;
 	}
 
 	ready_to_check=false;
@@ -174,10 +174,10 @@ void eCheckbox::on_mouse_up(int but,int mx,int my)
 
 
 
-void eCheckbox::on_mouse_click(int but,int mx,int my){}
-void eCheckbox::on_mouse_doubleclick(int but,int mx,int my){}
-void eCheckbox::on_mouse_wheel_down(int mx,int my){}
-void eCheckbox::on_mouse_wheel_up(int mx,int my){}
+//void eCheckbox::on_mouse_click(int but,int mx,int my){}
+//void eCheckbox::on_mouse_doubleclick(int but,int mx,int my){}
+//void eCheckbox::on_mouse_wheel_down(int mx,int my){}
+//void eCheckbox::on_mouse_wheel_up(int mx,int my){}
 void eCheckbox::on_mouse_drag_out(){}
 void eCheckbox::on_mouse_drag_in(DragPacket* dragpacket){}
 void eCheckbox::on_key_down(Key& key){}
@@ -207,7 +207,7 @@ void eCheckbox::set_text(const Str& txt,Align::Type align,int offx,int offy)
 	text_offy=offy;
 	
 	show_text=true;
-	draw();
+	dirty=true;
 }
 
 
@@ -221,7 +221,7 @@ void eCheckbox::set_tex(Texture* src,Align::Type align,int offx,int offy)
 	tex_offy=offy;
 	
 	show_tex=true;
-	draw();
+	dirty=true;
 }
 
 
@@ -238,7 +238,7 @@ void eCheckbox::set_tex(const Str& filename,Align::Type align,int offx,int offy)
 void eCheckbox::set_show_text(bool show)
 {
 	show_text=show;
-	draw();
+	dirty=true;
 }
 
 
@@ -247,7 +247,7 @@ void eCheckbox::set_show_text(bool show)
 void eCheckbox::set_show_tex(bool show)
 {
 	show_tex=show;
-	draw();
+	dirty=true;
 }
 
 
@@ -256,7 +256,7 @@ void eCheckbox::set_show_tex(bool show)
 void eCheckbox::set_checked(bool check)
 {
 	checked=check;
-	draw();
+	dirty=true;
 }
 
 
@@ -265,7 +265,7 @@ void eCheckbox::set_checked(bool check)
 void eCheckbox::set_check_size(int size)
 {
 	check_size=size;
-	draw();
+	dirty=true;
 }
 
 
@@ -274,7 +274,7 @@ void eCheckbox::set_check_size(int size)
 void eCheckbox::set_check_offset(int off)
 {
 	check_offset=off;
-	draw();
+	dirty=true;
 }
 
 
@@ -296,10 +296,10 @@ void eCheckbox::set_custom(Texture* box,Texture* mark,bool autosize,bool sh_text
 	if(autosize)
 	{
 		//set width
-		int tw=check_size+(sh_text?text_offx+Theme::font::normal->len(text):0);
+		int tw=check_size+(sh_text?text_offx+font->len(text):0);
 
 		//set height
-		int th=(sh_text?Theme::font::normal->height():(box?box->height():check_size));
+		int th=(sh_text?font->height():(box?box->height():check_size));
 		if(box && th<box->height())
 			th=box->height();
 		if(mark && th<mark->height())
@@ -307,7 +307,7 @@ void eCheckbox::set_custom(Texture* box,Texture* mark,bool autosize,bool sh_text
 
 		resize(tw,th);
 	}
-	draw();
+	dirty=true;
 }
 
 

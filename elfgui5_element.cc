@@ -11,6 +11,7 @@ Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 	//config vars
 	type="unknown";
 	name=ename;
+	font=Theme::font->normal;
 	x=ex;
 	y=ey;
 	visible=true;
@@ -28,6 +29,7 @@ Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 	use_anchor=false;
 
 	//internal config vars (use config functions to modify)
+	color=new Colors();
 	enabled=true;
 	min_w=10;
 	max_w=0;
@@ -44,9 +46,11 @@ Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 	//internal vars
 	image=NULL;
 	parent=NULL;
+	dirty=false;
 
 	//other
 	resize(ew,eh);
+	set_theme_colors();
 
 	#ifdef DBG
 	Log::debug("##### New element created: %s",name.ptr());
@@ -66,6 +70,7 @@ Element::~Element()
 
 	//free misc
 	delete anchor;
+	delete color;
 
 	#ifdef DBG
 	Log::debug("##### Element deleted: %s",name.ptr());
@@ -122,10 +127,51 @@ void Element::on_mouse_leave(){}
 void Element::on_mouse_move(int mx,int my){}
 void Element::on_mouse_down(int but,int mx,int my){}
 void Element::on_mouse_up(int but,int mx,int my){}
-void Element::on_mouse_click(int but,int mx,int my){}
-void Element::on_mouse_doubleclick(int but,int mx,int my){}
-void Element::on_mouse_wheel_down(int mx,int my){}
-void Element::on_mouse_wheel_up(int mx,int my){}
+
+
+
+//***** ON MOUSE CLICK
+void Element::on_mouse_click(int but,int mx,int my)
+{
+	if(but==1)
+		send_event("left click");
+	else if(but==2)
+		send_event("middle click");
+	else if(but==3)
+		send_event("right click");
+}
+
+
+
+//***** ON MOUSE DOUBLECLICK
+void Element::on_mouse_doubleclick(int but,int mx,int my)
+{
+	if(but==1)
+		send_event("left doubleclick");
+	else if(but==2)
+		send_event("middle doubleclick");
+	else if(but==3)
+		send_event("right doubleclick");
+}
+
+
+
+//***** ON MOUSE WHEEL DOWN
+void Element::on_mouse_wheel_down(int mx,int my)
+{
+	send_event("wheel down");
+}
+
+
+
+//***** ON MOUSE WHEEL UP
+void Element::on_mouse_wheel_up(int mx,int my)
+{
+	send_event("wheel up");
+}
+
+
+
 void Element::on_mouse_drag_out(){}
 void Element::on_mouse_drag_in(DragPacket* dragpacket){}
 void Element::on_key_down(Key& key){}
@@ -240,6 +286,108 @@ void Element::remove_child(Element* child)
 //****************************************************************
 
 
+//***** SET FONT
+void Element::set_font(Font* fnt,bool propagate)
+{
+	font=fnt;
+	dirty=true;
+
+	//check if we change the font of all children
+	if(propagate)
+	{
+		for(int a=0;a<children.size();a++)
+			children[a]->set_font(fnt,true);
+	}
+}
+
+
+
+//***** SET COLOR
+void Element::set_color(Color& col,const Color& newcol)
+{
+	col=Color(newcol);
+	dirty=true;
+}
+
+
+
+//***** SET COLORS ENABLED
+void Element::set_colors_enabled(const Color& c_light,const Color& c_medium,const Color& c_dark,const Color& c_text,const Color& c_editing,const Color& c_selection,const Color& c_extra,bool propagate)
+{
+	color->light=c_light;
+	color->medium=c_medium;
+	color->dark=c_dark;
+	color->text=c_text;
+	color->editing=c_editing;
+	color->selection=c_selection;
+	color->extra=c_extra;
+
+	dirty=true;
+	
+	//check if we change the colors of all children
+	if(propagate)
+	{
+		for(int a=0;a<children.size();a++)
+			children[a]->set_colors_enabled(Color(c_light),Color(c_medium),Color(c_dark),Color(c_text),Color(c_editing),Color(c_selection),Color(c_extra),true);
+	}
+}
+
+
+
+//***** SET COLORS DISABLED
+void Element::set_colors_disabled(const Color& c_light,const Color& c_medium,const Color& c_dark,const Color& c_text,const Color& c_editing,const Color& c_selection,const Color& c_extra,bool propagate)
+{
+	color->d_light=c_light;
+	color->d_medium=c_medium;
+	color->d_dark=c_dark;
+	color->d_text=c_text;
+	color->d_editing=c_editing;
+	color->d_selection=c_selection;
+	color->d_extra=c_extra;
+	
+	dirty=true;
+	
+	//check if we change the colors of all children
+	if(propagate)
+	{
+		for(int a=0;a<children.size();a++)
+			children[a]->set_colors_disabled(Color(c_light),Color(c_medium),Color(c_dark),Color(c_text),Color(c_editing),Color(c_selection),Color(c_extra),true);
+	}
+}
+
+
+
+//***** SET THEME COLORS
+void Element::set_theme_colors(bool propagate)
+{
+	color->light=Color(Theme::color->light);
+	color->medium=Color(Theme::color->medium);
+	color->dark=Color(Theme::color->dark);
+	color->text=Color(Theme::color->text);
+	color->editing=Color(Theme::color->editing);
+	color->selection=Color(Theme::color->selection);
+	color->extra=Color(Theme::color->extra);
+
+	color->d_light=Color(Theme::color->d_light);
+	color->d_medium=Color(Theme::color->d_medium);
+	color->d_dark=Color(Theme::color->d_dark);
+	color->d_text=Color(Theme::color->d_text);
+	color->d_editing=Color(Theme::color->d_editing);
+	color->d_selection=Color(Theme::color->d_selection);
+	color->d_extra=Color(Theme::color->d_extra);
+
+	dirty=true;
+
+	//check if we change the colors of all children
+	if(propagate)
+	{
+		for(int a=0;a<children.size();a++)
+			children[a]->set_theme_colors(true);
+	}
+}
+
+
+
 //***** RESIZE
 void Element::resize(int width,int height)
 {
@@ -277,7 +425,7 @@ void Element::resize(int width,int height)
 	}
 
 	//redraw texture
-	draw();
+	dirty=true;
 }
 
 
@@ -314,7 +462,7 @@ void Element::send_to_back()
 void Element::set_enabled(bool enbl)
 {
 	enabled=enbl;
-	draw();
+	dirty=true;
 }
 
 
@@ -459,7 +607,7 @@ void Element::send_event(Element* sndr,const Str& cmd)
 	if(parent && forward_event_to_parent)
 	{
 		#ifdef DBG
-			Log::debug("New event sent from '%s' of type '%s' forwarded to parent '%s'",name.ptr(),cmd.ptr(),parent->name.ptr());
+//			Log::debug("New event sent from '%s' of type '%s' forwarded to parent '%s'",name.ptr(),cmd.ptr(),parent->name.ptr());
 		#endif
 
 		parent->on_event(ev);
@@ -470,10 +618,10 @@ void Element::send_event(Element* sndr,const Str& cmd)
 	{
 		
 		#ifdef DBG
-			if(forward_event_to_parent)
-				Log::debug("New global event sent from '%s' of type '%s' forwarded from '%s'",ev->sender->name.ptr(),cmd.ptr(),name.ptr());
-			else
-				Log::debug("New global event sent from '%s' of type '%s'",ev->sender->name.ptr(),cmd.ptr());
+//			if(forward_event_to_parent)
+//				Log::debug("New global event sent from '%s' of type '%s' forwarded from '%s'",ev->sender->name.ptr(),cmd.ptr(),name.ptr());
+//			else
+//				Log::debug("New global event sent from '%s' of type '%s'",ev->sender->name.ptr(),cmd.ptr());
 		#endif
 
 		ElfGui5::events.add(ev);
@@ -543,6 +691,13 @@ void Element::display()
 {
 	if(visible)
 	{
+		//check if element is dirty
+		if(dirty)
+		{
+			draw();
+			dirty=false;
+		}
+			
 		//display self
 		int tx=get_true_x();
 		int ty=get_true_y();

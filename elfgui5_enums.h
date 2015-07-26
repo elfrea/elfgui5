@@ -13,7 +13,14 @@ namespace Align
 
 
 
-
+//GROUPBOX APPEARANCE
+namespace GroupboxAppearance
+{
+	enum Type
+	{
+		Plain,Single,Double,Triple,Panel3D,Panel,InvertedPanel
+	};
+}
 
 
 

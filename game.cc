@@ -19,6 +19,8 @@ eButton* but1;
 eButton* but2;
 eCheckbox* check1;
 eCheckbox* check2;
+eLabel* label1;
+eGroupbox* group1;
 
 
 
@@ -37,7 +39,7 @@ void Game::init()
 	Display::set_mode(VideoMode::resizable(1366,768,false));
 	ElfGui5::init();
 
-	win1=new eWindow("window1",340,50,300,340,"Test Window");
+	win1=new eWindow("window1",340,50,300,440,"Test Window");
 	ElfGui5::base->add_child(win1);
 
 	but1=new eButton("button1",10,80,80,25,"Button");
@@ -60,9 +62,18 @@ void Game::init()
 	panel4->set_custom("gfx/test/test_panel.png",true,true);
 	win1->add_child(panel4);
 
+	group1=new eGroupbox("groupbox1",140,160,100,80,"Group");
+	group1->set_appearance(GroupboxAppearance::Panel3D);
+	win1->add_child(group1);
+
 	check1=new eCheckbox("checkbox1",10,120,100,20,"Checkbox",false);
 	check1->can_be_resized=true;
 	win1->add_child(check1);
+
+	label1=new eLabel("label1",10,320,200,25,"Test Label");
+	label1->can_be_resized=true;
+	label1->can_be_moved=true;
+	win1->add_child(label1);
 
 	panel=new ePanel("panel1",10,10,300,300);
 	panel->can_be_resized=true;
