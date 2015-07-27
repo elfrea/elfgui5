@@ -12,4 +12,6 @@ void draw_text_align(Texture* tex,Align::Type,int offx,int offy,Font *font,const
 
 void draw_texture_align(Texture* dest,Align::Type align,int offx,int offy,Texture* src,bool alpha=true);
 
-
+void draw_dotted_hline(Texture* tex,int x,int y,int w,const Color& col,int len=3,int spacing=3);
+void draw_dotted_vline(Texture* tex,int x,int y,int h,const Color& col,int len=3,int spacing=3);
+void draw_dotted_box(Texture* tex,int x,int y,int w,int h,const Color& col,int len=3,int spacing=3);

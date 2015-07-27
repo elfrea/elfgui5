@@ -11,16 +11,16 @@ Str Game::name;
 
 //temp variables
 eWindow* win1;
-ePanel* panel;
-ePanel* panel2;
-ePanel* panel3;
-ePanel* panel4;
+eRadiobutton* radio1;
+eRadiobutton* radio2;
+eRadiobutton* radio3;
+eRadiobutton* radio4;
 eButton* but1;
-eButton* but2;
 eCheckbox* check1;
-eCheckbox* check2;
-eLabel* label1;
-eGroupbox* group1;
+ePushbutton* push1;
+eRadiopush* rpush1;
+eRadiopush* rpush2;
+eRadiopush* rpush3;
 
 
 
@@ -42,62 +42,39 @@ void Game::init()
 	win1=new eWindow("window1",340,50,300,440,"Test Window");
 	ElfGui5::base->add_child(win1);
 
-	but1=new eButton("button1",10,80,80,25,"Button");
-	but1->can_be_resized=true;
+	radio1=new eRadiobutton("radio1",10,10,100,25,"Choice 1A","a",true);
+	win1->add_child(radio1);
+
+	radio2=new eRadiobutton("radio2",10,40,100,25,"Choice 2A","a");
+	win1->add_child(radio2);
+
+	radio3=new eRadiobutton("radio3",10,70,100,25,"Choice 1B","b",true);
+	radio3->set_custom("gfx/test/test_radiobutton_box.png","gfx/test/test_radiobutton_mark.png");
+	win1->add_child(radio3);
+
+	radio4=new eRadiobutton("radio4",10,100,100,25,"Choice 2B","b");
+	radio4->set_custom("gfx/test/test_radiobutton_box.png","gfx/test/test_radiobutton_mark.png");
+	win1->add_child(radio4);
+
+	but1=new eButton("button1",10,140,150,30,"Test");
+	but1->shrink();
 	win1->add_child(but1);
 
-	but2=new eButton("button2",120,80,10,10,"Custom");
-	but2->set_custom("gfx/test/test_but.png","gfx/test/test_but_pushed.png","gfx/test/test_but_hover.png",true,true);
-	win1->add_child(but2);
-
-	check2=new eCheckbox("checkbox2",140,120,100,20,"Patate Poilue",false);
-	check2->set_custom("gfx/test/test_checkbox_box.png","gfx/test/test_checkbox_mark.png");
-	win1->add_child(check2);
-
-	panel4=new ePanel("panel4",10,160,10,10);
-	panel4->set_text("PANEL",Align::Middle);
-	panel4->can_be_moved=true;
-	panel4->mouse_down_bring_to_front=true;
-	panel4->set_move_area_autosize(true,true);
-	panel4->set_custom("gfx/test/test_panel.png",true,true);
-	win1->add_child(panel4);
-
-	group1=new eGroupbox("groupbox1",140,160,100,80,"Group");
-	group1->set_appearance(GroupboxAppearance::Panel3D);
-	win1->add_child(group1);
-
-	check1=new eCheckbox("checkbox1",10,120,100,20,"Checkbox",false);
-	check1->can_be_resized=true;
+	check1=new eCheckbox("checkbox1",10,180,10,10,"Check it!");
 	win1->add_child(check1);
 
-	label1=new eLabel("label1",10,320,200,10,"Test Label, you can try and resize it and the text will be juunified!",false,true);
-	label1->can_be_resized=true;
-	label1->set_move_area_autosize(true,true);
-	label1->can_be_moved=true;
-	win1->add_child(label1);
+	push1=new ePushbutton("pushbutton1",10,210,100,30,"PUSH");
+	push1->set_custom("gfx/test/test_but.png","gfx/test/test_but_pushed.png","gfx/test/test_but_hover.png");
+	win1->add_child(push1);
 
-	panel=new ePanel("panel1",10,10,300,300);
-	panel->can_be_resized=true;
-	panel->set_custom_cursor("gfx/elements/cursor_edit.png",2,7);
-	panel->set_text("Testing Two es wo",Align::Left);
-	ElfGui5::base->add_child(panel);
+	rpush1=new eRadiopush("radiopush1",10,250,70,50,"RPUSH1");
+	win1->add_child(rpush1);
 
-	panel2=new ePanel("panel2",10,30,80,11);
-	panel2->can_be_moved=true;
-	panel2->set_move_area(0,0,80,20);
-	panel2->set_move_area_autosize(true,false);
-	panel2->can_be_resized=true;
-	panel2->mouse_down_bring_to_front=true;
-	panel->add_child(panel2);
+	rpush2=new eRadiopush("radiopush2",100,250,70,50,"RPUSH2");
+	win1->add_child(rpush2);
 
-	panel3=new ePanel("panel3",10,10,50,50,true);
-	panel3->set_move_area_autosize(true,true);
-	panel3->can_be_moved=true;
-	panel3->can_be_resized=true;
-	panel3->mouse_down_bring_to_front=true;
-	panel3->set_tex("gfx/cursor_move.png",Align::Middle);
-	panel3->forward_event_to_parent=false;
-	win1->add_child(panel3);
+	rpush3=new eRadiopush("radiopush3",190,250,70,50,"RPUSH3");
+	win1->add_child(rpush3);
 
 
 	#ifdef DBG

@@ -15,6 +15,7 @@ eBase* ElfGui5::base;
 int64_t ElfGui5::doubleclick_timer;
 int64_t ElfGui5::doubleclick_delay;
 
+Element* ElfGui5::last_selected;
 Element* ElfGui5::element_under_mouse;
 int ElfGui5::mouse_is_down;
 int ElfGui5::last_mouse_click_but;
@@ -66,6 +67,7 @@ void ElfGui5::init()
 	doubleclick_delay=250;
 
 	//internal vars
+	last_selected=NULL;
 	element_under_mouse=NULL;
 	mouse_is_down=0;
 	last_mouse_click_but=0;
@@ -135,7 +137,7 @@ void ElfGui5::draw()
 	//draw image under the mouse if currently mouse dragging
 	if(current_dragpacket)
 	{
-		Mouse m=Input::get_mouse();
+		Mouse& m=Input::get_mouse();
 		texture_renderer.add(current_dragpacket->icon,m.x+current_dragpacket->offset_x,m.y+current_dragpacket->offset_y);
 	}
 
@@ -207,8 +209,15 @@ void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 		if(eum->mouse_down_bring_to_front)
 			eum->bring_to_front();
 			
+		//unselect last element
+		if(ElfGui5::current_element && ElfGui5::last_selected && ElfGui5::last_selected!=eum && eum->selectable)
+			ElfGui5::last_selected->set_selected(false);
+
 		//set current active element
 		ElfGui5::current_element=eum;
+
+		if(eum->selectable)
+			eum->set_selected(true);
 
 		//check if element can be resized
 		if(eum->can_be_resized && mx>=eum->w-ElfGui5::resize_gizmo->width() && my>=eum->h-ElfGui5::resize_gizmo->height() && but==1)
@@ -326,16 +335,15 @@ void MyEventHandler::on_mouse_wheel_up(Mouse& mouse)
 //***** ON MOUSE MOVE
 void MyEventHandler::on_mouse_move(Mouse& mouse)
 {
-	Mouse m=Input::get_mouse();
 	Element* eum=ElfGui5::base->find_element_under_mouse();
 
 	//set appropriate mouse cursor
 	//resize cursor
-	if(ElfGui5::current_element_is_resizing || (eum->enabled && eum->can_be_resized && m.x-eum->get_true_x()>=eum->w-ElfGui5::resize_gizmo->width() && m.y-eum->get_true_y()>=eum->h-ElfGui5::resize_gizmo->height()))
+	if(ElfGui5::current_element_is_resizing || (eum->enabled && eum->can_be_resized && mouse.x-eum->get_true_x()>=eum->w-ElfGui5::resize_gizmo->width() && mouse.y-eum->get_true_y()>=eum->h-ElfGui5::resize_gizmo->height()))
 		ElfGui5::set_mouse_cursor("resize");
 
 	//move cursor
-	else if(ElfGui5::current_element_is_moving || (eum->enabled && eum->can_be_moved && eum->move_area.contains(m.x-eum->get_true_x(),m.y-eum->get_true_y())))
+	else if(ElfGui5::current_element_is_moving || (eum->enabled && eum->can_be_moved && eum->move_area.contains(mouse.x-eum->get_true_x(),mouse.y-eum->get_true_y())))
 		ElfGui5::set_mouse_cursor("move");
 
 	//custom cursor
@@ -422,8 +430,8 @@ void MyEventHandler::on_mouse_move(Mouse& mouse)
 	else if(ElfGui5::current_element_is_moving)
 	{
 		Element* ele=ElfGui5::current_element;
-		int px=m.x-ElfGui5::moving_offx;
-		int py=m.y-ElfGui5::moving_offy;
+		int px=mouse.x-ElfGui5::moving_offx;
+		int py=mouse.y-ElfGui5::moving_offy;
 
 		//adjust coords if element has a parent
 		if(ElfGui5::current_element->parent)
@@ -464,7 +472,7 @@ void MyEventHandler::on_mouse_move(Mouse& mouse)
 				ElfGui5::element_under_mouse->on_mouse_leave();
 
 				//check for mouse dragging
-				if(ElfGui5::element_under_mouse->can_be_dragged && m.left() && ElfGui5::current_dragpacket==NULL)
+				if(ElfGui5::element_under_mouse->can_be_dragged && mouse.left() && ElfGui5::current_dragpacket==NULL)
 					ElfGui5::element_under_mouse->on_mouse_drag_out();
 			}
 
@@ -487,13 +495,75 @@ void MyEventHandler::on_mouse_move(Mouse& mouse)
 //***** ON KEY DOWN
 void MyEventHandler::on_key_down(Key& key)
 {
-	Element* ele=ElfGui5::current_element;
+	Element* ele=ElfGui5::last_selected;
 	if(ele==NULL)
 		return;
 
 	//check if we need to send keyboard events to parent
 	while(ele)
 	{
+		//catch TAB key
+		if(key.code==KEY_TAB)
+		{
+			
+			//switch selected element
+			Element* e=ElfGui5::last_selected;
+			if(e && e->parent)
+			{
+				bool backward=Input::get_keyboard().shift();
+				Element* first=e;
+				Element* next=e;
+
+				//calculate next and first
+				for(int a=0;a<e->parent->children.size();a++)
+				{
+					Element* child=e->parent->children[a];
+
+					if(child->selectable)
+					{
+						//forward
+						if(backward==false)
+						{
+							//set first
+							if(child->tab_index<first->tab_index)
+								first=child;
+
+							//set next
+							if(child->tab_index>e->tab_index)
+							{
+								if((next->tab_index==e->tab_index && child->tab_index>next->tab_index) || child->tab_index<next->tab_index)
+									next=child;
+							}
+						}
+
+						//backward
+						else
+						{
+							//set first
+							if(child->tab_index>first->tab_index)
+								first=child;
+
+							//set next
+							if(child->tab_index<e->tab_index)
+							{
+								if((next->tab_index==e->tab_index && child->tab_index<next->tab_index) || child->tab_index>next->tab_index)
+									next=child;
+							}
+						}
+					}
+				}
+				
+				//set next selected element
+				if((backward==false && next->tab_index>e->tab_index) || (backward && next->tab_index<e->tab_index))
+					next->set_selected(true);
+				else
+					first->set_selected(true);
+
+			}
+
+		}
+
+		//send event
 		if(ele->enabled && ele->send_keyboard_events_to_parent==false)
 		{
 			//send on_key_down
@@ -511,7 +581,7 @@ void MyEventHandler::on_key_down(Key& key)
 //***** ON KEY UP
 void MyEventHandler::on_key_up(Key& key)
 {
-	Element* ele=ElfGui5::current_element;
+	Element* ele=ElfGui5::last_selected;
 	if(ele==NULL)
 		return;
 
@@ -535,7 +605,7 @@ void MyEventHandler::on_key_up(Key& key)
 //***** ON TEXT
 void MyEventHandler::on_text(const Str& text)
 {
-	Element* ele=ElfGui5::current_element;
+	Element* ele=ElfGui5::last_selected;
 	if(ele==NULL)
 		return;
 

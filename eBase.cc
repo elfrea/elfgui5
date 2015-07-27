@@ -10,6 +10,7 @@ eBase::eBase(const Str& ename,int ex,int ey,int ew,int eh):Element(ename,ex,ey,e
 	type="base";
 	
 	//own config vars
+	selectable=false;
 	
 	//own internal config vars (use config functions to modify)
 	use_bgcolor=true;

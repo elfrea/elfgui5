@@ -5,32 +5,6 @@
 
 
 
-/*
-class Label
-{
-   TextFormat _tf;
-
-public:
-
-   void set(const TextFormat &tf)
-   {
-      _tf = tf;
-      draw();
-   }
-
-   void set(const Str&s, TextAlign::Type align = TextAlign::Center, VertTextAlign::Type valign = VertTextAlign::Middle)
-   {
-      TextFormat tf;
-      tf.set_align(align);
-      tf.set_valign(valign);
-      tf.add_text(s);
-
-      set(tf);
-   }
-};
-
-*/
-
 class eLabel:public Element
 {
 public:

@@ -18,6 +18,7 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	move_area_auto_width=true;
 	
 	//own config vars
+	selectable=false;
 
 	//own internal config vars (use config functions to modify)
 

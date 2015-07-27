@@ -4,20 +4,21 @@
 
 
 //constructor
-eCheckbox::eCheckbox(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt,bool echecked,bool autosize):Element(ename,ex,ey,ew,eh)
+eRadiobutton::eRadiobutton(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt,const Str& grp,bool echecked,bool autosize):Element(ename,ex,ey,ew,eh)
 {
-	#define DEFAULT_CHECK_SIZE 13
-	#define DEFAULT_CHECK_OFFSET 3
+	#define DEFAULT_CHECK_SIZE 17
+	#define DEFAULT_CHECK_RADIUS 3
 
 	//parent class vars
-	type="checkbox";
+	type="radiobutton";
 	
 	//own config vars
 	
 	//own internal config vars (use config functions to modify)
+	group=grp;
 	checked=echecked;
 	check_size=DEFAULT_CHECK_SIZE;
-	check_offset=DEFAULT_CHECK_OFFSET;
+	check_radius=DEFAULT_CHECK_RADIUS;
 	show_text=true;
 	show_tex=false;
 
@@ -45,7 +46,7 @@ eCheckbox::eCheckbox(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt
 
 
 //destructor
-eCheckbox::~eCheckbox()
+eRadiobutton::~eRadiobutton()
 {
 }
 
@@ -62,9 +63,9 @@ eCheckbox::~eCheckbox()
 
 
 //***** LOOP
-void eCheckbox::loop()
+void eRadiobutton::loop()
 {
-	Mouse m=Input::get_mouse();
+	Mouse& m=Input::get_mouse();
 	Keyboard& kbd=Input::get_keyboard();
 
 	if(ready_to_check && m.button(1)==false && kbd.is_down(KEY_SPACE)==false)
@@ -74,7 +75,7 @@ void eCheckbox::loop()
 
 
 //***** DRAW
-void eCheckbox::draw()
+void eRadiobutton::draw()
 {
 
 	//check box
@@ -85,7 +86,9 @@ void eCheckbox::draw()
 	}
 	else
 	{
-		draw_edit_panel(image,color,enabled,0,(h-check_size)/2,check_size,check_size);
+		image->clear(Color(0,0,0,0));
+		image->circle_fill(check_size/2,(check_size/2)+(h-check_size)/2,check_size/2,color->editing);
+		image->circle(check_size/2,(check_size/2)+(h-check_size)/2,check_size/2,color->dark);
 	}
 
 	//check mark
@@ -101,15 +104,9 @@ void eCheckbox::draw()
 		if(checked)
 		{
 			if(enabled)
-			{
-				image->line(check_offset,(h-check_size)/2+check_offset,check_size-check_offset,(h-check_size)/2+check_size-check_offset,color->text);
-				image->line(check_offset,(h-check_size)/2+check_size-check_offset,check_size-check_offset,(h-check_size)/2+check_offset,color->text);
-			}
+				image->circle_fill(check_size/2,(check_size/2)+(h-check_size)/2,check_radius,color->text);
 			else
-			{
-				image->line(check_offset,(h-check_size)/2+check_offset,check_size-check_offset,(h-check_size)/2+check_size-check_offset,color->d_text);
-				image->line(check_offset,(h-check_size)/2+check_size-check_offset,check_size-check_offset,(h-check_size)/2+check_offset,color->d_text);
-			}
+				image->circle_fill(check_size/2,(check_size/2)+(h-check_size)/2,check_radius,color->d_text);
 		}
 	}
 	
@@ -145,18 +142,18 @@ void eCheckbox::draw()
 //****************************************************************
 
 
-//void eCheckbox::on_event(Event* ev){}
+//void eRadiobutton::on_event(Event* ev){}
 
 
 
-void eCheckbox::on_mouse_enter(int mx,int my){}
-void eCheckbox::on_mouse_leave(){}
-void eCheckbox::on_mouse_move(int mx,int my){}
+void eRadiobutton::on_mouse_enter(int mx,int my){}
+void eRadiobutton::on_mouse_leave(){}
+void eRadiobutton::on_mouse_move(int mx,int my){}
 
 
 
 //***** ON MOUSE DOWN
-void eCheckbox::on_mouse_down(int but,int mx,int my)
+void eRadiobutton::on_mouse_down(int but,int mx,int my)
 {
 	ready_to_check=true;
 }
@@ -164,27 +161,27 @@ void eCheckbox::on_mouse_down(int but,int mx,int my)
 
 
 //***** ON MOUSE UP
-void eCheckbox::on_mouse_up(int but,int mx,int my)
+void eRadiobutton::on_mouse_up(int but,int mx,int my)
 {
 	if(but==1 && ready_to_check)
-		set_checked(!checked);
+		set_checked();
 
 	ready_to_check=false;
 }
 
 
 
-//void eCheckbox::on_mouse_click(int but,int mx,int my){}
-//void eCheckbox::on_mouse_doubleclick(int but,int mx,int my){}
-//void eCheckbox::on_mouse_wheel_down(int mx,int my){}
-//void eCheckbox::on_mouse_wheel_up(int mx,int my){}
-void eCheckbox::on_mouse_drag_out(){}
-void eCheckbox::on_mouse_drag_in(DragPacket* dragpacket){}
+//void eRadiobutton::on_mouse_click(int but,int mx,int my){}
+//void eRadiobutton::on_mouse_doubleclick(int but,int mx,int my){}
+//void eRadiobutton::on_mouse_wheel_down(int mx,int my){}
+//void eRadiobutton::on_mouse_wheel_up(int mx,int my){}
+void eRadiobutton::on_mouse_drag_out(){}
+void eRadiobutton::on_mouse_drag_in(DragPacket* dragpacket){}
 
 
 
 //***** ON KEY DOWN
-void eCheckbox::on_key_down(Key& key)
+void eRadiobutton::on_key_down(Key& key)
 {
 	if(key.code==KEY_SPACE)
 		ready_to_check=true;
@@ -193,20 +190,20 @@ void eCheckbox::on_key_down(Key& key)
 
 
 //***** ON KEY UP
-void eCheckbox::on_key_up(Key& key)
+void eRadiobutton::on_key_up(Key& key)
 {
 	if(key.code==KEY_SPACE && ready_to_check)
 	{
-		set_checked(!checked);
+		set_checked();
 		ready_to_check=false;
 	}
 }
 
 
 
-void eCheckbox::on_text(const Str& text){}
-void eCheckbox::on_resize(int width,int height){}
-void eCheckbox::on_parent_resize(){}
+void eRadiobutton::on_text(const Str& text){}
+void eRadiobutton::on_resize(int width,int height){}
+void eRadiobutton::on_parent_resize(){}
 
 
 
@@ -221,7 +218,7 @@ void eCheckbox::on_parent_resize(){}
 
 
 //***** SHRINK
-void eCheckbox::shrink()
+void eRadiobutton::shrink()
 {
 	//set width
 	int tw=check_size+(show_text?text_offx+font->len(text):0);
@@ -241,13 +238,13 @@ void eCheckbox::shrink()
 
 
 //***** SET TEXT
-void eCheckbox::set_text(const Str& txt,Align::Type align,int offx,int offy,bool autosize)
+void eRadiobutton::set_text(const Str& txt,Align::Type align,int offx,int offy,bool autosize)
 {
 	text=txt;
 	text_align=align;
 	text_offx=offx;
 	text_offy=offy;
-
+	
 	if(autosize)
 		shrink();
 	
@@ -258,7 +255,7 @@ void eCheckbox::set_text(const Str& txt,Align::Type align,int offx,int offy,bool
 
 
 //***** SET TEX
-void eCheckbox::set_tex(Texture* src,Align::Type align,int offx,int offy,bool autosize)
+void eRadiobutton::set_tex(Texture* src,Align::Type align,int offx,int offy,bool autosize)
 {
 	tex=src;
 	tex_align=align;
@@ -274,7 +271,7 @@ void eCheckbox::set_tex(Texture* src,Align::Type align,int offx,int offy,bool au
 
 
 //***** SET TEX
-void eCheckbox::set_tex(const Str& filename,Align::Type align,int offx,int offy,bool autosize)
+void eRadiobutton::set_tex(const Str& filename,Align::Type align,int offx,int offy,bool autosize)
 {
 	Texture* t=Cache::texture(filename);
 	set_tex(t,align,offx,offy);
@@ -287,7 +284,7 @@ void eCheckbox::set_tex(const Str& filename,Align::Type align,int offx,int offy,
 
 
 //***** SHOW TEXT
-void eCheckbox::set_show_text(bool show)
+void eRadiobutton::set_show_text(bool show)
 {
 	show_text=show;
 	dirty=true;
@@ -296,7 +293,7 @@ void eCheckbox::set_show_text(bool show)
 
 
 //***** SHOW TEX
-void eCheckbox::set_show_tex(bool show)
+void eRadiobutton::set_show_tex(bool show)
 {
 	show_tex=show;
 	dirty=true;
@@ -304,18 +301,43 @@ void eCheckbox::set_show_tex(bool show)
 
 
 
-//***** SET CHECKED
-void eCheckbox::set_checked(bool check)
+//***** SET GROUP
+void eRadiobutton::set_group(const Str& grp)
 {
-	checked=check;
-	send_event("trigger");
+	group=grp;
+	dirty=true;
+}
+
+
+
+//***** SET CHECKED
+void eRadiobutton::set_checked()
+{
+	//tell other radiobuttons of the same parent and group to uncheck
+	if(parent && !checked)
+	{
+		for(int a=0;a<parent->children.size();a++)
+		{
+			Element* ele=parent->children[a];
+
+			if(ele->type==type && ((eRadiobutton*)ele)->group==group)
+			{
+				((eRadiobutton*)ele)->checked=false;
+				ele->dirty=true;
+			}
+		}
+	
+		send_event("trigger");
+	}
+	
+	checked=true;
 	dirty=true;
 }
 
 
 
 //***** SET CHECK SIZE
-void eCheckbox::set_check_size(int size,bool autosize)
+void eRadiobutton::set_check_size(int size,bool autosize)
 {
 	check_size=size;
 	if(autosize)
@@ -327,16 +349,16 @@ void eCheckbox::set_check_size(int size,bool autosize)
 
 
 //***** SET CHECK OFFSET
-void eCheckbox::set_check_offset(int off)
+void eRadiobutton::set_check_radius(int off)
 {
-	check_offset=off;
+	check_radius=off;
 	dirty=true;
 }
 
 
 
 //***** SET CUSTOM
-void eCheckbox::set_custom(Texture* box,Texture* mark,bool autosize,bool sh_text)
+void eRadiobutton::set_custom(Texture* box,Texture* mark,bool autosize,bool sh_text)
 {
 	custom_box=box;
 	custom_mark=mark;
@@ -347,7 +369,6 @@ void eCheckbox::set_custom(Texture* box,Texture* mark,bool autosize,bool sh_text
 	if(box)
 		check_size=box->width();
 
-	
 	//check if we need to resize the checkbox
 	if(autosize)
 		shrink();
@@ -358,7 +379,7 @@ void eCheckbox::set_custom(Texture* box,Texture* mark,bool autosize,bool sh_text
 
 
 //***** SET CUSTOM
-void eCheckbox::set_custom(const Str& box,const Str& mark,bool autosize,bool sh_text)
+void eRadiobutton::set_custom(const Str& box,const Str& mark,bool autosize,bool sh_text)
 {
 	set_custom(Cache::texture(box),Cache::texture(mark),autosize,sh_text);
 }
@@ -373,6 +394,7 @@ void eCheckbox::set_custom(const Str& box,const Str& mark,bool autosize,bool sh_
 //****************************************************************
 //OWN INTERNAL FUNCTIONS
 //****************************************************************
+
 
 
 

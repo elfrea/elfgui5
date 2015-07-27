@@ -18,6 +18,7 @@ public:
 	Font* font;
 	int x,y;
 	bool visible;
+	bool selectable;
 	bool mouse_down_bring_to_front;
 	bool can_be_dragged;
 	bool can_be_moved;
@@ -32,6 +33,8 @@ public:
 	bool use_custom_cursor;
 	bool use_anchor;
 
+	int tab_index;
+
 
 	//internal config vars (use config functions to modify)
 	Colors* color;
@@ -39,6 +42,7 @@ public:
 	int w,h;
 	int min_w,max_w;
 	int min_h,max_h;
+	bool selected;
 	Rect move_area;
 	Anchor* anchor;
 	bool move_area_auto_width;
@@ -91,6 +95,7 @@ public:
 	virtual void remove_child(Element* child);
 
 	//config functions
+	void set_selected(bool select);
 	void set_font(Font* fnt,bool propagate=false);
 	void set_color(Color& col,const Color& newcol);
 	void set_colors_enabled(const Color& c_light,const Color& c_medium,const Color& c_dark,const Color& c_text,const Color& c_editing,const Color& c_selection,const Color& c_extra,bool propagate=false);
@@ -111,6 +116,7 @@ public:
 	void send_event(Event* ev);
 	void send_event(const Str& cmd);
 	void set_anchor(bool t,bool b,bool l,bool r,bool use=true);
+	void set_anchor(bool t,int ty,bool b,int by,bool l,int lx,bool r,int rx,bool use=true);
 
 	//internal functions
 	void loops();

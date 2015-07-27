@@ -10,6 +10,7 @@ eLabel::eLabel(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt,bool 
 	type="label";
 	
 	//own config vars
+	selectable=false;
 	
 	//own internal config vars (use config functions to modify)
 
@@ -136,7 +137,6 @@ void eLabel::set_text_format(TextFormat& tf,bool autowidth,bool autoheight)
 	text_format.calc(autowidth?0:w);
 	
 	//resize element if necessary
-Log::log("%i",text_format.get_height());
 	resize(autowidth?text_format.get_width():w,50);//autoheight?text_format.get_height():h);
 
 	dirty=true;

@@ -4,14 +4,16 @@
 
 
 //constructor
-eButton::eButton(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt):Element(ename,ex,ey,ew,eh)
+eRadiopush::eRadiopush(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt,const Str& grp,bool epushed):Element(ename,ex,ey,ew,eh)
 {
 	//parent class vars
-	type="button";
+	type="radiopush";
 	
 	//own config vars
-
+	
 	//own internal config vars (use config functions to modify)
+	group=grp;
+	pushed=epushed;
 	customized=false;
 	show_text=true;
 	show_tex=false;
@@ -31,9 +33,8 @@ eButton::eButton(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt):El
 	custom_layout_hover=NULL;
 
 	//own internal vars
-	pushed=false;
-	pushed_and_left=false;
 	custom_img=NULL;
+	ready_to_push=true;
 	
 	//own elements
 
@@ -45,7 +46,7 @@ eButton::eButton(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt):El
 
 
 //destructor
-eButton::~eButton()
+eRadiopush::~eRadiopush()
 {
 }
 
@@ -62,19 +63,14 @@ eButton::~eButton()
 
 
 //***** LOOP
-void eButton::loop()
+void eRadiopush::loop()
 {
 	Mouse& m=Input::get_mouse();
+	Keyboard& kbd=Input::get_keyboard();
 
-	if(pushed_and_left && m.button(1)==false)
-		pushed_and_left=false;
+	if(ready_to_push && m.button(1)==false && kbd.is_down(KEY_SPACE)==false)
+		ready_to_push=false;
 	
-	if(pushed && ElfGui5::last_selected!=this)
-	{
-		pushed=false;
-		dirty=1;
-	}
-
 	//set custom img
 	if(customized)
 	{
@@ -110,10 +106,9 @@ void eButton::loop()
 
 
 //***** DRAW
-void eButton::draw()
+void eRadiopush::draw()
 {
-	
-	//draw button
+	//draw pushbutton
 	if(customized)
 	{
 		image->clear(Color(0,0,0,0));
@@ -153,111 +148,66 @@ void eButton::draw()
 //****************************************************************
 
 
-//void eButton::on_event(Event* ev){}
-
-
-
-//***** ON MOUSE ENTER
-void eButton::on_mouse_enter(int mx,int my)
-{
-	Mouse& m=Input::get_mouse();
-
-	if(pushed_and_left && m.button(1))
-	{
-		pushed=true;
-		dirty=true;
-	}
-
-	pushed_and_left=false;
-}
-
-
-
-//***** ON MOUSE LEAVE
-void eButton::on_mouse_leave()
-{
-	Keyboard& kbd=Input::get_keyboard();
-
-	if(pushed && kbd.is_down(KEY_SPACE)==false)
-	{
-		pushed_and_left=true;
-		pushed=false;
-		dirty=true;
-	}
-}
-
-
-
-void eButton::on_mouse_move(int mx,int my){}
+//void eRadiopush::on_event(Event* ev){}
+void eRadiopush::on_mouse_enter(int mx,int my){}
+void eRadiopush::on_mouse_leave(){}
+void eRadiopush::on_mouse_move(int mx,int my){}
 
 
 
 //***** ON MOUSE DOWN
-void eButton::on_mouse_down(int but,int mx,int my)
+void eRadiopush::on_mouse_down(int but,int mx,int my)
 {
 	if(but==1)
-	{
-		pushed=true;
-		dirty=true;
-	}
+		ready_to_push=true;
 }
 
 
 
 //***** ON MOUSE UP
-void eButton::on_mouse_up(int but,int mx,int my)
+void eRadiopush::on_mouse_up(int but,int mx,int my)
 {
-	Keyboard& kbd=Input::get_keyboard();
-
-	if(but==1 && kbd.is_down(KEY_SPACE)==false)
-	{
-		if(pushed)
-			send_event("trigger");
-
-		pushed=false;
-		dirty=true;
-	}
+	if(but==1 && ready_to_push)
+		set_pushed(!pushed);
+		
+	ready_to_push=false;
 }
 
 
 
-//void eButton::on_mouse_click(int but,int mx,int my){}
-//void eButton::on_mouse_doubleclick(int but,int mx,int my){}
-//void eButton::on_mouse_wheel_down(int mx,int my){}
-//void eButton::on_mouse_wheel_up(int mx,int my){}
-void eButton::on_mouse_drag_out(){}
-void eButton::on_mouse_drag_in(DragPacket* dragpacket){}
+//void eRadiopush::on_mouse_click(int but,int mx,int my){}
+//void eRadiopush::on_mouse_doubleclick(int but,int mx,int my){}
+//void eRadiopush::on_mouse_wheel_down(int mx,int my){}
+//void eRadiopush::on_mouse_wheel_up(int mx,int my){}
+void eRadiopush::on_mouse_drag_out(){}
+void eRadiopush::on_mouse_drag_in(DragPacket* dragpacket){}
 
 
 
 //***** ON KEY DOWN
-void eButton::on_key_down(Key& key)
+void eRadiopush::on_key_down(Key& key)
 {
 	if(key.code==KEY_SPACE)
-	{
-		pushed=true;
-		dirty=true;
-	}
+		ready_to_push=true;
 }
 
 
 
 //***** ON KEY UP
-void eButton::on_key_up(Key& key)
+void eRadiopush::on_key_up(Key& key)
 {
-	if(key.code==KEY_SPACE)
+	if(key.code==KEY_SPACE && ready_to_push)
 	{
-		pushed=false;
-		send_event("trigger");
-		dirty=true;
+		set_pushed(!pushed);
+		ready_to_push=false;
 	}
 }
 
 
 
-void eButton::on_text(const Str& text){}
-void eButton::on_resize(int width,int height){}
-void eButton::on_parent_resize(){}
+void eRadiopush::on_text(const Str& text){}
+void eRadiopush::on_resize(int width,int height){}
+void eRadiopush::on_parent_resize(){}
 
 
 
@@ -271,8 +221,34 @@ void eButton::on_parent_resize(){}
 //****************************************************************
 
 
+//***** SET PUSHED
+void eRadiopush::set_pushed(bool push)
+{
+	//tell other radiopush of the same parent and group to uncheck
+	if(parent && !pushed)
+	{
+		for(int a=0;a<parent->children.size();a++)
+		{
+			Element* ele=parent->children[a];
+
+			if(ele->type==type && ((eRadiopush*)ele)->group==group)
+			{
+				((eRadiopush*)ele)->pushed=false;
+				ele->dirty=true;
+			}
+		}
+		
+		send_event("trigger");
+	}
+	
+	pushed=true;
+	dirty=true;
+}
+
+
+
 //***** SHRINK
-void eButton::shrink()
+void eRadiopush::shrink()
 {
 	int tw=font->len(text,true)+4;
 	int th=font->height()+4;
@@ -283,7 +259,7 @@ void eButton::shrink()
 
 
 //***** SET TEXT
-void eButton::set_text(const Str& txt,Align::Type align,int offx,int offy)
+void eRadiopush::set_text(const Str& txt,Align::Type align,int offx,int offy)
 {
 	text=txt;
 	text_align=align;
@@ -297,7 +273,7 @@ void eButton::set_text(const Str& txt,Align::Type align,int offx,int offy)
 
 
 //***** SET TEX
-void eButton::set_tex(Texture* src,Align::Type align,int offx,int offy)
+void eRadiopush::set_tex(Texture* src,Align::Type align,int offx,int offy)
 {
 	tex=src;
 	tex_align=align;
@@ -311,7 +287,7 @@ void eButton::set_tex(Texture* src,Align::Type align,int offx,int offy)
 
 
 //***** SET TEX
-void eButton::set_tex(const Str& filename,Align::Type align,int offx,int offy)
+void eRadiopush::set_tex(const Str& filename,Align::Type align,int offx,int offy)
 {
 	Texture* t=Cache::texture(filename);
 	set_tex(t,align,offx,offy);
@@ -320,7 +296,7 @@ void eButton::set_tex(const Str& filename,Align::Type align,int offx,int offy)
 
 
 //***** SHOW TEXT
-void eButton::set_show_text(bool show)
+void eRadiopush::set_show_text(bool show)
 {
 	show_text=show;
 	dirty=true;
@@ -329,7 +305,7 @@ void eButton::set_show_text(bool show)
 
 
 //***** SHOW TEX
-void eButton::set_show_tex(bool show)
+void eRadiopush::set_show_tex(bool show)
 {
 	show_tex=show;
 	dirty=true;
@@ -337,8 +313,17 @@ void eButton::set_show_tex(bool show)
 
 
 
+//***** SET GROUP
+void eRadiopush::set_group(const Str& grp)
+{
+	group=grp;
+	dirty=true;
+}
+
+
+
 //***** SET CUSTOMIZED
-void eButton::set_customized(bool custom)
+void eRadiopush::set_customized(bool custom)
 {
 	customized=custom;
 	dirty=true;
@@ -347,7 +332,7 @@ void eButton::set_customized(bool custom)
 
 
 //***** SET CUSTOM
-void eButton::set_custom(Texture* lay,Texture* lay_pushed,Texture* lay_hover,bool autosize,bool sh_text,bool sh_tex)
+void eRadiopush::set_custom(Texture* lay,Texture* lay_pushed,Texture* lay_hover,bool autosize,bool sh_text,bool sh_tex)
 {
 	custom_layout=lay;
 	custom_layout_pushed=lay_pushed;
@@ -369,7 +354,7 @@ void eButton::set_custom(Texture* lay,Texture* lay_pushed,Texture* lay_hover,boo
 
 
 //***** SET CUSTOM
-void eButton::set_custom(const Str& lay,const Str& lay_pushed,const Str& lay_hover,bool autosize,bool sh_text,bool sh_tex)
+void eRadiopush::set_custom(const Str& lay,const Str& lay_pushed,const Str& lay_hover,bool autosize,bool sh_text,bool sh_tex)
 {
 	set_custom(Cache::texture(lay),Cache::texture(lay_pushed),Cache::texture(lay_hover),autosize,sh_text,sh_tex);
 }

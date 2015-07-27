@@ -250,3 +250,84 @@ void draw_texture_align(Texture* dest,Align::Type align,int offx,int offy,Textur
 
 
 
+//DRAW DOTTED HLINE
+void draw_dotted_hline(Texture* tex,int x,int y,int w,const Color& col,int len,int spacing)
+{
+	int tw=tex->width();
+	int th=tex->height();
+
+	if(x>=0 && y>=0 && (x+w)<=tw && y<th)
+	{
+		bool draw=true;
+		int c=1;
+		for(int a=x;a<(x+w);a++)
+		{
+			if(draw)
+				tex->set_pixel_fast(a,y,col);
+
+			c++;
+			if(draw && c>len)
+			{
+				c=1;
+				draw=false;
+			}
+			else if(draw==false && c>spacing)
+			{
+				c=1;
+				draw=true;
+			}
+		}
+	}
+}
+
+
+
+//DRAW DOTTED VLINE
+void draw_dotted_vline(Texture* tex,int x,int y,int h,const Color& col,int len,int spacing)
+{
+	int tw=tex->width();
+	int th=tex->height();
+
+	if(x>=0 && y>=0 && x<tw && (y+h)<=th)
+	{
+		bool draw=true;
+		int c=1;
+		for(int a=y;a<(y+h);a++)
+		{
+			if(draw)
+				tex->set_pixel_fast(x,a,col);
+
+			c++;
+			if(draw && c>len)
+			{
+				c=1;
+				draw=false;
+			}
+			else if(draw==false && c>spacing)
+			{
+				c=1;
+				draw=true;
+			}
+		}
+	}
+}
+
+
+
+//DRAW DOTTED BOX
+void draw_dotted_box(Texture* tex,int x,int y,int w,int h,const Color& col,int len,int spacing)
+{
+	draw_dotted_hline(tex,x,y,w,col,len,spacing);
+	draw_dotted_hline(tex,x,y+h-1,w,col,len,spacing);
+
+	draw_dotted_vline(tex,x,y,h,col,len,spacing);
+	draw_dotted_vline(tex,x+w-1,y,h,col,len,spacing);
+}
+
+
+
+
+
+
+
+

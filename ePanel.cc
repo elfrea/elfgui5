@@ -10,6 +10,7 @@ ePanel::ePanel(const Str& ename,int ex,int ey,int ew,int eh,bool invert):Element
 	type="panel";
 	
 	//own config vars
+	selectable=false;
 	
 	//own internal config vars (use config functions to modify)
 	customized=false;

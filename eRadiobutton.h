@@ -4,16 +4,19 @@
 #include "elfgui5.h"
 
 
-class eButton:public Element
+class eRadiobutton:public Element
 {
 public:
 
 	//own config vars
 
 	//own internal config vars (use config functions to modify)
-	bool customized;
+	Str group;
+	int check_size;
+	int check_radius;
 	bool show_text;
 	bool show_tex;
+	bool checked;
 
 	Align::Type text_align;
 	int text_offx;
@@ -25,23 +28,19 @@ public:
 	int tex_offy;
 	Texture* tex;
 
-	Texture* custom_layout;
-	Texture* custom_layout_pushed;
-	Texture* custom_layout_hover;
-
 	//own internal vars
-	bool pushed;
-	bool pushed_and_left;
-	Texture* custom_img;
+	bool ready_to_check;
+	Texture* custom_box;
+	Texture* custom_mark;
 
 	//own elements
 
 
 
 	//constructor
-	eButton(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt);
+	eRadiobutton(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt,const Str& grp="default",bool echecked=false,bool autosize=true);
 	//destructor
-	~eButton();
+	~eRadiobutton();
 
 
 
@@ -49,7 +48,7 @@ public:
 	void loop();
 	void draw();
 
-	//event functions
+	//event functions	
 	//void on_event(Event* ev);
 	void on_mouse_enter(int mx,int my);
 	void on_mouse_leave();
@@ -70,20 +69,24 @@ public:
 
 	//own config functions
 	void shrink();
-	void set_text(const Str& txt,Align::Type align=Align::Middle,int offx=0,int offy=0);
-	void set_tex(Texture* src,Align::Type align=Align::Middle,int offx=0,int offy=0);
-	void set_tex(const Str& filename,Align::Type align=Align::Middle,int offx=0,int offy=0);
+	void set_text(const Str& txt,Align::Type align=Align::Left,int offx=4,int offy=0,bool autosize=true);
+	void set_tex(Texture* src,Align::Type align=Align::Left,int offx=4,int offy=0,bool autosize=true);
+	void set_tex(const Str& filename,Align::Type align=Align::Left,int offx=4,int offy=0,bool autosize=true);
 	void set_show_text(bool show);
 	void set_show_tex(bool show);
-
-	void set_customized(bool custom);
-	void set_custom(Texture* lay,Texture* lay_pushed,Texture* lay_hover,bool autosize=true,bool sh_text=false,bool sh_tex=false);
-	void set_custom(const Str& lay,const Str& lay_pushed,const Str& lay_hover,bool autosize=true,bool sh_text=false,bool sh_tex=false);
+	void set_group(const Str& grp);
+	void set_checked();
+	void set_check_size(int size,bool autosize=true);
+	void set_check_radius(int off);
+	void set_custom(Texture* box,Texture* mark,bool autosize=true,bool sh_text=true);
+	void set_custom(const Str& box,const Str& mark,bool autosize=true,bool sh_text=true);
 
 	//own internal functions
 
 
 };
+
+
 
 
 

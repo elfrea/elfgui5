@@ -10,6 +10,7 @@ eGroupbox::eGroupbox(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt
 	type="groupbox";
 	
 	//own config vars
+	selectable=false;
 	
 	//own internal config vars (use config functions to modify)
 	appearance=GroupboxAppearance::Panel3D;

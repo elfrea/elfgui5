@@ -11,6 +11,7 @@ Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 	//config vars
 	type="unknown";
 	name=ename;
+	selectable=true;
 	font=Theme::font->normal;
 	x=ex;
 	y=ey;
@@ -28,6 +29,8 @@ Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 	forward_event_to_parent=true;
 	use_anchor=false;
 
+	tab_index=-1;
+
 	//internal config vars (use config functions to modify)
 	color=new Colors();
 	enabled=true;
@@ -35,6 +38,7 @@ Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 	max_w=0;
 	min_h=10;
 	max_h=0;
+	selected=false;
 	move_area=Rect(0,0,ew,eh);
 	anchor=new Anchor();
 	move_area_auto_width=false;
@@ -242,6 +246,10 @@ void Element::insert_child(Element* child,int index)
 	//add child
 	children.insert(child,index);
 	child->parent=this;
+
+	//set child tab index if necessary
+	if(child->selectable && child->tab_index==-1)
+		child->tab_index=index;
 }
 
 
@@ -284,6 +292,22 @@ void Element::remove_child(Element* child)
 //****************************************************************
 //CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SET SELECTED
+void Element::set_selected(bool select)
+{
+	if(selected!=select && selectable)
+	{
+		if(ElfGui5::last_selected && ElfGui5::last_selected!=this)
+			ElfGui5::last_selected->set_selected(false);
+
+		selected=select;
+		ElfGui5::last_selected=this;
+		dirty=true;
+	}
+}
+
 
 
 //***** SET FONT
@@ -660,6 +684,15 @@ void Element::set_anchor(bool t,bool b,bool l,bool r,bool use)
 
 
 
+//***** SET ANCHOR
+void Element::set_anchor(bool t,int ty,bool b,int by,bool l,int lx,bool r,int rx,bool use)
+{
+	anchor->set(t,ty,b,by,l,lx,r,rx);
+	use_anchor=use;
+}
+
+
+
 
 
 
@@ -851,7 +884,7 @@ Element* Element::find_element_at(int x,int y)
 //***** FIND_ELEMENT_UNDER_MOUSE
 Element* Element::find_element_under_mouse()
 {
-	Mouse m=Input::get_mouse();
+	Mouse& m=Input::get_mouse();
 	return find_element_at(m.x,m.y);
 }
 

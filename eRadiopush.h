@@ -4,13 +4,15 @@
 #include "elfgui5.h"
 
 
-class eButton:public Element
+class eRadiopush:public Element
 {
 public:
 
 	//own config vars
 
 	//own internal config vars (use config functions to modify)
+	Str group;
+	bool pushed;
 	bool customized;
 	bool show_text;
 	bool show_tex;
@@ -30,18 +32,17 @@ public:
 	Texture* custom_layout_hover;
 
 	//own internal vars
-	bool pushed;
-	bool pushed_and_left;
 	Texture* custom_img;
+	bool ready_to_push;
 
 	//own elements
 
 
 
 	//constructor
-	eButton(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt);
+	eRadiopush(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt,const Str& grp="default",bool epushed=false);
 	//destructor
-	~eButton();
+	~eRadiopush();
 
 
 
@@ -69,12 +70,14 @@ public:
 	void on_parent_resize();
 
 	//own config functions
+	void set_pushed(bool push);
 	void shrink();
 	void set_text(const Str& txt,Align::Type align=Align::Middle,int offx=0,int offy=0);
 	void set_tex(Texture* src,Align::Type align=Align::Middle,int offx=0,int offy=0);
 	void set_tex(const Str& filename,Align::Type align=Align::Middle,int offx=0,int offy=0);
 	void set_show_text(bool show);
 	void set_show_tex(bool show);
+	void set_group(const Str& grp);
 
 	void set_customized(bool custom);
 	void set_custom(Texture* lay,Texture* lay_pushed,Texture* lay_hover,bool autosize=true,bool sh_text=false,bool sh_tex=false);
@@ -84,6 +87,7 @@ public:
 
 
 };
+
 
 
 

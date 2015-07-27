@@ -18,6 +18,10 @@
 #include "eCheckbox.h"
 #include "eLabel.h"
 #include "eGroupbox.h"
+#include "eRadiobutton.h"
+#include "ePushbutton.h"
+#include "eRadiopush.h"
+
 
 
 
@@ -64,6 +68,7 @@ public:
 
 	static int64_t doubleclick_timer;
 
+	static Element* last_selected;
 	static Element* element_under_mouse;
 	static int mouse_is_down;
 	static int last_mouse_click_but;

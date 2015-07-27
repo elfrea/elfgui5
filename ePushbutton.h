@@ -4,13 +4,14 @@
 #include "elfgui5.h"
 
 
-class eButton:public Element
+class ePushbutton:public Element
 {
 public:
 
 	//own config vars
 
 	//own internal config vars (use config functions to modify)
+	bool pushed;
 	bool customized;
 	bool show_text;
 	bool show_tex;
@@ -30,18 +31,17 @@ public:
 	Texture* custom_layout_hover;
 
 	//own internal vars
-	bool pushed;
-	bool pushed_and_left;
 	Texture* custom_img;
+	bool ready_to_push;
 
 	//own elements
 
 
 
 	//constructor
-	eButton(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt);
+	ePushbutton(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt,bool epushed=false);
 	//destructor
-	~eButton();
+	~ePushbutton();
 
 
 
@@ -69,6 +69,7 @@ public:
 	void on_parent_resize();
 
 	//own config functions
+	void set_pushed(bool push);
 	void shrink();
 	void set_text(const Str& txt,Align::Type align=Align::Middle,int offx=0,int offy=0);
 	void set_tex(Texture* src,Align::Type align=Align::Middle,int offx=0,int offy=0);
@@ -84,6 +85,7 @@ public:
 
 
 };
+
 
 
 
