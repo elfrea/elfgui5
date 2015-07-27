@@ -210,8 +210,12 @@ void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 			eum->bring_to_front();
 			
 		//unselect last element
-		if(ElfGui5::current_element && ElfGui5::last_selected && ElfGui5::last_selected!=eum && eum->selectable)
+		if(ElfGui5::current_element && ElfGui5::last_selected && ElfGui5::last_selected!=eum)
+		{
 			ElfGui5::last_selected->set_selected(false);
+			if(eum->selectable==false)
+				ElfGui5::last_selected=NULL;
+		}
 
 		//set current active element
 		ElfGui5::current_element=eum;
@@ -495,83 +499,110 @@ void MyEventHandler::on_mouse_move(Mouse& mouse)
 //***** ON KEY DOWN
 void MyEventHandler::on_key_down(Key& key)
 {
-	Element* ele=ElfGui5::last_selected;
-	if(ele==NULL)
-		return;
-
-	//check if we need to send keyboard events to parent
-	while(ele)
+	//catch TAB key
+	if(key.code==KEY_TAB)
 	{
-		//catch TAB key
-		if(key.code==KEY_TAB)
+		
+		Element* e=NULL;
+
+		//fetch selected element
+		if(ElfGui5::last_selected)
+			e=ElfGui5::last_selected;
+
+		//else fetch current element last selectable children
+		else if(ElfGui5::current_element)
 		{
-			
-			//switch selected element
-			Element* e=ElfGui5::last_selected;
-			if(e && e->parent)
+			int index=-1;
+			for(int a=0;a<ElfGui5::current_element->children.size();a++)
 			{
-				bool backward=Input::get_keyboard().shift();
-				Element* first=e;
-				Element* next=e;
-
-				//calculate next and first
-				for(int a=0;a<e->parent->children.size();a++)
+				if(ElfGui5::current_element->children[a]->selectable)
 				{
-					Element* child=e->parent->children[a];
+					if(ElfGui5::current_element->children[a]->tab_index>index)
+						index=a;
+				}
+			}
 
-					if(child->selectable)
+			if(index>-1)
+				e=ElfGui5::current_element->children[index];
+		}
+		
+
+		//switch selected element
+		if(e && e->parent)
+		{
+			bool backward=Input::get_keyboard().shift();
+			Element* first=e;
+			Element* next=e;
+
+			//calculate next and first
+			for(int a=0;a<e->parent->children.size();a++)
+			{
+				Element* child=e->parent->children[a];
+
+				if(child->selectable)
+				{
+					//forward
+					if(backward==false)
 					{
-						//forward
-						if(backward==false)
-						{
-							//set first
-							if(child->tab_index<first->tab_index)
-								first=child;
+						//set first
+						if(child->tab_index<first->tab_index)
+							first=child;
 
-							//set next
-							if(child->tab_index>e->tab_index)
-							{
-								if((next->tab_index==e->tab_index && child->tab_index>next->tab_index) || child->tab_index<next->tab_index)
-									next=child;
-							}
+						//set next
+						if(child->tab_index>e->tab_index)
+						{
+							if((next->tab_index==e->tab_index && child->tab_index>next->tab_index) || child->tab_index<next->tab_index)
+								next=child;
 						}
+					}
 
-						//backward
-						else
+					//backward
+					else
+					{
+						//set first
+						if(child->tab_index>first->tab_index)
+							first=child;
+
+						//set next
+						if(child->tab_index<e->tab_index)
 						{
-							//set first
-							if(child->tab_index>first->tab_index)
-								first=child;
-
-							//set next
-							if(child->tab_index<e->tab_index)
-							{
-								if((next->tab_index==e->tab_index && child->tab_index<next->tab_index) || child->tab_index>next->tab_index)
-									next=child;
-							}
+							if((next->tab_index==e->tab_index && child->tab_index<next->tab_index) || child->tab_index>next->tab_index)
+								next=child;
 						}
 					}
 				}
-				
-				//set next selected element
-				if((backward==false && next->tab_index>e->tab_index) || (backward && next->tab_index<e->tab_index))
-					next->set_selected(true);
-				else
-					first->set_selected(true);
+			}
+			
+			//set next selected element
+			if((backward==false && next->tab_index>e->tab_index) || (backward && next->tab_index<e->tab_index))
+				next->set_selected(true);
+			else
+				first->set_selected(true);
 
+		}
+
+	}
+	
+	else
+	{
+		Element* ele=ElfGui5::last_selected;
+		if(ele==NULL)
+			return;
+
+		//check if we need to send keyboard events to parent
+		while(ele)
+		{
+
+			//send event
+			if(ele->enabled && ele->send_keyboard_events_to_parent==false)
+			{
+				//send on_key_down
+				ele->on_key_down(key);
+				break;
 			}
 
+			ele=ele->parent;
 		}
-
-		//send event
-		if(ele->enabled && ele->send_keyboard_events_to_parent==false)
-		{
-			//send on_key_down
-			ele->on_key_down(key);
-			break;
-		}
-
-		ele=ele->parent;
 	}
 
 }
