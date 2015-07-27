@@ -21,6 +21,7 @@ ePushbutton* push1;
 eRadiopush* rpush1;
 eRadiopush* rpush2;
 eRadiopush* rpush3;
+eTexturebox* tex1;
 
 
 
@@ -39,7 +40,7 @@ void Game::init()
 	Display::set_mode(VideoMode::resizable(1366,768,false));
 	ElfGui5::init();
 
-	win1=new eWindow("window1",340,50,300,440,"Test Window");
+	win1=new eWindow("window1",340,50,300,600,"Test Window");
 	ElfGui5::base->add_child(win1);
 
 	radio1=new eRadiobutton("radio1",10,10,100,25,"Choice 1A","a",true);
@@ -75,6 +76,11 @@ void Game::init()
 
 	rpush3=new eRadiopush("radiopush3",190,250,70,50,"RPUSH3");
 	win1->add_child(rpush3);
+
+	tex1=new eTexturebox("texturebox1",10,310,180,180,Cache::texture("gfx/test/test_tex.png"),1,false);
+	tex1->set_texture_offset(30,30);
+	tex1->set_dynamic(true);
+	win1->add_child(tex1);
 
 
 	#ifdef DBG
