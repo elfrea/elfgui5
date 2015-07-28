@@ -183,8 +183,59 @@ void eRadiobutton::on_mouse_drag_in(DragPacket* dragpacket){}
 //***** ON KEY DOWN
 void eRadiobutton::on_key_down(Key& key)
 {
+	//SPACE
 	if(key.code==KEY_SPACE)
 		ready_to_check=true;
+
+	//UP-DOWN ARROW
+	else if(key.code==KEY_UP || key.code==KEY_DOWN || key.code==KEY_LEFT || key.code==KEY_RIGHT)
+	{
+		int backward=(key.code==KEY_UP || key.code==KEY_LEFT);
+
+		if(parent)
+		{
+			Element* target=NULL;
+
+			for(int a=0;a<parent->children.size();a++)
+			{
+				Element* ele=parent->children[a];
+
+				if(ele==this || ele->type!=type || ((eRadiobutton*)ele)->group!=group)
+					continue;
+
+				//forward
+				if(backward==false)
+				{
+					if(target==NULL)
+					{
+						if(ele->tab_index>tab_index)
+							target=ele;
+					}
+					else if(ele->tab_index>tab_index && ele->tab_index<target->tab_index)
+						target=ele;
+				}
+
+				//backward
+				else
+				{
+					if(target==NULL)
+					{
+						if(ele->tab_index<tab_index)
+							target=ele;
+					}
+					else if(ele->tab_index<tab_index && ele->tab_index>target->tab_index)
+						target=ele;
+				}
+			}
+			
+			//set new selected radiobutton
+			if(target)
+			{
+				target->set_selected(true);
+				((eRadiobutton*)target)->set_checked();
+			}
+		}
+	}
 }
 
 
@@ -192,11 +243,13 @@ void eRadiobutton::on_key_down(Key& key)
 //***** ON KEY UP
 void eRadiobutton::on_key_up(Key& key)
 {
+	//SPACE
 	if(key.code==KEY_SPACE && ready_to_check)
 	{
 		set_checked();
 		ready_to_check=false;
 	}
+	
 }
 
 

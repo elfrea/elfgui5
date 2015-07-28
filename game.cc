@@ -23,6 +23,11 @@ eRadiopush* rpush2;
 eRadiopush* rpush3;
 eTexturebox* tex1;
 
+eWindow* win2;
+eScrollbar* hscroll1;
+eScrollbar* vscroll1;
+ePercentbar* percent1;
+
 
 
 //***** INIT
@@ -40,7 +45,7 @@ void Game::init()
 	Display::set_mode(VideoMode::resizable(1366,768,false));
 	ElfGui5::init();
 
-	win1=new eWindow("window1",340,50,300,600,"Test Window");
+	win1=new eWindow("window1",10,10,300,600,"Test Window");
 	ElfGui5::base->add_child(win1);
 
 	radio1=new eRadiobutton("radio1",10,10,100,25,"Choice 1A","a",true);
@@ -49,12 +54,10 @@ void Game::init()
 	radio2=new eRadiobutton("radio2",10,40,100,25,"Choice 2A","a");
 	win1->add_child(radio2);
 
-	radio3=new eRadiobutton("radio3",10,70,100,25,"Choice 1B","b",true);
-	radio3->set_custom("gfx/test/test_radiobutton_box.png","gfx/test/test_radiobutton_mark.png");
+	radio3=new eRadiobutton("radio3",10,70,100,25,"Choice 3A","a");
 	win1->add_child(radio3);
 
-	radio4=new eRadiobutton("radio4",10,100,100,25,"Choice 2B","b");
-	radio4->set_custom("gfx/test/test_radiobutton_box.png","gfx/test/test_radiobutton_mark.png");
+	radio4=new eRadiobutton("radio4",10,100,100,25,"Choice 4A","a");
 	win1->add_child(radio4);
 
 	but1=new eButton("button1",10,140,150,30,"Test");
@@ -81,6 +84,30 @@ void Game::init()
 	tex1->set_texture_offset(30,30);
 	tex1->set_dynamic(true);
 	win1->add_child(tex1);
+
+	
+	
+	
+	
+	
+	win2=new eWindow("window2",340,50,300,600,"Test Window 2");
+	ElfGui5::base->add_child(win2);
+
+	hscroll1=new eScrollbar("h scrollbar1",10,10,280,20,4,122,Orientation::Horizontal);
+	hscroll1->set_page_size(14);
+	win2->add_child(hscroll1);
+
+	vscroll1=new eScrollbar("v scrollbar1",10,40,20,280,-123,12,Orientation::Vertical);
+	vscroll1->set_page_size(4);
+	win2->add_child(vscroll1);
+
+	percent1=new ePercentbar("percentbar1",10,340,280,25,30,0,100,true);
+	win2->add_child(percent1);
+
+
+
+
+
 
 
 	#ifdef DBG

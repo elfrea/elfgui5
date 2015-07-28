@@ -24,3 +24,14 @@ namespace GroupboxAppearance
 
 
 
+
+//ORIENTATION
+namespace Orientation
+{
+	enum Type
+	{
+		Horizontal,Vertical
+	};
+}
+
+

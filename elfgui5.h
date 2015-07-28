@@ -22,6 +22,8 @@
 #include "ePushbutton.h"
 #include "eRadiopush.h"
 #include "eTexturebox.h"
+#include "eScrollbar.h"
+#include "ePercentbar.h"
 
 
 

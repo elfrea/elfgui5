@@ -8,6 +8,7 @@ eTemplate::eTemplate(const Str& ename,int ex,int ey,int ew,int eh):Element(ename
 {
 	//parent class vars
 	type="template";
+	selectable=false;
 	
 	//own config vars
 	
@@ -50,6 +51,7 @@ void eTemplate::loop()
 //***** DRAW
 void eTemplate::draw()
 {
+	image->clear(Color(0,0,0,0));
 }
 
 

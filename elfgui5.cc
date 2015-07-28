@@ -502,7 +502,6 @@ void MyEventHandler::on_key_down(Key& key)
 	//catch TAB key
 	if(key.code==KEY_TAB)
 	{
-		
 		Element* e=NULL;
 
 		//fetch selected element
@@ -521,7 +520,6 @@ void MyEventHandler::on_key_down(Key& key)
 						index=a;
 				}
 			}
-
 			if(index>-1)
 				e=ElfGui5::current_element->children[index];
 		}
@@ -582,10 +580,16 @@ void MyEventHandler::on_key_down(Key& key)
 		}
 
 	}
-	
+
+
+
+
+	//send on key down event
 	else
 	{
 		Element* ele=ElfGui5::last_selected;
+		if(ele==NULL)
+			ele=ElfGui5::current_element;
 		if(ele==NULL)
 			return;
 

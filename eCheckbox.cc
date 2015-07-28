@@ -77,24 +77,19 @@ void eCheckbox::loop()
 void eCheckbox::draw()
 {
 
+	image->clear(Color(0,0,0,0));
+
 	//check box
 	if(custom_box)
-	{
-		image->clear(Color(0,0,0,0));
 		image->blit(0,(h-custom_box->height())/2,custom_box,false);
-	}
 	else
-	{
 		draw_edit_panel(image,color,enabled,0,(h-check_size)/2,check_size,check_size);
-	}
 
 	//check mark
 	if(custom_mark)
 	{
 		if(checked)
-		{
 			image->blit(0,(h-custom_mark->height())/2,custom_mark,true);
-		}
 	}
 	else
 	{
