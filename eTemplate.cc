@@ -18,7 +18,7 @@ eTemplate::eTemplate(const Str& ename,int ex,int ey,int ew,int eh):Element(ename
 	
 	//own elements
 
-	//other	
+	//other
 	dirty=true;
 }
 
@@ -83,6 +83,8 @@ void eTemplate::on_key_up(Key& key){}
 void eTemplate::on_text(const Str& text){}
 void eTemplate::on_resize(int width,int height){}
 void eTemplate::on_parent_resize(){}
+void eTemplate::on_select(){}
+void eTemplate::on_unselect(){}
 
 
 

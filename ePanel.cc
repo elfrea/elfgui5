@@ -125,6 +125,8 @@ void ePanel::on_key_up(Key& key){}
 void ePanel::on_text(const Str& text){}
 void ePanel::on_resize(int width,int height){}
 void ePanel::on_parent_resize(){}
+void ePanel::on_select(){}
+void ePanel::on_unselect(){}
 
 
 

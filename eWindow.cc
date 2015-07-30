@@ -109,6 +109,8 @@ void eWindow::on_key_up(Key& key){}
 void eWindow::on_text(const Str& text){}
 void eWindow::on_resize(int width,int height){}
 void eWindow::on_parent_resize(){}
+void eWindow::on_select(){}
+void eWindow::on_unselect(){}
 
 
 

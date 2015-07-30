@@ -18,6 +18,12 @@ public:
 	int value_max;
 
 	bool show_percent;
+	bool show_value;
+	bool show_border;
+
+	Texture* custom_bg;
+	Texture* custom_bar;
+	Texture* custom_border;
 
 	//own internal vars
 
@@ -54,6 +60,8 @@ public:
 	void on_text(const Str& text);
 	void on_resize(int width,int height);
 	void on_parent_resize();
+	void on_select();
+	void on_unselect();
 
 	//own config functions
 	int get_percent();
@@ -61,6 +69,13 @@ public:
 	void set_value(int val);
 	void set_value_range(int min,int max);
 	void set_show_percent(bool show);
+	void set_show_value(bool show);
+	void set_show_border(bool show);
+	void set_bar_color(const Color& col);
+
+	void set_customized(bool custom);
+	void set_custom(Texture* bg,Texture* bar,Texture* border,bool autosize=true);
+	void set_custom(const Str& bg,const Str& bar,const Str& border,bool autosize=true);
 
 	//own internal functions
 

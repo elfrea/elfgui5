@@ -257,6 +257,8 @@ void eRadiobutton::on_key_up(Key& key)
 void eRadiobutton::on_text(const Str& text){}
 void eRadiobutton::on_resize(int width,int height){}
 void eRadiobutton::on_parent_resize(){}
+void eRadiobutton::on_select(){}
+void eRadiobutton::on_unselect(){}
 
 
 

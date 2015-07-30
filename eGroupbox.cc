@@ -163,6 +163,8 @@ void eGroupbox::on_key_up(Key& key){}
 void eGroupbox::on_text(const Str& text){}
 void eGroupbox::on_resize(int width,int height){}
 void eGroupbox::on_parent_resize(){}
+void eGroupbox::on_select(){}
+void eGroupbox::on_unselect(){}
 
 
 

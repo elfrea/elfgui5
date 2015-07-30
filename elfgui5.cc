@@ -5,7 +5,6 @@
 
 bool ElfGui5::ready_to_quit;
 
-TexRenderer ElfGui5::texture_renderer;
 MyEventHandler ElfGui5::event_handler;
 
 List<Event*> ElfGui5::events;
@@ -138,11 +137,10 @@ void ElfGui5::draw()
 	if(current_dragpacket)
 	{
 		Mouse& m=Input::get_mouse();
-		texture_renderer.add(current_dragpacket->icon,m.x+current_dragpacket->offset_x,m.y+current_dragpacket->offset_y);
+		current_dragpacket->icon->draw(m.x+current_dragpacket->offset_x,m.y+current_dragpacket->offset_y);
 	}
 
 	
-	texture_renderer.draw();
 }
 
 

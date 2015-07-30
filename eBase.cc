@@ -81,13 +81,13 @@ void eBase::on_mouse_up(int but,int mx,int my){}
 //void eBase::on_mouse_wheel_up(int mx,int my){}
 void eBase::on_mouse_drag_out(){}
 void eBase::on_mouse_drag_in(DragPacket* dragpacket){}
-
 void eBase::on_key_down(Key& key){}
 void eBase::on_key_up(Key& key){}
 void eBase::on_text(const Str& text){}
-
 void eBase::on_resize(int width,int height){}
 void eBase::on_parent_resize(){}
+void eBase::on_select(){}
+void eBase::on_unselect(){}
 
 
 

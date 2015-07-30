@@ -9,6 +9,7 @@
 #include "elfgui5_dragpacket.h"
 #include "elfgui5_event.h"
 #include "elfgui5_anchor.h"
+#include "elfgui5_clipboard.h"
 
 #include "elfgui5_element.h"
 #include "eBase.h"
@@ -24,6 +25,7 @@
 #include "eTexturebox.h"
 #include "eScrollbar.h"
 #include "ePercentbar.h"
+#include "eEditbox.h"
 
 
 
@@ -64,7 +66,6 @@ public:
 
 	//internal vars
 	static MyEventHandler event_handler;
-	static TexRenderer texture_renderer;
 	static List<Event*> events;
 	
 	static eBase* base;

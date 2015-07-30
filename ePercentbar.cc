@@ -15,6 +15,12 @@ ePercentbar::ePercentbar(const Str& ename,int ex,int ey,int ew,int eh,int val,in
 	//own internal config vars (use config functions to modify)
 	customized=false;
 	show_percent=show;
+	show_value=false;
+	show_border=true;
+
+	custom_bg=NULL;
+	custom_bar=NULL;
+	custom_border=NULL;
 
 	//own internal vars
 	
@@ -61,6 +67,16 @@ void ePercentbar::draw()
 	if(customized)
 	{
 		image->clear(Color(0,0,0,0));
+
+		//show bg
+		image->blit(0,0,custom_bg);
+
+		//show bar
+		int bw=custom_bar->width()*get_percent()/100;
+		image->blit(0,0,custom_bar,0,0,bw,custom_bar->height());
+
+		//show border
+		image->blit(0,0,custom_border);
 	}
 
 	//normal
@@ -74,12 +90,17 @@ void ePercentbar::draw()
 		image->rect_fill(0,0,bw,h,color->extra);
 
 		//show border
-		image->rect(0,0,w-1,h-1,color->text);
+		if(show_border)
+			image->rect(0,0,w-1,h-1,color->text);
 	}
 
 	//show percent
+	if(show_percent)
+		draw_text_align(image,Align::Middle,0,0,font,color->text,Str::build("%i%%",get_percent()));
 
-	draw_text_align(image,Align::Middle,0,0,font,color->text,Str::build("%i%%",get_percent()));
+	//show value
+	if(show_value)
+		draw_text_align(image,Align::Middle,0,0,font,color->text,Str::build("%i/%i",value,value_max));
 }
 
 
@@ -106,11 +127,13 @@ void ePercentbar::on_mouse_up(int but,int mx,int my){}
 //void ePercentbar::on_mouse_wheel_up(int mx,int my){}
 void ePercentbar::on_mouse_drag_out(){}
 void ePercentbar::on_mouse_drag_in(DragPacket* dragpacket){}
-void ePercentbar::on_key_down(Key& key){set_value(value+3);}
+void ePercentbar::on_key_down(Key& key){}
 void ePercentbar::on_key_up(Key& key){}
 void ePercentbar::on_text(const Str& text){}
 void ePercentbar::on_resize(int width,int height){}
 void ePercentbar::on_parent_resize(){}
+void ePercentbar::on_select(){}
+void ePercentbar::on_unselect(){}
 
 
 
@@ -183,6 +206,68 @@ void ePercentbar::set_show_percent(bool show)
 {
 	show_percent=show;
 	dirty=true;
+}
+
+
+
+//***** SET SHOW VALUE
+void ePercentbar::set_show_value(bool show)
+{
+	show_value=show;
+	dirty=true;
+}
+
+
+
+//***** SET SHOW BORDER
+void ePercentbar::set_show_border(bool show)
+{
+	show_border=show;
+	dirty=true;
+}
+
+
+
+//***** SET BAR COLOR
+void ePercentbar::set_bar_color(const Color& col)
+{
+	color->extra=Color(col);
+	dirty=true;
+}
+
+
+
+//***** SET CUSTOMIZED
+void ePercentbar::set_customized(bool custom)
+{
+	customized=custom;
+	dirty=1;
+}
+
+
+
+//***** SET CUSTOM
+void ePercentbar::set_custom(Texture* bg,Texture* bar,Texture* border,bool autosize)
+{
+	custom_bg=bg;
+	custom_bar=bar;
+	custom_border=border;
+
+	//check if we need to resize the percentbar
+	if(autosize)
+		resize(bg->width(),bg->height());
+
+	customized=true;
+
+	dirty=true;
+}
+
+
+
+//***** SET CUSTOM
+void ePercentbar::set_custom(const Str& bg,const Str& bar,const Str& border,bool autosize)
+{
+	set_custom(Cache::texture(bg),Cache::texture(bar),Cache::texture(border),autosize);
 }
 
 

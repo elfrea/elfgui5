@@ -249,6 +249,8 @@ void eScrollbar::on_key_up(Key& key){}
 void eScrollbar::on_text(const Str& text){}
 void eScrollbar::on_resize(int width,int height){}
 void eScrollbar::on_parent_resize(){}
+void eScrollbar::on_select(){}
+void eScrollbar::on_unselect(){}
 
 
 

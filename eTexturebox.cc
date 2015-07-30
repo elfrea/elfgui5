@@ -148,6 +148,8 @@ void eTexturebox::on_key_up(Key& key){}
 void eTexturebox::on_text(const Str& text){}
 void eTexturebox::on_resize(int width,int height){}
 void eTexturebox::on_parent_resize(){}
+void eTexturebox::on_select(){}
+void eTexturebox::on_unselect(){}
 
 
 

@@ -64,6 +64,8 @@ public:
 	void on_text(const Str& text);
 	void on_resize(int width,int height);
 	void on_parent_resize();
+	void on_select();
+	void on_unselect();
 
 	//own config functions
 	void set_text(const Str& txt,Align::Type align=Align::Top,int offx=0,int offy=0);

@@ -35,3 +35,15 @@ namespace Orientation
 }
 
 
+
+
+
+//EDITBOX FILTER
+namespace EditboxFilter
+{
+	enum Type
+	{
+		None,Int,Float,Hex,Alpha,Alphanumeric,Filename
+	};
+}
+

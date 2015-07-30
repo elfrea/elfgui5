@@ -23,6 +23,7 @@ int main(int argc, char **argv)
 				break;
 			Game::draw();
 
+			Display::render();
 			Display::swap();
 		}
 		

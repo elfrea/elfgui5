@@ -183,6 +183,8 @@ void Element::on_key_up(Key& key){}
 void Element::on_text(const Str& text){}
 void Element::on_resize(int width,int height){}
 void Element::on_parent_resize(){}
+void Element::on_select(){}
+void Element::on_unselect(){}
 
 
 
@@ -301,6 +303,12 @@ void Element::set_selected(bool select)
 	{
 		if(ElfGui5::last_selected && ElfGui5::last_selected!=this)
 			ElfGui5::last_selected->set_selected(false);
+
+		//send on_select and on_unselect event
+		if(select)
+			on_select();
+		else
+			on_unselect();
 
 		selected=select;
 		ElfGui5::last_selected=this;
@@ -734,11 +742,11 @@ void Element::display()
 		//display self
 		int tx=get_true_x();
 		int ty=get_true_y();
-		ElfGui5::texture_renderer.add(image,tx,ty);
+		image->draw(tx,ty);
 
 		//display resize gizmo if needed
 		if(can_be_resized)
-			ElfGui5::texture_renderer.add(ElfGui5::resize_gizmo,tx+w-1-ElfGui5::resize_gizmo->width(),ty+h-1-ElfGui5::resize_gizmo->height());
+			ElfGui5::resize_gizmo->draw(tx+w-1-ElfGui5::resize_gizmo->width(),ty+h-1-ElfGui5::resize_gizmo->height());
 
 		//replace children
 		replace_elements();

@@ -28,7 +28,7 @@ void Theme::set(const Str& theme)
 		color->dark=Color::ubyte(120,120,120);
 		color->text=Color::ubyte(0,0,0);
 		color->editing=Color::ubyte(240,240,240);
-		color->selection=Color::ubyte(50,50,150);
+		color->selection=Color::ubyte(110,130,170);
 		color->extra=Color::ubyte(255,0,0);
 
 		color->d_light=Color::ubyte(170,170,170);
@@ -36,7 +36,7 @@ void Theme::set(const Str& theme)
 		color->d_dark=Color::ubyte(70,70,70);
 		color->d_text=Color::ubyte(70,70,70);
 		color->d_editing=Color::ubyte(200,200,200);
-		color->d_selection=Color::ubyte(50,50,50);
+		color->d_selection=Color::ubyte(100,100,100);
 		color->d_extra=Color::ubyte(255,0,0);
 
 

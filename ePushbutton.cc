@@ -207,6 +207,8 @@ void ePushbutton::on_key_up(Key& key)
 void ePushbutton::on_text(const Str& text){}
 void ePushbutton::on_resize(int width,int height){}
 void ePushbutton::on_parent_resize(){}
+void ePushbutton::on_select(){}
+void ePushbutton::on_unselect(){}
 
 
 

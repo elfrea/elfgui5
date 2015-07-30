@@ -54,6 +54,8 @@ public:
 	void on_text(const Str& text);
 	void on_resize(int width,int height);
 	void on_parent_resize();
+	void on_select();
+	void on_unselect();
 
 	//own config functions
 	void set_text(const Str& txt,const Color& col,Font* fnt,bool autowidth=true,bool autoheight=true,TextAlign::Type align=TextAlign::Center,VertTextAlign::Type valign=VertTextAlign::Middle);

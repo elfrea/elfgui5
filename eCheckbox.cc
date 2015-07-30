@@ -202,6 +202,8 @@ void eCheckbox::on_key_up(Key& key)
 void eCheckbox::on_text(const Str& text){}
 void eCheckbox::on_resize(int width,int height){}
 void eCheckbox::on_parent_resize(){}
+void eCheckbox::on_select(){}
+void eCheckbox::on_unselect(){}
 
 
 

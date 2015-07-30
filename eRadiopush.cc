@@ -208,6 +208,8 @@ void eRadiopush::on_key_up(Key& key)
 void eRadiopush::on_text(const Str& text){}
 void eRadiopush::on_resize(int width,int height){}
 void eRadiopush::on_parent_resize(){}
+void eRadiopush::on_select(){}
+void eRadiopush::on_unselect(){}
 
 
 

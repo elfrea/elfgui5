@@ -1,6 +1,5 @@
 WINDOW 			
 EDITBOX 			
-PERCENTBAR 		
 MENUBAR 			
 TAB 				
 TABBAR 			

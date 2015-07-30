@@ -99,6 +99,8 @@ void eLabel::on_resize(int width,int height)
 
 
 void eLabel::on_parent_resize(){}
+void eLabel::on_select(){}
+void eLabel::on_unselect(){}
 
 
 

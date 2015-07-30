@@ -88,6 +88,8 @@ public:
 	virtual void on_text(const Str& text);
 	virtual void on_resize(int width,int height);
 	virtual void on_parent_resize();
+	virtual void on_select();
+	virtual void on_unselect();
 	
 	//family functions
 	virtual void add_child(Element* child);
