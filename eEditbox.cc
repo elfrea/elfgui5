@@ -418,7 +418,10 @@ void eEditbox::on_text(const Str& txt)
 		if(cursor_pos<get_last_pos())
 			remove_chars(cursor_pos,txt.get_utf8_len(),false);
 		add_chars(cursor_pos,txt);
-		set_cursor_position(cursor_pos+txt.get_utf8_len());
+
+		Str s=apply_filter(txt);
+		if(s==txt)
+			set_cursor_position(cursor_pos+txt.get_utf8_len());
 	}
 
 	//normal mode
@@ -427,7 +430,10 @@ void eEditbox::on_text(const Str& txt)
 		if(selecting)
 			remove_selection();
 		add_chars(cursor_pos,txt);
-		set_cursor_position(cursor_pos+txt.get_utf8_len());
+		
+		Str s=apply_filter(txt);
+		if(s==txt)
+			set_cursor_position(cursor_pos+txt.get_utf8_len());
 	}
 }
 
@@ -695,7 +701,9 @@ void eEditbox::paste_text(const Str& txt)
 		else
 			add_chars(cursor_pos,txt);
 
-		set_cursor_position(cursor_pos+txt.get_utf8_len());
+		Str s=apply_filter(txt);
+		if(s==txt)
+			set_cursor_position(cursor_pos+txt.get_utf8_len());
 	}
 }
 
