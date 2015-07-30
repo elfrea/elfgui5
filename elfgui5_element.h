@@ -106,7 +106,7 @@ public:
 	void resize(int width,int height);
 	void bring_to_front();
 	void send_to_back();
-	void set_enabled(bool enbl);
+	void set_enabled(bool enbl,bool send_to_children=true);
 	void set_min_size(int minw,int minh);
 	void set_max_size(int maxw,int maxh);
 	void set_minmax_size(int minw,int minh,int maxw,int maxh);

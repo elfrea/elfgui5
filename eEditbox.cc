@@ -26,6 +26,7 @@ eEditbox::eEditbox(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt):
 	custom_bg=NULL;
 
 	insert_mode=false;
+	readonly=false;
 
 	border_w=DEFAULT_BORDER_W;
 	min_right_view=DEFAULT_MIN_RIGHT_VIEW;
@@ -53,6 +54,7 @@ eEditbox::eEditbox(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt):
 	//own elements
 
 	//other
+	set_custom_cursor("gfx/elements/cursor_edit.png",2,7);
 	set_text(txt);
 	dirty=true;
 }
@@ -147,7 +149,7 @@ void eEditbox::draw()
 
 	//normal
 	else
-		draw_edit_panel(image,color);
+		draw_edit_panel(image,color,enabled);
 
 	//show selection
 	if(selecting)
@@ -163,10 +165,13 @@ void eEditbox::draw()
 	Str t=get_visible_text();
 	int tx=border_w;
 	int ty=(h-font->height())/2;
-	image->print(font,tx,ty,color->text,t,false);
+	if(enabled)
+		image->print(font,tx,ty,color->text,t,false);
+	else
+		image->print(font,tx,ty,color->d_text,t,false);
 
 	//show cursor
-	if(selected)
+	if(selected && !readonly && enabled)
 	{
 		if(!cursor_is_gone)
 		{
@@ -364,13 +369,15 @@ void eEditbox::on_key_down(Key& key)
 	//KEY RETURN
 	else if(key.code==KEY_RETURN)
 	{
-		send_event("trigger");
+		if(!readonly)
+			send_event("trigger");
 	}
 	
 	//KEY INSERT
 	else if(key.code==KEY_INSERT)
 	{
-		set_insert_mode(!insert_mode);
+		if(!readonly)
+			set_insert_mode(!insert_mode);
 	}
 
 	//CTRL-C
@@ -443,6 +450,7 @@ void eEditbox::on_select()
 void eEditbox::on_unselect()
 {
 	Input::set_key_down_repeat(false);
+	selecting=false;
 }
 
 
@@ -458,15 +466,18 @@ void eEditbox::on_unselect()
 
 
 //***** SET TEXT
-void eEditbox::set_text(const Str& txt)
+void eEditbox::set_text(const Str& txt,bool override_readonly)
 {
-	Str filtered=apply_filter(txt);
-
-	if(text!=filtered)
+	if(!readonly || override_readonly)
 	{
-		text=filtered;
-		send_event("change");
-		dirty=true;
+		Str filtered=apply_filter(txt);
+
+		if(text!=filtered)
+		{
+			text=filtered;
+			send_event("change");
+			dirty=true;
+		}
 	}
 }
 
@@ -627,6 +638,15 @@ Str eEditbox::get_selected_text()
 		s="";
 
 	return s;
+}
+
+
+
+//***** SET READONLY
+void eEditbox::set_readonly(bool read)
+{
+	readonly=read;
+	dirty=true;
 }
 
 
@@ -1219,6 +1239,14 @@ Str eEditbox::filter_char(const Str& ch)
 		case EditboxFilter::Filename:
 		{
 			if((ch>="a" && ch<="z") || (ch>="A" && ch<="Z") || (ch>="0" && ch<="9") || ch=="-" || ch=="." || ch=="/" || ch=="\\" || ch=="_" || ch=="(" || ch==")" || ch=="[" || ch=="]" || ch==":" || ch=="~" || ch==" ")
+				return ch;
+		}
+		break;
+
+		//IP
+		case EditboxFilter::IP:
+		{
+			if((ch>="0" && ch<="9") || ch==".")
 				return ch;
 		}
 		break;

@@ -29,6 +29,9 @@ eScrollbar* vscroll1;
 ePercentbar* percent1;
 eEditbox* edit1;
 eEditbox* edit2;
+eTimer* timer1;
+eSpinner* spin1;
+eSpinner* spin2;
 
 
 
@@ -114,10 +117,16 @@ void Game::init()
 	edit2=new eEditbox("editbox2",10,410,200,25,"testing123");
 	edit2->set_custom("gfx/test/test_editbox.png",15,true);
 	edit2->set_filter(EditboxFilter::Filename);
-	edit2->set_password_mode(true);
 	win2->add_child(edit2);
 
+	timer1=new eTimer("timer1",500,false);
+	win2->add_child(timer1);
 
+	spin1=new eSpinner("spinner1",10,480,150,30,SpinnerMode::Double,0,0,100,Orientation::Horizontal);
+	win2->add_child(spin1);
+
+	spin2=new eSpinner("spinner2",10,520,150,30,SpinnerMode::Bool,0,0,100,Orientation::Vertical);
+	win2->add_child(spin2);
 
 
 

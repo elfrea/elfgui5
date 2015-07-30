@@ -308,12 +308,12 @@ void eScrollbar::set_orientation(Orientation::Type orient)
 	//HORIZONTAL
 	if(orientation==Orientation::Horizontal)
 	{
-		button_dec->set_tex("gfx/elements/scrollbar_left.png");
+		button_dec->set_tex("gfx/elements/arrow_left.png");
 		button_dec->resize(h,h);
 		button_dec->x=0;
 		button_dec->y=0;
 
-		button_inc->set_tex("gfx/elements/scrollbar_right.png");
+		button_inc->set_tex("gfx/elements/arrow_right.png");
 		button_inc->resize(h,h);
 		button_inc->x=w-h;
 		button_inc->y=0;
@@ -322,12 +322,12 @@ void eScrollbar::set_orientation(Orientation::Type orient)
 	//VERTICAL
 	else
 	{
-		button_dec->set_tex("gfx/elements/scrollbar_up.png");
+		button_dec->set_tex("gfx/elements/arrow_up.png");
 		button_dec->resize(w,w);
 		button_dec->x=0;
 		button_dec->y=0;
 
-		button_inc->set_tex("gfx/elements/scrollbar_down.png");
+		button_inc->set_tex("gfx/elements/arrow_down.png");
 		button_inc->resize(w,w);
 		button_inc->x=0;
 		button_inc->y=h-w;

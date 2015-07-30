@@ -26,6 +26,8 @@
 #include "eScrollbar.h"
 #include "ePercentbar.h"
 #include "eEditbox.h"
+#include "eTimer.h"
+#include "eSpinner.h"
 
 
 

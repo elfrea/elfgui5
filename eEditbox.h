@@ -17,6 +17,7 @@ public:
 	bool customized;
 	Texture* custom_bg;
 
+	bool readonly;
 	bool insert_mode;
 	bool password_mode;
 	Str password_char;
@@ -80,7 +81,7 @@ public:
 	void on_unselect();
 
 	//own config functions
-	void set_text(const Str& txt);
+	void set_text(const Str& txt,bool override_readonly=false);
 	void set_custom(Texture* tex,int borderw=5,bool autosize=true);
 	void set_custom(const Str& filename,int borderw=5,bool autosize=true);
 	void set_customized(bool custom);
@@ -93,6 +94,7 @@ public:
 	void set_password_mode(bool pass,const Str& chr="*");
 	void set_password_char(const Str& chr);
 	Str get_selected_text();
+	void set_readonly(bool read);
 
 	void copy_text(const Str& txt,Str& dest=Clipboard::text);
 	void copy_selected_text(Str& dest=Clipboard::text);

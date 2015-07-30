@@ -43,7 +43,27 @@ namespace EditboxFilter
 {
 	enum Type
 	{
-		None,Binary,Int,Float,Hex,Oct,Alpha,Alphanumeric,Filename
+		None,Binary,Int,Float,Hex,Oct,Alpha,Alphanumeric,Filename,IP
 	};
 }
+
+
+
+
+
+//SPINNER MODE
+namespace SpinnerMode
+{
+	enum Type
+	{
+		Double,Float,Int,Int64,Bool
+	};
+}
+
+
+
+
+
+
+
 

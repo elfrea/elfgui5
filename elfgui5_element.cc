@@ -304,14 +304,15 @@ void Element::set_selected(bool select)
 		if(ElfGui5::last_selected && ElfGui5::last_selected!=this)
 			ElfGui5::last_selected->set_selected(false);
 
+		selected=select;
+		ElfGui5::last_selected=this;
+		
 		//send on_select and on_unselect event
 		if(select)
 			on_select();
 		else
 			on_unselect();
 
-		selected=select;
-		ElfGui5::last_selected=this;
 		dirty=true;
 	}
 }
@@ -491,10 +492,17 @@ void Element::send_to_back()
 
 
 //***** SET ENABLED
-void Element::set_enabled(bool enbl)
+void Element::set_enabled(bool enbl,bool send_to_children)
 {
 	enabled=enbl;
 	dirty=true;
+
+	//send it to children
+	if(send_to_children)
+	{
+		for(int a=0;a<children.size();a++)
+			children[a]->set_enabled(enbl,true);
+	}
 }
 
 
