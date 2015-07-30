@@ -250,35 +250,47 @@ void eEditbox::on_key_down(Key& key)
 	//KEY LEFT
 	if(key.code==KEY_LEFT)
 	{
+		int amount=0;
+
+		//CTRL
+		if(k.ctrl())
+			amount=cursor_pos-get_next_space_pos(true)-1;
+
 		//SHIFT
 		if(k.shift())
 		{
 			if(cursor_pos==selection_start || !selecting)
-				add_selection(cursor_pos-1,cursor_pos-1);
+				add_selection(cursor_pos-1-amount,cursor_pos-1);
 			else
-				del_selection(cursor_pos-1,cursor_pos-1);
+				del_selection(cursor_pos-1-amount,cursor_pos-1);
 		}
 		else
 			selecting=false;
 		
-		set_cursor_position(cursor_pos-1);
+		set_cursor_position(cursor_pos-1-amount);
 	}
 	
 	//KEY RIGHT
 	else if(key.code==KEY_RIGHT)
 	{
+		int amount=0;
+
+		//CTRL
+		if(k.ctrl())
+			amount=get_next_space_pos(false)-cursor_pos;
+
 		//SHIFT
 		if(k.shift())
 		{
 			if(cursor_pos>selection_end || !selecting)
-				add_selection(cursor_pos,cursor_pos);
+				add_selection(cursor_pos,cursor_pos+amount);
 			else
-				del_selection(cursor_pos,cursor_pos);
+				del_selection(cursor_pos,cursor_pos+amount);
 		}
 		else
 			selecting=false;
 		
-		set_cursor_position(cursor_pos+1);
+		set_cursor_position(cursor_pos+1+amount);
 		
 	}
 	
@@ -821,6 +833,86 @@ inline int eEditbox::get_last_pos()
 
 
 
+//***** GET NEXT SPACE POS
+int eEditbox::get_next_space_pos(bool backward)
+{
+	Str str=get_text();
+	Str s;
+	
+	int space_pos;
+
+	int p=-1;
+	int pos=0;
+	int c=0;
+	bool found=false;
+
+	if(backward)
+	{
+		s=str.sub(0,str.get_utf8_start(cursor_pos));
+
+		for(;;)
+		{
+			int a=cursor_pos-1-c;
+			if(a<0)
+				break;
+			pos=s.get_utf8_start(a);
+
+			int len;
+			uint32_t ch=s.get_utf8_char(pos,len);
+			if(!ch) 
+				break;
+
+			Str ss=s.sub(pos,len);
+			if(found && ss!=" ")
+			{
+				p=pos;
+				break;
+			}
+			else if(ss==" " && c)
+				found=true;
+
+			c++;
+		}
+
+		if(p==-1)
+			space_pos=0;
+		else
+			space_pos=cursor_pos-c;
+	}
+	else
+	{
+		s=str.sub(str.get_utf8_start(cursor_pos+1));
+
+		for(;;)
+		{
+			int len;
+			uint32_t ch=s.get_utf8_char(pos,len);
+			if(!ch) 
+				break;
+
+			Str ss=s.sub(pos,len);
+			if(found && ss!=" ")
+			{
+				p=pos;
+				break;
+			}
+			else if(ss==" ")
+				found=true;
+
+			pos+=len;
+			c++;
+		}
+
+		if(p==-1)
+			space_pos=get_last_pos();
+		else
+			space_pos=cursor_pos+c;
+	}
+	return space_pos;
+}
+
+
+
 //***** ADD CHARS
 void eEditbox::add_chars(int pos,Str chars)
 {
@@ -829,8 +921,8 @@ void eEditbox::add_chars(int pos,Str chars)
 	if(pos>get_last_pos())
 		pos=get_last_pos();
 	
-	Str left=get_text().sub(0,get_text().get_utf8_start(pos));
-	Str right=get_text().sub(get_text().get_utf8_start(pos));
+	Str left=text.sub(0,text.get_utf8_start(pos));
+	Str right=text.sub(text.get_utf8_start(pos));
 
 	set_text(left+chars+right);
 }
@@ -850,17 +942,17 @@ void eEditbox::remove_chars(int pos,int len,bool backward)
 
 	if(backward)
 	{
-		byte_pos1=get_text().get_utf8_start(pos-len);
-		byte_pos2=get_text().get_utf8_start(pos);
+		byte_pos1=text.get_utf8_start(pos-len);
+		byte_pos2=text.get_utf8_start(pos);
 	}
 	else
 	{
-		byte_pos1=get_text().get_utf8_start(pos);
-		byte_pos2=get_text().get_utf8_start(pos+len);
+		byte_pos1=text.get_utf8_start(pos);
+		byte_pos2=text.get_utf8_start(pos+len);
 	}
 	Str left,right;
-	left=get_text().sub(0,byte_pos1);
-	right=get_text().sub(byte_pos2);
+	left=text.sub(0,byte_pos1);
+	right=text.sub(byte_pos2);
 
 	set_text(left+right);
 }
@@ -1022,7 +1114,6 @@ Str eEditbox::apply_filter(const Str& str)
 	Str filtered="";
 
 	int pos=0;
-	
 	for(;;)
 	{
 		//get next char and len
@@ -1034,8 +1125,11 @@ Str eEditbox::apply_filter(const Str& str)
 
 		//add char to string
 		Str s=str.sub(pos,len);
-		if(filter_char(s))
-			filtered+=s;
+		if(Str news=filter_char(s))
+		{
+			if(news!="")
+				filtered+=news;
+		}
 
 		//adjust string position
 		pos+=len;
@@ -1046,44 +1140,92 @@ Str eEditbox::apply_filter(const Str& str)
 
 
 
-//		None,Int,Float,Hex,Alpha,Alphanumeric,Filename
 //***** FILTER CHAR
-bool eEditbox::filter_char(const Str& ch)
+Str eEditbox::filter_char(const Str& ch)
 {
-/*
+
 	switch(filter)
 	{
-		//
-		case EditboxFilter::
+		//NONE
+		case EditboxFilter::None:
+		{
+			return ch;
+		}
 		break;
 
-		//
-		case EditboxFilter::
+		//BINARY
+		case EditboxFilter::Binary:
+		{
+			if(ch=="0" || ch=="1")
+			return ch;
+		}
 		break;
 
-		//
-		case EditboxFilter::
+		//INT
+		case EditboxFilter::Int:
+		{
+			if((ch>="0" && ch<="9") || ch=="-")
+				return ch;
+		}
 		break;
 
-		//
-		case EditboxFilter::
+		//FLOAT
+		case EditboxFilter::Float:
+		{
+			if((ch>="0" && ch<="9") || ch=="." || ch=="-")
+				return ch;
+		}
 		break;
 
-		//
-		case EditboxFilter::
+		//HEX
+		case EditboxFilter::Hex:
+		{
+			Str s=ch;
+
+			//upcase automatically
+			if(ch>="a" && ch<="f")
+				s=ch.toupper();
+
+			if((s>="0" && s<="9") || (s>="A" && s<="F"))
+				return s;
+		}
 		break;
 
-		//
-		case EditboxFilter::
+		//OCT
+		case EditboxFilter::Oct:
+		{
+			if(ch>="0" && ch<="7")
+				return ch;
+		}
 		break;
 
-		//
-		case EditboxFilter::
+		//ALPHA
+		case EditboxFilter::Alpha:
+		{
+			if((ch>="a" && ch<="z") || (ch>="A" && ch<="Z"))
+				return ch;
+		}
+		break;
+
+		//ALPHANUMERIC
+		case EditboxFilter::Alphanumeric:
+		{
+			if((ch>="a" && ch<="z") || (ch>="A" && ch<="Z") || (ch>="0" && ch<="9") || ch=="-")
+				return ch;
+		}
+		break;
+
+		//FILENAME
+		case EditboxFilter::Filename:
+		{
+			if((ch>="a" && ch<="z") || (ch>="A" && ch<="Z") || (ch>="0" && ch<="9") || ch=="-" || ch=="." || ch=="/" || ch=="\\" || ch=="_" || ch=="(" || ch==")" || ch=="[" || ch=="]" || ch==":" || ch=="~" || ch==" ")
+				return ch;
+		}
 		break;
 
 	}
-*/
-	return true;
+
+	return "";
 }
 
 

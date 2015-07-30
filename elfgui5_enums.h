@@ -43,7 +43,7 @@ namespace EditboxFilter
 {
 	enum Type
 	{
-		None,Int,Float,Hex,Alpha,Alphanumeric,Filename
+		None,Binary,Int,Float,Hex,Oct,Alpha,Alphanumeric,Filename
 	};
 }
 

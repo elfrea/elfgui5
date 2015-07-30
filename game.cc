@@ -107,12 +107,14 @@ void Game::init()
 	//percent1->set_custom("gfx/test/test_percent_bg.png","gfx/test/test_percent_bar.png","gfx/test/test_percent_border.png");
 	win2->add_child(percent1);
 
-	edit1=new eEditbox("editbox1",10,380,200,25,"blébléblé");
-	edit1->set_password_mode(true);
+	edit1=new eEditbox("editbox1",10,380,200,25,"1blébléblé2");
+//	edit1->set_password_mode(true);
 	win2->add_child(edit1);
 
 	edit2=new eEditbox("editbox2",10,410,200,25,"testing123");
 	edit2->set_custom("gfx/test/test_editbox.png",15,true);
+	edit2->set_filter(EditboxFilter::Filename);
+	edit2->set_password_mode(true);
 	win2->add_child(edit2);
 
 

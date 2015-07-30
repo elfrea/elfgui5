@@ -111,6 +111,7 @@ public:
 	int get_view_w();
 	int get_view_last();
 	int get_last_pos();
+	int get_next_space_pos(bool backward);
 
 	void add_chars(int pos,Str chars);
 	void remove_chars(int pos,int len,bool backward=false);
@@ -125,7 +126,7 @@ public:
 	int find_pos_at(int mx);
 
 	Str apply_filter(const Str& str);
-	bool filter_char(const Str& ch);
+	Str filter_char(const Str& ch);
 
 };
 
