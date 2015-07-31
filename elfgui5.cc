@@ -172,14 +172,15 @@ void ElfGui5::shutdown()
 Event* ElfGui5::fetch_event()
 {
 	Event* ev=NULL;
-	bool ok=true;
+	bool ok=false;
 
-	while(!ok)
+	while(ok==false)
 	{
+		ok=true;
+
 		//check if there is any events in the list
 		if(events.size()>0)
 		{
-			ok=true;
 			ev=events[0];
 			events.remove_nodel(0);
 
