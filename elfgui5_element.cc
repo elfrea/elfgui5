@@ -640,6 +640,13 @@ DragPacket* Element::start_drag(const Str& icon_path,int offx,int offy)
 //***** SEND EVENT
 void Element::send_event(Element* sndr,const Str& cmd)
 {
+	//return if event's sender is in the dead list
+	for(int a=0;a<ElfGui5::dead_list.size();a++)
+	{
+		if(sndr==ElfGui5::dead_list[a])
+			return;
+	}
+
 	//create new event
 	Event* ev=new Event(sndr,cmd);
 

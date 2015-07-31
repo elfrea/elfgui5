@@ -178,6 +178,16 @@ Event* ElfGui5::fetch_event()
 	{
 		ev=events[0];
 		events.remove_nodel(0);
+
+		//check if event's sender is in the dead list
+		for(int a=0;a<dead_list.size();a++)
+		{
+			if(ev->sender==dead_list[a])
+			{
+				delete ev;
+				return NULL;
+			}
+		}
 	}
 
 	return ev;
