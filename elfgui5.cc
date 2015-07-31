@@ -172,20 +172,25 @@ void ElfGui5::shutdown()
 Event* ElfGui5::fetch_event()
 {
 	Event* ev=NULL;
+	bool ok=true;
 
-	//check if there is any events in the list
-	if(events.size()>0)
+	while(!ok)
 	{
-		ev=events[0];
-		events.remove_nodel(0);
-
-		//check if event's sender is in the dead list
-		for(int a=0;a<dead_list.size();a++)
+		//check if there is any events in the list
+		if(events.size()>0)
 		{
-			if(ev->sender==dead_list[a])
+			ok=true;
+			ev=events[0];
+			events.remove_nodel(0);
+
+			//check if event's sender is in the dead list
+			for(int a=0;a<dead_list.size();a++)
 			{
-				delete ev;
-				return NULL;
+				if(ev->sender==dead_list[a])
+				{
+					delete ev;
+					ok=false;
+				}
 			}
 		}
 	}
