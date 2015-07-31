@@ -38,4 +38,4 @@ $(TARGET): $(OBJS) $(DEPS)
 	g++ -o $(TARGET) $(OBJS) -L$(PIXDIR) -lpix5_d -Wl,-rpath=$(PIXDIR)
  
 $(OBJS): %.o: %.cc $(DEPS)
-	g++ -c -o $@ -I$(PIXDIR) -Wall -Werror -DDBG -DOVERLOAD_NEW_DELETE $<
+	g++ -g -c -o $@ -I$(PIXDIR) -Wall -Werror -DDBG $<

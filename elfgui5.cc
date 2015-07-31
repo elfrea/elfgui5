@@ -757,6 +757,7 @@ void ElfGui5::set_mouse_cursor(const Str& cursor)
 void ElfGui5::add_element_in_dead_list(Element* ele)
 {
 	dead_list.add(ele);
+	
 	if(element_under_mouse==ele)
 		element_under_mouse=NULL;
 
