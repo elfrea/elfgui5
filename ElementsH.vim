@@ -174,12 +174,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 95 - ((34 * winheight(0) + 29) / 59)
+let s:l = 95 - ((19 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 95
-normal! 023|
+normal! 022|
 tabedit eTemplate.h
 set splitbelow splitright
 set nosplitbelow
@@ -2574,12 +2574,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 26 - ((25 * winheight(0) + 29) / 59)
+let s:l = 9 - ((8 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-26
-normal! 05|
+9
+normal! 015|
 tabnext 21
 set stal=1
 if exists('s:wipebuf')

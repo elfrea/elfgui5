@@ -46,17 +46,12 @@ void draw_panel(Texture* tex,int x,int y,int w,int h,bool inverted,bool enabled,
 
 
 	//draw panel
-	Texture *t=Texture::create(tex->width(),tex->height());
+	tex->rect_fill(Rect(x,y,w,h),col[1]);
+	tex->line(x,y,x+w-1,y,col[0]);
+	tex->line(x,y,x,y+h-2,col[0]);
+	tex->line(x,y+h-1,x+w-1,y+h-1,col[2]);
+	tex->line(x+w-1,y+1,x+w-1,y+h-1,col[2]);
 
-	t->clear(Color(0,0,0,0));
-	t->rect_fill(Rect(x,y,w,h),col[1]);
-	t->line(x,y,x+w-1,y,col[0]);
-	t->line(x,y,x,y+h-2,col[0]);
-	t->line(x,y+h-1,x+w-1,y+h-1,col[2]);
-	t->line(x+w-1,y+1,x+w-1,y+h-1,col[2]);
-
-	tex->blit(0,0,t);
-	delete t;
 }
 
 

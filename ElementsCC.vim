@@ -174,12 +174,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 609 - ((29 * winheight(0) + 29) / 59)
+let s:l = 448 - ((42 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-609
-normal! 015|
+448
+normal! 0
 tabedit eTemplate.cc
 set splitbelow splitright
 set nosplitbelow
@@ -534,12 +534,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 53 - ((52 * winheight(0) + 29) / 59)
+let s:l = 103 - ((0 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-53
-normal! 042|
+103
+normal! 0
 tabedit ePanel.cc
 set splitbelow splitright
 set nosplitbelow
@@ -1974,12 +1974,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 250 - ((58 * winheight(0) + 29) / 59)
+let s:l = 161 - ((22 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-250
-normal! 056|
+161
+normal! 045|
 tabedit eTimer.cc
 set splitbelow splitright
 set nosplitbelow
@@ -2580,7 +2580,7 @@ exe s:l
 normal! zt
 10
 normal! 014|
-tabnext 21
+tabnext 1
 set stal=1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
