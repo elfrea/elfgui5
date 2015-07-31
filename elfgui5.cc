@@ -764,14 +764,9 @@ void ElfGui5::add_element_in_dead_list(Element* ele)
 {
 	dead_list.add(ele);
 	
-	if(element_under_mouse==ele)
-		element_under_mouse=NULL;
-
-	if(current_element==ele)
-		current_element=NULL;
-
-	if(last_selected==ele)
-		last_selected=NULL;
+	element_under_mouse=NULL;
+	current_element=NULL;
+	last_selected=NULL;
 }
 
 
