@@ -20,6 +20,10 @@ eTrackbar::eTrackbar(const Str& ename,int ex,int ey,int ew,int eh,int val,int mi
 
 	customized=false;
 	show_rails=true;
+
+	custom_bar=NULL;
+	custom_tracker=NULL;
+	custom_tracker_disabled=NULL;
 	
 	//own internal config vars (use config functions to modify)
 
@@ -140,9 +144,19 @@ void eTrackbar::draw()
 
 		//tracker
 		if(orientation==Orientation::Horizontal)
-			image->blit(custom_tracker->width()/2+(w-custom_tracker->width())*get_percent()/100-(custom_tracker->width()/2),(h-custom_tracker->height())/2,custom_tracker);
+		{
+			if(enabled)
+				image->blit(custom_tracker->width()/2+(w-custom_tracker->width())*get_percent()/100-(custom_tracker->width()/2),(h-custom_tracker->height())/2,custom_tracker);
+			else
+				image->blit(custom_tracker_disabled->width()/2+(w-custom_tracker_disabled->width())*get_percent()/100-(custom_tracker_disabled->width()/2),(h-custom_tracker_disabled->height())/2,custom_tracker_disabled);
+		}
 		else
-			image->blit((w-custom_tracker->width())/2,custom_tracker->height()/2+(h-custom_tracker->height())*get_percent()/100-(custom_tracker->height()/2),custom_tracker);
+		{
+			if(enabled)
+				image->blit((w-custom_tracker->width())/2,custom_tracker->height()/2+(h-custom_tracker->height())*get_percent()/100-(custom_tracker->height()/2),custom_tracker);
+			else
+				image->blit((w-custom_tracker_disabled->width())/2,custom_tracker_disabled->height()/2+(h-custom_tracker_disabled->height())*get_percent()/100-(custom_tracker_disabled->height()/2),custom_tracker_disabled);
+		}
 
 	}
 
@@ -337,10 +351,11 @@ void eTrackbar::set_customized(bool custom)
 
 
 //***** SET CUSTOM
-void eTrackbar::set_custom(Texture* bar,Texture* tracker,bool autosize)
+void eTrackbar::set_custom(Texture* bar,Texture* tracker,Texture* dtracker,bool autosize)
 {
 	custom_bar=bar;
 	custom_tracker=tracker;
+	custom_tracker_disabled=dtracker;
 
 	if(autosize)
 	{
@@ -369,9 +384,9 @@ void eTrackbar::set_custom(Texture* bar,Texture* tracker,bool autosize)
 
 
 //***** SET CUSTOM
-void eTrackbar::set_custom(const Str& bar,const Str& tracker,bool autosize)
+void eTrackbar::set_custom(const Str& bar,const Str& tracker,const Str& dtracker,bool autosize)
 {
-	set_custom(Cache::texture(bar),Cache::texture(tracker),autosize);
+	set_custom(Cache::texture(bar),Cache::texture(tracker),Cache::texture(dtracker),autosize);
 }
 
 

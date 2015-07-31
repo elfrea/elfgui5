@@ -36,6 +36,7 @@ eRadiobutton::eRadiobutton(const Str& ename,int ex,int ey,int ew,int eh,const St
 	ready_to_check=false;
 	custom_box=NULL;
 	custom_mark=NULL;
+	custom_box_disabled=NULL;
 	
 	//own elements
 
@@ -82,7 +83,11 @@ void eRadiobutton::draw()
 	if(custom_box)
 	{
 		image->clear(Color(0,0,0,0));
-		image->blit(0,(h-custom_box->height())/2,custom_box,false);
+
+		if(enabled)
+			image->blit(0,(h-custom_box->height())/2,custom_box,false);
+		else
+			image->blit(0,(h-custom_box_disabled->height())/2,custom_box_disabled,false);
 	}
 	else
 	{
@@ -413,10 +418,11 @@ void eRadiobutton::set_check_radius(int off)
 
 
 //***** SET CUSTOM
-void eRadiobutton::set_custom(Texture* box,Texture* mark,bool autosize,bool sh_text)
+void eRadiobutton::set_custom(Texture* box,Texture* mark,Texture* dbox,bool autosize,bool sh_text)
 {
 	custom_box=box;
 	custom_mark=mark;
+	custom_box_disabled=dbox;
 
 	show_text=sh_text;
 
@@ -434,9 +440,9 @@ void eRadiobutton::set_custom(Texture* box,Texture* mark,bool autosize,bool sh_t
 
 
 //***** SET CUSTOM
-void eRadiobutton::set_custom(const Str& box,const Str& mark,bool autosize,bool sh_text)
+void eRadiobutton::set_custom(const Str& box,const Str& mark,const Str& dbox,bool autosize,bool sh_text)
 {
-	set_custom(Cache::texture(box),Cache::texture(mark),autosize,sh_text);
+	set_custom(Cache::texture(box),Cache::texture(mark),Cache::texture(dbox),autosize,sh_text);
 }
 
 

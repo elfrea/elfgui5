@@ -18,6 +18,7 @@ public:
 	bool customized;
 	Texture* custom_bar;
 	Texture* custom_tracker;
+	Texture* custom_tracker_disabled;
 
 	bool show_rails;
 
@@ -80,8 +81,8 @@ public:
 	void set_tracker_size(int size);
 
 	void set_customized(bool custom);
-	void set_custom(Texture* bar,Texture* tracker,bool autosize=true);
-	void set_custom(const Str& bar,const Str& tracker,bool autosize=true);
+	void set_custom(Texture* bar,Texture* tracker,Texture* dtracker,bool autosize=true);
+	void set_custom(const Str& bar,const Str& tracker,const Str& dtracker,bool autosize=true);
 
 	void set_show_rails(bool show);
 

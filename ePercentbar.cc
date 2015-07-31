@@ -21,6 +21,7 @@ ePercentbar::ePercentbar(const Str& ename,int ex,int ey,int ew,int eh,int val,in
 	custom_bg=NULL;
 	custom_bar=NULL;
 	custom_border=NULL;
+	custom_bar_disabled=NULL;
 
 	//own internal vars
 	
@@ -72,8 +73,16 @@ void ePercentbar::draw()
 		image->blit(0,0,custom_bg);
 
 		//show bar
-		int bw=custom_bar->width()*get_percent()/100;
-		image->blit(0,0,custom_bar,0,0,bw,custom_bar->height());
+		if(enabled)
+		{
+			int bw=custom_bar->width()*get_percent()/100;
+			image->blit(0,0,custom_bar,0,0,bw,custom_bar->height());
+		}
+		else
+		{
+			int bw=custom_bar_disabled->width()*get_percent()/100;
+			image->blit(0,0,custom_bar_disabled,0,0,bw,custom_bar_disabled->height());
+		}
 
 		//show border
 		image->blit(0,0,custom_border);
@@ -247,11 +256,12 @@ void ePercentbar::set_customized(bool custom)
 
 
 //***** SET CUSTOM
-void ePercentbar::set_custom(Texture* bg,Texture* bar,Texture* border,bool autosize)
+void ePercentbar::set_custom(Texture* bg,Texture* bar,Texture* border,Texture* dbar,bool autosize)
 {
 	custom_bg=bg;
 	custom_bar=bar;
 	custom_border=border;
+	custom_bar_disabled=dbar;
 
 	//check if we need to resize the percentbar
 	if(autosize)
@@ -265,9 +275,9 @@ void ePercentbar::set_custom(Texture* bg,Texture* bar,Texture* border,bool autos
 
 
 //***** SET CUSTOM
-void ePercentbar::set_custom(const Str& bg,const Str& bar,const Str& border,bool autosize)
+void ePercentbar::set_custom(const Str& bg,const Str& bar,const Str& border,const Str& dbar,bool autosize)
 {
-	set_custom(Cache::texture(bg),Cache::texture(bar),Cache::texture(border),autosize);
+	set_custom(Cache::texture(bg),Cache::texture(bar),Cache::texture(border),Cache::texture(dbar),autosize);
 }
 
 

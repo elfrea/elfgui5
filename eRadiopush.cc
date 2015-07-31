@@ -31,6 +31,7 @@ eRadiopush::eRadiopush(const Str& ename,int ex,int ey,int ew,int eh,const Str& t
 	custom_layout=NULL;
 	custom_layout_pushed=NULL;
 	custom_layout_hover=NULL;
+	custom_layout_disabled=NULL;
 
 	//own internal vars
 	custom_img=NULL;
@@ -112,8 +113,17 @@ void eRadiopush::draw()
 	if(customized)
 	{
 		image->clear(Color(0,0,0,0));
-		if(custom_img)
-			image->blit(0,0,custom_img,false);
+
+		if(enabled)
+		{
+			if(custom_img)
+				image->blit(0,0,custom_img,false);
+		}
+		else
+		{
+			if(custom_layout_disabled)
+				image->blit(0,0,custom_layout_disabled,false);
+		}
 	}
 	else
 		draw_panel(image,color,pushed,enabled);
@@ -334,11 +344,12 @@ void eRadiopush::set_customized(bool custom)
 
 
 //***** SET CUSTOM
-void eRadiopush::set_custom(Texture* lay,Texture* lay_pushed,Texture* lay_hover,bool autosize,bool sh_text,bool sh_tex)
+void eRadiopush::set_custom(Texture* lay,Texture* lay_pushed,Texture* lay_hover,Texture* dlay,bool autosize,bool sh_text,bool sh_tex)
 {
 	custom_layout=lay;
 	custom_layout_pushed=lay_pushed;
 	custom_layout_hover=lay_hover;
+	custom_layout_disabled=dlay;
 
 	show_text=sh_text;
 	show_tex=sh_tex;
@@ -356,9 +367,9 @@ void eRadiopush::set_custom(Texture* lay,Texture* lay_pushed,Texture* lay_hover,
 
 
 //***** SET CUSTOM
-void eRadiopush::set_custom(const Str& lay,const Str& lay_pushed,const Str& lay_hover,bool autosize,bool sh_text,bool sh_tex)
+void eRadiopush::set_custom(const Str& lay,const Str& lay_pushed,const Str& lay_hover,const Str& dlay,bool autosize,bool sh_text,bool sh_tex)
 {
-	set_custom(Cache::texture(lay),Cache::texture(lay_pushed),Cache::texture(lay_hover),autosize,sh_text,sh_tex);
+	set_custom(Cache::texture(lay),Cache::texture(lay_pushed),Cache::texture(lay_hover),Cache::texture(dlay),autosize,sh_text,sh_tex);
 }
 
 

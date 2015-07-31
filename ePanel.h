@@ -30,6 +30,7 @@ public:
 
 	Color plain_color;
 	Texture* custom_layout;
+	Texture* custom_layout_disabled;
 
 	//own internal vars
 
@@ -79,8 +80,8 @@ public:
 	void set_plain(bool show,const Color& col);
 
 	void set_customized(bool custom);
-	void set_custom(Texture* lay,bool autosize=true,bool sh_text=false,bool sh_tex=false);
-	void set_custom(const Str& lay,bool autosize=true,bool sh_text=false,bool sh_tex=false);
+	void set_custom(Texture* lay,Texture* dlay,bool autosize=true,bool sh_text=false,bool sh_tex=false);
+	void set_custom(const Str& lay,const Str& dlay,bool autosize=true,bool sh_text=false,bool sh_tex=false);
 
 	//own internal functions
 

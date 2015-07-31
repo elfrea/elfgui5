@@ -31,6 +31,11 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	//own internal config vars (use config functions to modify)
 
 	//own internal vars
+	maximized_x=0;
+	maximized_y=0;
+	maximized_w=0;
+	maximized_h=0;
+	shaded_h=0;
 
 	//own elements
 	titlebar=new ePanel(ename+".titlebar",0,0,ew,DEFAULT_TITLEBAR_H);
@@ -45,33 +50,34 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	statusbar=new ePanel(ename+".statusbar",0,eh-DEFAULT_STATUSBAR_H,ew,DEFAULT_STATUSBAR_H);
 	statusbar->can_be_clicked_through=true;
 	statusbar->can_be_resized=true;
+	statusbar->set_font(Theme::font->small);
 	add_child_on_window(statusbar);
 	statusbar->set_anchor(false,true,true,true);
 
 	button_close=new eButton(ename+".button_close",0,0,10,10,"");
 	button_close->set_show_text(false);
-	button_close->set_custom("gfx/elements/window_button_close_normal.png","gfx/elements/window_button_close_pushed.png","gfx/elements/window_button_close_hover.png");
+	button_close->set_custom("gfx/elements/window_button_close_normal.png","gfx/elements/window_button_close_pushed.png","gfx/elements/window_button_close_hover.png","gfx/elements/window_button_close_disabled.png");
 	button_close->always_on_top=true;
 	button_close->selectable=false;
 	add_child_on_window(button_close);
 
 	button_maximize=new eButton(ename+".button_maximize",0,0,10,10,"");
 	button_maximize->set_show_text(false);
-	button_maximize->set_custom("gfx/elements/window_button_maximize_normal.png","gfx/elements/window_button_maximize_pushed.png","gfx/elements/window_button_maximize_hover.png");
+	button_maximize->set_custom("gfx/elements/window_button_maximize_normal.png","gfx/elements/window_button_maximize_pushed.png","gfx/elements/window_button_maximize_hover.png","gfx/elements/window_button_maximize_disabled.png");
 	button_maximize->always_on_top=true;
 	button_maximize->selectable=false;
 	add_child_on_window(button_maximize);
 
 	button_minimize=new eButton(ename+".button_minimize",0,0,10,10,"");
 	button_minimize->set_show_text(false);
-	button_minimize->set_custom("gfx/elements/window_button_minimize_normal.png","gfx/elements/window_button_minimize_pushed.png","gfx/elements/window_button_minimize_hover.png");
+	button_minimize->set_custom("gfx/elements/window_button_minimize_normal.png","gfx/elements/window_button_minimize_pushed.png","gfx/elements/window_button_minimize_hover.png","gfx/elements/window_button_minimize_disabled.png");
 	button_minimize->always_on_top=true;
 	button_minimize->selectable=false;
 	add_child_on_window(button_minimize);
 
 	button_shade=new eButton(ename+".button_shade",0,0,10,10,"");
 	button_shade->set_show_text(false);
-	button_shade->set_custom("gfx/elements/window_button_shade_normal.png","gfx/elements/window_button_shade_pushed.png","gfx/elements/window_button_shade_hover.png");
+	button_shade->set_custom("gfx/elements/window_button_shade_normal.png","gfx/elements/window_button_shade_pushed.png","gfx/elements/window_button_shade_hover.png","gfx/elements/window_button_shade_disabled.png");
 	button_shade->always_on_top=true;
 	button_shade->selectable=false;
 	add_child_on_window(button_shade);
@@ -131,6 +137,10 @@ void eWindow::draw()
 //***** ON EVENT
 void eWindow::on_event(Event* ev)
 {
+	//bring to front
+	if(mouse_down_bring_to_front)
+		bring_to_front();
+
 	//CLOSE BUTTON
 	if(ev->sender==button_close && ev->command=="trigger")
 	{
@@ -140,16 +150,26 @@ void eWindow::on_event(Event* ev)
 	//MAXIMIZE BUTTON
 	else if(ev->sender==button_maximize && ev->command=="trigger")
 	{
+		maximize();
 	}
 
 	//MINIMIZE BUTTON
 	else if(ev->sender==button_minimize && ev->command=="trigger")
 	{
+		minimize();
 	}
 
 	//SHADE BUTTON
 	else if(ev->sender==button_shade && ev->command=="trigger")
 	{
+		shade();
+	}
+
+	//SEND EVENT TO PARENT
+	else
+	{
+		send_event(ev);
+		return;
 	}
 
 
@@ -161,10 +181,36 @@ void eWindow::on_event(Event* ev)
 void eWindow::on_mouse_enter(int mx,int my){}
 void eWindow::on_mouse_leave(){}
 void eWindow::on_mouse_move(int mx,int my){}
-void eWindow::on_mouse_down(int but,int mx,int my){}
+
+
+
+//***** ON MOUSE DOWN
+void eWindow::on_mouse_down(int but,int mx,int my)
+{
+	//shade with middle button
+	if(but==2)
+	{
+		if(button_shade->visible && button_shade->enabled)
+			shade();
+	}
+}
+
+
+
 void eWindow::on_mouse_up(int but,int mx,int my){}
 //void eWindow::on_mouse_click(int but,int mx,int my){}
-//void eWindow::on_mouse_doubleclick(int but,int mx,int my){}
+
+
+
+//***** ON MOUSE DOUBLECLICK
+void eWindow::on_mouse_doubleclick(int but,int mx,int my)
+{
+	if(button_maximize->enabled && button_maximize->visible)
+		maximize();
+}
+
+
+
 //void eWindow::on_mouse_wheel_down(int mx,int my){}
 //void eWindow::on_mouse_wheel_up(int mx,int my){}
 void eWindow::on_mouse_drag_out(){}
@@ -177,10 +223,10 @@ void eWindow::on_parent_resize(){}
 void eWindow::on_select(){}
 void eWindow::on_unselect(){}
 
-void eWindow::on_close(){}
-void eWindow::on_maximize(){}
-void eWindow::on_minimize(){}
-void eWindow::on_shade(){}
+bool eWindow::on_close(){return true;}
+bool eWindow::on_maximize(){return true;}
+bool eWindow::on_minimize(){return true;}
+bool eWindow::on_shade(){return true;}
 
 
 
@@ -364,6 +410,14 @@ void eWindow::set_statusbar_height(int sh)
 
 
 
+//***** SET STATUSBAR MESSAGE
+void eWindow::set_statusbar_message(const Str& msg)
+{
+	statusbar->set_text(msg,Align::Left,5);
+}
+
+
+
 //***** SET SHOW BUTTONS
 void eWindow::set_show_buttons(bool bclose,bool bmax,bool bmin,bool bshade)
 {
@@ -380,9 +434,8 @@ void eWindow::set_show_buttons(bool bclose,bool bmax,bool bmin,bool bshade)
 //***** CLOSE
 void eWindow::close()
 {
-	on_close();
-	
-	ElfGui5::add_element_in_dead_list(this);
+	if(on_close())
+		add_to_dead_list();
 }
 
 
@@ -390,6 +443,35 @@ void eWindow::close()
 //***** MAXIMIZE
 void eWindow::maximize()
 {
+	if(on_maximize() && parent)
+	{
+		maximized=!maximized;
+
+		//save current position and size and maximize the window
+		if(maximized)
+		{
+			maximized_x=x;
+			maximized_y=y;
+			maximized_w=w;
+			maximized_h=h;
+
+			x=0;
+			y=0;
+			resize(parent->w,parent->h);
+			can_be_moved=false;
+			can_be_resized=false;
+		}
+
+		//fetch old position and size and unmaximize the window
+		else
+		{
+			x=maximized_x;
+			y=maximized_y;
+			resize(maximized_w,maximized_h);
+			can_be_moved=true;
+			can_be_resized=true;
+		}
+	}
 }
 
 
@@ -397,6 +479,22 @@ void eWindow::maximize()
 //***** MINIMIZE
 void eWindow::minimize()
 {
+	if(on_minimize())
+	{
+		minimized=!minimized;
+
+		//minimize window
+		if(minimized)
+		{
+			visible=false;
+		}
+
+		//unminimize window
+		else
+		{
+			visible=true;
+		}
+	}
 }
 
 
@@ -404,6 +502,36 @@ void eWindow::minimize()
 //***** SHADE
 void eWindow::shade()
 {
+	if(on_minimize())
+	{
+		shaded=!shaded;
+
+		//save current height and shade window
+		if(shaded)
+		{
+			shaded_h=h;
+
+			body->visible=false;
+			statusbar->visible=false;
+
+			resize(w,titlebar->h);
+			can_be_resized=false;
+
+			button_maximize->set_enabled(false);
+		}
+
+		//fetch old height and unshade window
+		else
+		{
+			body->visible=true;
+			statusbar->visible=true;
+			
+			resize(w,shaded_h);
+			can_be_resized=true;
+
+			button_maximize->set_enabled(true);
+		}
+	}
 }
 
 

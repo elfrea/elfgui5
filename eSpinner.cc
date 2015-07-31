@@ -99,7 +99,7 @@ void eSpinner::on_event(Event* ev)
 	}
 
 	//***** BUTTON INC TRIGGER
-	if(ev->sender==button_inc && ev->command=="trigger")
+	else if(ev->sender==button_inc && ev->command=="trigger")
 	{
 		if(mode==SpinnerMode::Bool)
 			set_value(!value);
@@ -108,7 +108,7 @@ void eSpinner::on_event(Event* ev)
 	}
 
 	//***** EDITBOX WHEEL DOWN
-	if(ev->sender==editbox && ev->command=="wheel down")
+	else if(ev->sender==editbox && ev->command=="wheel down")
 	{
 		if(mode==SpinnerMode::Bool)
 			set_value(!value);
@@ -117,7 +117,7 @@ void eSpinner::on_event(Event* ev)
 	}
 
 	//***** EDITBOX WHEEL UP
-	if(ev->sender==editbox && ev->command=="wheel up")
+	else if(ev->sender==editbox && ev->command=="wheel up")
 	{
 		if(mode==SpinnerMode::Bool)
 			set_value(!value);
@@ -126,9 +126,16 @@ void eSpinner::on_event(Event* ev)
 	}
 
 	//***** EDITBOX TRIGGER
-	if(ev->sender==editbox && ev->command=="trigger")
+	else if(ev->sender==editbox && ev->command=="trigger")
 	{
 		set_value(filter_manual_value());
+	}
+
+	//SEND EVENT TO PARENT
+	else
+	{
+		send_event(ev);
+		return;
 	}
 
 	delete ev;

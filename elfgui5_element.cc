@@ -961,6 +961,13 @@ void Element::apply_anchor()
 
 
 
+//***** ADD TO DEAD LIST
+void Element::add_to_dead_list()
+{
+	ElfGui5::add_element_in_dead_list(this);
+}
+
+
 
 
 

@@ -75,7 +75,8 @@ void cGame::init()
 	win1->add_child(check1);
 
 	push1=new ePushbutton("pushbutton1",10,210,100,30,"PUSH");
-	push1->set_custom("gfx/test/test_but.png","gfx/test/test_but_pushed.png","gfx/test/test_but_hover.png");
+	push1->set_custom("gfx/test/test_but.png","gfx/test/test_but_pushed.png","gfx/test/test_but_hover.png","gfx/test/test_but_disabled.png");
+	push1->set_enabled(false);
 	win1->add_child(push1);
 
 	rpush1=new eRadiopush("radiopush1",10,250,70,50,"RPUSH1");
@@ -99,6 +100,7 @@ void cGame::init()
 	
 	win2=new eWindow("window2",340,50,300,600,"Test Window 2");
 	win2->set_show_buttons(true,false,true,false);
+	win2->set_statusbar_message("Status Test Message");
 	ElfGui5::base->add_child(win2);
 
 	hscroll1=new eScrollbar("h scrollbar1",10,10,280,20,4,122,Orientation::Horizontal);
@@ -118,7 +120,7 @@ void cGame::init()
 	win2->add_child(edit1);
 
 	edit2=new eEditbox("editbox2",10,410,200,25,"testing123");
-	edit2->set_custom("gfx/test/test_editbox.png",15,true);
+	edit2->set_custom("gfx/test/test_editbox.png","gfx/test/test_editbox_disabled.png",15,true);
 	edit2->set_filter(EditboxFilter::Filename);
 	win2->add_child(edit2);
 
@@ -136,7 +138,7 @@ void cGame::init()
 	win2->add_child(track1);
 
 	track2=new eTrackbar("trackbar2",50,90,30,200,0,12,20,Orientation::Vertical);
-	track2->set_custom("gfx/test/test_trackbar_track.png","gfx/test/test_trackbar_tracker.png");
+	track2->set_custom("gfx/test/test_trackbar_track.png","gfx/test/test_trackbar_tracker.png","gfx/test/test_trackbar_tracker_disabled.png");
 	win2->add_child(track2);
 
 

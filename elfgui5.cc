@@ -203,6 +203,11 @@ void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 
 
 	Element* eum=ElfGui5::element_under_mouse;
+
+	//send event "touched" to parent (hack for bringing parent window to front)
+	if(eum)
+		eum->send_event("touched");
+
 	if(eum && eum->enabled)
 	{
 		int mx=mouse.x-eum->get_true_x();

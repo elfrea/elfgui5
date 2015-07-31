@@ -31,6 +31,7 @@ public:
 	Texture* custom_layout;
 	Texture* custom_layout_pushed;
 	Texture* custom_layout_hover;
+	Texture* custom_layout_disabled;
 
 	//own internal vars
 	Texture* custom_img;
@@ -82,8 +83,8 @@ public:
 	void set_show_tex(bool show);
 
 	void set_customized(bool custom);
-	void set_custom(Texture* lay,Texture* lay_pushed,Texture* lay_hover,bool autosize=true,bool sh_text=false,bool sh_tex=false);
-	void set_custom(const Str& lay,const Str& lay_pushed,const Str& lay_hover,bool autosize=true,bool sh_text=false,bool sh_tex=false);
+	void set_custom(Texture* lay,Texture* lay_pushed,Texture* lay_hover,Texture* dlay,bool autosize=true,bool sh_text=false,bool sh_tex=false);
+	void set_custom(const Str& lay,const Str& lay_pushed,const Str& lay_hover,const Str& dlay,bool autosize=true,bool sh_text=false,bool sh_tex=false);
 
 	//own internal functions
 

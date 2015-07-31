@@ -34,6 +34,7 @@ public:
 	bool ready_to_check;
 	Texture* custom_box;
 	Texture* custom_mark;
+	Texture* custom_box_disabled;
 
 	//own elements
 
@@ -82,8 +83,8 @@ public:
 	void set_checked();
 	void set_check_size(int size,bool autosize=true);
 	void set_check_radius(int off);
-	void set_custom(Texture* box,Texture* mark,bool autosize=true,bool sh_text=true);
-	void set_custom(const Str& box,const Str& mark,bool autosize=true,bool sh_text=true);
+	void set_custom(Texture* box,Texture* mark,Texture* dbox,bool autosize=true,bool sh_text=true);
+	void set_custom(const Str& box,const Str& mark,const Str& dbox,bool autosize=true,bool sh_text=true);
 
 	//own internal functions
 

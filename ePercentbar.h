@@ -26,6 +26,7 @@ public:
 	Texture* custom_bg;
 	Texture* custom_bar;
 	Texture* custom_border;
+	Texture* custom_bar_disabled;
 
 	//own internal vars
 
@@ -76,8 +77,8 @@ public:
 	void set_bar_color(const Color& col);
 
 	void set_customized(bool custom);
-	void set_custom(Texture* bg,Texture* bar,Texture* border,bool autosize=true);
-	void set_custom(const Str& bg,const Str& bar,const Str& border,bool autosize=true);
+	void set_custom(Texture* bg,Texture* bar,Texture* border,Texture* dbar,bool autosize=true);
+	void set_custom(const Str& bg,const Str& bar,const Str& border,const Str& dbar,bool autosize=true);
 
 	//own internal functions
 

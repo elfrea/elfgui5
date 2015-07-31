@@ -18,6 +18,7 @@ public:
 	//own internal config vars (use config functions to modify)
 	bool customized;
 	Texture* custom_bg;
+	Texture* custom_bg_disabled;
 
 	bool readonly;
 	bool insert_mode;
@@ -84,8 +85,8 @@ public:
 
 	//own config functions
 	void set_text(const Str& txt,bool override_readonly=false);
-	void set_custom(Texture* tex,int borderw=5,bool autosize=true);
-	void set_custom(const Str& filename,int borderw=5,bool autosize=true);
+	void set_custom(Texture* tex,Texture* dtex,int borderw=5,bool autosize=true);
+	void set_custom(const Str& filename,const Str& dfilename,int borderw=5,bool autosize=true);
 	void set_customized(bool custom);
 	void set_border_width(int bw);
 	void set_cursor_position(int pos);

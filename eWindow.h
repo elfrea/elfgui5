@@ -23,6 +23,11 @@ public:
 	bool show_button_shade;
 
 	//own internal vars
+	int maximized_x;
+	int maximized_y;
+	int maximized_w;
+	int maximized_h;
+	int shaded_h;
 
 	//own elements
 	class ePanel* titlebar;
@@ -56,7 +61,7 @@ public:
 	void on_mouse_down(int but,int mx,int my);
 	void on_mouse_up(int but,int mx,int my);
 //	void on_mouse_click(int but,int mx,int my);
-//	void on_mouse_doubleclick(int but,int mx,int my);
+	void on_mouse_doubleclick(int but,int mx,int my);
 //	void on_mouse_wheel_down(int mx,int my);
 //	void on_mouse_wheel_up(int mx,int my);
 	void on_mouse_drag_out();
@@ -68,10 +73,10 @@ public:
 	void on_parent_resize();
 	void on_select();
 	void on_unselect();
-	virtual void on_close();
-	virtual void on_maximize();
-	virtual void on_minimize();
-	virtual void on_shade();
+	virtual bool on_close();
+	virtual bool on_maximize();
+	virtual bool on_minimize();
+	virtual bool on_shade();
 
 	//family functions
 	void add_child(Element* child);
@@ -88,6 +93,7 @@ public:
 	void set_icon(const Str& filename,Align::Type align=Align::Left,int offx=3,int offy=0);
 	void set_titlebar_height(int th);
 	void set_statusbar_height(int sh);
+	void set_statusbar_message(const Str& msg);
 	void set_show_buttons(bool bclose,bool bmax,bool bmin,bool bshade);
 
 	void close();

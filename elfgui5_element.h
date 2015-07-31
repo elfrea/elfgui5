@@ -130,5 +130,6 @@ public:
 	Element* find_element_at(int x,int y);
 	Element* find_element_under_mouse();
 	void apply_anchor();
+	void add_to_dead_list();
 
 };

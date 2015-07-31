@@ -24,6 +24,7 @@ eEditbox::eEditbox(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt):
 	//own internal config vars (use config functions to modify)
 	customized=false;
 	custom_bg=NULL;
+	custom_bg_disabled=NULL;
 
 	insert_mode=false;
 	readonly=false;
@@ -148,7 +149,11 @@ void eEditbox::draw()
 	if(customized)
 	{
 		image->clear(Color(0,0,0,0));
-		image->blit(0,0,custom_bg);
+
+		if(enabled)
+			image->blit(0,0,custom_bg);
+		else
+			image->blit(0,0,custom_bg_disabled);
 	}
 
 	//normal
@@ -504,7 +509,7 @@ void eEditbox::set_text(const Str& txt,bool override_readonly)
 
 
 //***** SET CUSTOM
-void eEditbox::set_custom(Texture* tex,int borderw,bool autosize)
+void eEditbox::set_custom(Texture* tex,Texture* dtex,int borderw,bool autosize)
 {
 	//resize editbox if autosize is enabled
 	if(autosize)
@@ -513,6 +518,7 @@ void eEditbox::set_custom(Texture* tex,int borderw,bool autosize)
 	set_border_width(borderw);
 
 	custom_bg=tex;
+	custom_bg_disabled=dtex;
 	customized=true;
 	dirty=true;
 }
@@ -520,9 +526,9 @@ void eEditbox::set_custom(Texture* tex,int borderw,bool autosize)
 
 
 //***** SET CUSTOM
-void eEditbox::set_custom(const Str& filename,int borderw,bool autosize)
+void eEditbox::set_custom(const Str& filename,const Str& dfilename,int borderw,bool autosize)
 {
-	set_custom(Cache::texture(filename),borderw,autosize);
+	set_custom(Cache::texture(filename),Cache::texture(dfilename),borderw,autosize);
 }
 
 

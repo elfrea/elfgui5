@@ -154,6 +154,13 @@ void eScrollbar::on_event(Event* ev)
 	else if(ev->sender==button_inc && ev->command=="trigger")
 		set_value(value+1);
 
+	//SEND EVENT TO PARENT
+	else
+	{
+		send_event(ev);
+		return;
+	}
+
 	delete ev;
 }
 

@@ -32,6 +32,7 @@ ePanel::ePanel(const Str& ename,int ex,int ey,int ew,int eh,bool invert):Element
 	tex=NULL;
 
 	custom_layout=NULL;
+	custom_layout_disabled=NULL;
 
 	//own internal vars
 
@@ -73,8 +74,16 @@ void ePanel::draw()
 	if(customized)
 	{
 		image->clear(Color(0,0,0,0));
-		if(custom_layout)
-			image->blit(0,0,custom_layout,false);
+		if(enabled)
+		{
+			if(custom_layout)
+				image->blit(0,0,custom_layout,false);
+		}
+		else
+		{
+			if(custom_layout_disabled)
+				image->blit(0,0,custom_layout_disabled,false);
+		}
 	}
 	else if(plain)
 		image->clear(plain_color);
@@ -225,9 +234,10 @@ void ePanel::set_customized(bool custom)
 
 
 //***** SET CUSTOM
-void ePanel::set_custom(Texture* lay,bool autosize,bool sh_text,bool sh_tex)
+void ePanel::set_custom(Texture* lay,Texture* dlay,bool autosize,bool sh_text,bool sh_tex)
 {
 	custom_layout=lay;
+	custom_layout_disabled=dlay;
 
 	show_text=sh_text;
 	show_tex=sh_tex;
@@ -244,9 +254,9 @@ void ePanel::set_custom(Texture* lay,bool autosize,bool sh_text,bool sh_tex)
 
 
 //***** SET CUSTOM
-void ePanel::set_custom(const Str& lay,bool autosize,bool sh_text,bool sh_tex)
+void ePanel::set_custom(const Str& lay,const Str& dlay,bool autosize,bool sh_text,bool sh_tex)
 {
-	set_custom(Cache::texture(lay),autosize,sh_text,sh_tex);
+	set_custom(Cache::texture(lay),Cache::texture(dlay),autosize,sh_text,sh_tex);
 }
 
 
