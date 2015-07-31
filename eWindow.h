@@ -6,18 +6,30 @@
 
 class eWindow:public Element
 {
+	OBJ("eWindow")
+
 public:
 
 	//own config vars
 
 	//own internal config vars (use config functions to modify)
+	bool show_button_close;
+	bool show_button_maximize;
+	bool show_button_minimize;
+	bool show_button_shade;
 
 	//own internal vars
 
 	//own elements
 	class ePanel* titlebar;
-	class ePanel* statusbar;
+	class eButton* button_close;
+	class eButton* button_maximize;
+	class eButton* button_minimize;
+	class eButton* button_shade;
+	
 	class ePanel* body;
+	
+	class ePanel* statusbar;
 
 
 
@@ -68,8 +80,10 @@ public:
 	void set_icon(const Str& filename,Align::Type align=Align::Left,int offx=3,int offy=0);
 	void set_titlebar_height(int th);
 	void set_statusbar_height(int sh);
+	void set_show_buttons(bool bclose,bool bmax,bool bmin,bool bshade);
 
 	//own internal functions
+	void refresh_buttons();
 
 };
 

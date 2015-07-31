@@ -108,12 +108,16 @@ void eEditbox::loop()
 		//check if mouse must change view_pos
 		if(ms>=mouse_scroll_timer+mouse_scroll_delay)
 		{
-			mouse_scroll_timer=ms;
+			//check if all text already fit in the editbox
+			if(get_visible_text()!=text)
+			{
+				mouse_scroll_timer=ms;
 
-			if(mx<-3)
-				set_view_pos(view_pos-1);
-			else if(mx>w+3)
-				set_view_pos(view_pos+1);
+				if(mx<-3)
+					set_view_pos(view_pos-1);
+				else if(mx>w+3)
+					set_view_pos(view_pos+1);
+			}
 		}
 
 		//select text

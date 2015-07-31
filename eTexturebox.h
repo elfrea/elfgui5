@@ -6,6 +6,8 @@
 
 class eTexturebox:public Element
 {
+	OBJ("eTexturebox")
+
 public:
 
 	//own config vars

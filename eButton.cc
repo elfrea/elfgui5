@@ -69,12 +69,6 @@ void eButton::loop()
 	if(pushed_and_left && m.button(1)==false)
 		pushed_and_left=false;
 	
-	if(pushed && ElfGui5::last_selected!=this)
-	{
-		pushed=false;
-		dirty=1;
-	}
-
 	//set custom img
 	if(customized)
 	{

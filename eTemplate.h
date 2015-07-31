@@ -6,6 +6,8 @@
 
 class eTemplate:public Element
 {
+	OBJ("eTemplate")
+	
 public:
 
 	//own config vars

@@ -6,7 +6,7 @@
 
 
 //game variables
-Str Game::name;
+Str cGame::name;
 
 
 //temp variables
@@ -32,11 +32,13 @@ eEditbox* edit2;
 eTimer* timer1;
 eSpinner* spin1;
 eSpinner* spin2;
+eTrackbar* track1;
+eTrackbar* track2;
 
 
 
 //***** INIT
-void Game::init()
+void cGame::init()
 {
 	//game init
 	name="Game";
@@ -96,6 +98,7 @@ void Game::init()
 	
 	
 	win2=new eWindow("window2",340,50,300,600,"Test Window 2");
+	win2->set_show_buttons(true,false,true,false);
 	ElfGui5::base->add_child(win2);
 
 	hscroll1=new eScrollbar("h scrollbar1",10,10,280,20,4,122,Orientation::Horizontal);
@@ -123,10 +126,28 @@ void Game::init()
 	win2->add_child(timer1);
 
 	spin1=new eSpinner("spinner1",10,480,150,30,SpinnerMode::Double,0,0,100,Orientation::Horizontal);
+	spin1->resize(130,20);
 	win2->add_child(spin1);
 
 	spin2=new eSpinner("spinner2",10,520,150,30,SpinnerMode::Bool,0,0,100,Orientation::Vertical);
 	win2->add_child(spin2);
+
+	track1=new eTrackbar("trackbar1",50,50,200,30,0,5,10,Orientation::Horizontal);
+	win2->add_child(track1);
+
+	track2=new eTrackbar("trackbar2",50,90,30,200,0,12,20,Orientation::Vertical);
+	track2->set_custom("gfx/test/test_trackbar_track.png","gfx/test/test_trackbar_tracker.png");
+	win2->add_child(track2);
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -143,7 +164,7 @@ void Game::init()
 
 
 //***** LOOP
-int Game::loop()
+int cGame::loop()
 {
 	//fetch elfgui5 events
 	while(Event* ev=ElfGui5::fetch_event())
@@ -162,7 +183,7 @@ int Game::loop()
 
 
 //***** DRAW
-void Game::draw()
+void cGame::draw()
 {
 
 	ElfGui5::draw();
@@ -171,7 +192,7 @@ void Game::draw()
 
 
 //***** SHUTDOWN
-void Game::shutdown()
+void cGame::shutdown()
 {
 	#ifdef DBG
 	Log::debug("");
@@ -196,7 +217,7 @@ void Game::shutdown()
 
 
 //***** MANAGE EVENT
-void Game::manage_event(Event* ev)
+void cGame::manage_event(Event* ev)
 {
 	Log::log("GLOBAL EVENT RECEIVED: Sender: %s    Command: %s",ev->sender->name.ptr(),ev->command.ptr());
 }

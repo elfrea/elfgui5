@@ -8,9 +8,10 @@
 
 
 //***** GAME
-class Game
+class cGame:public Obj
 {
 public:
+	OBJ("cGame")
 
 	//game variables
 	static Str name;

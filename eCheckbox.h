@@ -6,6 +6,8 @@
 
 class eCheckbox:public Element
 {
+	OBJ("eCheckbox")
+
 public:
 
 	//own config vars

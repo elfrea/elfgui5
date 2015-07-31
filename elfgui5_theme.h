@@ -6,8 +6,10 @@
 
 
 
-class Colors
+class Colors:public Obj
 {
+	OBJ("Colors")
+
 public:
 
 	//normal
@@ -29,8 +31,10 @@ public:
 
 
 
-class Fonts
+class Fonts:public Obj
 {
+	OBJ("Fonts")
+
 public:
 
 	Font* tiny;
@@ -49,8 +53,10 @@ public:
 
 
 
-class Theme
+class Theme:public Obj
 {
+	OBJ("Theme")
+	
 public:
 
 	static Colors* color;

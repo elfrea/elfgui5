@@ -131,6 +131,7 @@ void eSpinner::on_event(Event* ev)
 		set_value(filter_manual_value());
 	}
 
+	delete ev;
 }
 
 
@@ -149,7 +150,17 @@ void eSpinner::on_mouse_drag_in(DragPacket* dragpacket){}
 void eSpinner::on_key_down(Key& key){}
 void eSpinner::on_key_up(Key& key){}
 void eSpinner::on_text(const Str& text){}
-void eSpinner::on_resize(int width,int height){}
+
+
+
+//***** ON RESIZE
+void eSpinner::on_resize(int width,int height)
+{
+	replace_elements();
+}
+
+
+
 void eSpinner::on_parent_resize(){}
 
 
@@ -213,45 +224,7 @@ void eSpinner::set_mode(SpinnerMode::Type mod)
 void eSpinner::set_orientation(Orientation::Type orient)
 {
 	orientation=orient;
-
-	//horizontal
-	if(orientation==Orientation::Horizontal)
-	{
-		button_dec->resize(h,h);
-		button_dec->x=0;
-		button_dec->y=0;
-		button_dec->set_tex("gfx/elements/arrow_left.png");
-
-		button_inc->resize(h,h);
-		button_inc->x=w-h;
-		button_inc->y=0;
-		button_inc->set_tex("gfx/elements/arrow_right.png");
-
-		editbox->resize(w-(h*2),h);
-		editbox->x=h;
-		editbox->y=0;
-
-	}
-
-	//vertical
-	else
-	{
-		button_dec->resize(h,h/2);
-		button_dec->x=w-h;
-		button_dec->y=h/2;
-		button_dec->set_tex("gfx/elements/arrow_down.png");
-
-		button_inc->resize(h,h/2);
-		button_inc->x=w-h;
-		button_inc->y=0;
-		button_inc->set_tex("gfx/elements/arrow_up.png");
-
-		editbox->resize(w-h,h);
-		editbox->x=0;
-		editbox->y=0;
-
-	}
-
+	replace_elements();
 }
 
 
@@ -484,6 +457,52 @@ double eSpinner::filter_manual_value()
 
 	return 0;
 }
+
+
+
+//***** REPLACE ELEMENTS
+void eSpinner::replace_elements()
+{
+	//horizontal
+	if(orientation==Orientation::Horizontal)
+	{
+		button_dec->resize(h,h);
+		button_dec->x=0;
+		button_dec->y=0;
+		button_dec->set_tex("gfx/elements/arrow_left.png");
+
+		button_inc->resize(h,h);
+		button_inc->x=w-h;
+		button_inc->y=0;
+		button_inc->set_tex("gfx/elements/arrow_right.png");
+
+		editbox->resize(w-(h*2),h);
+		editbox->x=h;
+		editbox->y=0;
+
+	}
+
+	//vertical
+	else
+	{
+		button_dec->resize(h,h/2);
+		button_dec->x=w-h;
+		button_dec->y=h/2;
+		button_dec->set_tex("gfx/elements/arrow_down.png");
+
+		button_inc->resize(h,h/2);
+		button_inc->x=w-h;
+		button_inc->y=0;
+		button_inc->set_tex("gfx/elements/arrow_up.png");
+
+		editbox->resize(w-h,h);
+		editbox->x=0;
+		editbox->y=0;
+
+	}
+
+}
+
 
 
 

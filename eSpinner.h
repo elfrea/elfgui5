@@ -6,6 +6,8 @@
 
 class eSpinner:public Element
 {
+	OBJ("eSpinner")
+
 public:
 
 	//own config vars
@@ -92,6 +94,7 @@ public:
 
 	//own internal functions
 	double filter_manual_value();
+	void replace_elements();
 
 
 };

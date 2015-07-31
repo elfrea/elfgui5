@@ -614,7 +614,7 @@ void MyEventHandler::on_key_down(Key& key)
 //***** ON KEY UP
 void MyEventHandler::on_key_up(Key& key)
 {
-	Element* ele=ElfGui5::last_selected;
+	Element* ele=ElfGui5::current_element;
 	if(ele==NULL)
 		return;
 

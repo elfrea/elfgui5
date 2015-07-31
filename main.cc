@@ -14,21 +14,21 @@ int main(int argc, char **argv)
 	{
 		//main init
 		pix_init("Test");
-		Game::init();
+		cGame::init();
 		
 		//main loop
 		for(;;)
 		{
-			if(Game::loop())
+			if(cGame::loop())
 				break;
-			Game::draw();
+			cGame::draw();
 
 			Display::render();
 			Display::swap();
 		}
 		
 		//main shutdown
-		Game::shutdown();
+		cGame::shutdown();
 		pix_shutdown();
 
 	}

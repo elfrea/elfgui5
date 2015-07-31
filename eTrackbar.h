@@ -4,39 +4,41 @@
 #include "elfgui5.h"
 
 
-class ePercentbar:public Element
+class eTrackbar:public Element
 {
-	OBJ("ePercentbar")
+	OBJ("eTrackbar")
 
 public:
 
 	//own config vars
 
 	//own internal config vars (use config functions to modify)
+	Orientation::Type orientation;
+
 	bool customized;
-	
+	Texture* custom_bar;
+	Texture* custom_tracker;
+
+	bool show_rails;
+
 	int value;
 	int value_min;
 	int value_max;
 
-	bool show_percent;
-	bool show_value;
-	bool show_border;
-
-	Texture* custom_bg;
-	Texture* custom_bar;
-	Texture* custom_border;
+	int track_size;
+	int tracker_size;
 
 	//own internal vars
+	bool ready_to_track;
 
 	//own elements
 
 
 
 	//constructor
-	ePercentbar(const Str& ename,int ex,int ey,int ew,int eh,int val=0,int min=0,int max=100,bool show=true);
+	eTrackbar(const Str& ename,int ex,int ey,int ew,int eh,int val,int min,int max,Orientation::Type orient=Orientation::Horizontal);
 	//destructor
-	~ePercentbar();
+	~eTrackbar();
 
 
 
@@ -53,8 +55,8 @@ public:
 	void on_mouse_up(int but,int mx,int my);
 //	void on_mouse_click(int but,int mx,int my);
 //	void on_mouse_doubleclick(int but,int mx,int my);
-//	void on_mouse_wheel_down(int mx,int my);
-//	void on_mouse_wheel_up(int mx,int my);
+	void on_mouse_wheel_down(int mx,int my);
+	void on_mouse_wheel_up(int mx,int my);
 	void on_mouse_drag_out();
 	void on_mouse_drag_in(DragPacket* dragpacket);
 	void on_key_down(Key& key);
@@ -66,18 +68,22 @@ public:
 	void on_unselect();
 
 	//own config functions
-	int get_percent();
-	void set_percent(int val);
+	void set_orientation(Orientation::Type orient);
+
 	void set_value(int val);
 	void set_value_range(int min,int max);
-	void set_show_percent(bool show);
-	void set_show_value(bool show);
-	void set_show_border(bool show);
-	void set_bar_color(const Color& col);
+
+	void set_percent(int percent);
+	int get_percent();
+
+	void set_track_size(int size);
+	void set_tracker_size(int size);
 
 	void set_customized(bool custom);
-	void set_custom(Texture* bg,Texture* bar,Texture* border,bool autosize=true);
-	void set_custom(const Str& bg,const Str& bar,const Str& border,bool autosize=true);
+	void set_custom(Texture* bar,Texture* tracker,bool autosize=true);
+	void set_custom(const Str& bar,const Str& tracker,bool autosize=true);
+
+	void set_show_rails(bool show);
 
 	//own internal functions
 

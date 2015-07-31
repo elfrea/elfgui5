@@ -675,6 +675,7 @@ void Element::send_event(Element* sndr,const Str& cmd)
 void Element::send_event(Event* ev)
 {
 	send_event(ev->sender,ev->command);
+	delete ev;
 }
 
 
@@ -705,6 +706,7 @@ void Element::set_anchor(bool t,int ty,bool b,int by,bool l,int lx,bool r,int rx
 {
 	anchor->set(t,ty,b,by,l,lx,r,rx);
 	use_anchor=use;
+	apply_anchor();
 }
 
 

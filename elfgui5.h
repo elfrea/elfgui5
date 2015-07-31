@@ -28,6 +28,7 @@
 #include "eEditbox.h"
 #include "eTimer.h"
 #include "eSpinner.h"
+#include "eTrackbar.h"
 
 
 
@@ -58,8 +59,10 @@ public:
 
 
 
-class ElfGui5
+class ElfGui5:public Obj
 {
+	OBJ("ElfGui5")
+	
 public:
 
 	//config vars

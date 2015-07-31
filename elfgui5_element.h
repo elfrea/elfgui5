@@ -7,8 +7,9 @@
 
 
 
-class Element
+class Element:public Obj
 {
+	OBJ("Element")
 
 public:
 

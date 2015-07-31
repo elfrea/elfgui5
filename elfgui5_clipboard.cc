@@ -20,3 +20,9 @@ void Clipboard::clear()
 
 
 
+//***** KILL
+void Clipboard::kill()
+{
+	delete text;
+	delete mouse_text;
+}

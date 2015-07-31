@@ -6,6 +6,8 @@
 
 class eRadiopush:public Element
 {
+	OBJ("eRadiopush")
+
 public:
 
 	//own config vars

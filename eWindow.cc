@@ -19,6 +19,10 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	
 	//own config vars
 	selectable=false;
+	show_button_close=true;
+	show_button_maximize=true;
+	show_button_minimize=true;
+	show_button_shade=true;
 
 	//own internal config vars (use config functions to modify)
 
@@ -29,6 +33,10 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	titlebar->can_be_clicked_through=true;
 	add_child_on_window(titlebar);
 	titlebar->set_anchor(true,false,true,true);
+		
+	body=new ePanel(ename+".body",0,DEFAULT_TITLEBAR_H,ew,eh-(DEFAULT_TITLEBAR_H+DEFAULT_STATUSBAR_H));
+	add_child_on_window(body);
+	body->set_anchor(true,true,true,true);
 
 	statusbar=new ePanel(ename+".statusbar",0,eh-DEFAULT_STATUSBAR_H,ew,DEFAULT_STATUSBAR_H);
 	statusbar->can_be_clicked_through=true;
@@ -36,14 +44,39 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	add_child_on_window(statusbar);
 	statusbar->set_anchor(false,true,true,true);
 
-	body=new ePanel(ename+".body",0,DEFAULT_TITLEBAR_H,ew,eh-(DEFAULT_TITLEBAR_H+DEFAULT_STATUSBAR_H));
-	add_child_on_window(body);
-	body->set_anchor(true,true,true,true);
+	button_close=new eButton(ename+".button_close",0,0,10,10,"");
+	button_close->set_show_text(false);
+	button_close->set_custom("gfx/elements/window_button_close_normal.png","gfx/elements/window_button_close_pushed.png","gfx/elements/window_button_close_hover.png");
+	button_close->always_on_top=true;
+	button_close->selectable=false;
+	add_child_on_window(button_close);
+
+	button_maximize=new eButton(ename+".button_maximize",0,0,10,10,"");
+	button_maximize->set_show_text(false);
+	button_maximize->set_custom("gfx/elements/window_button_maximize_normal.png","gfx/elements/window_button_maximize_pushed.png","gfx/elements/window_button_maximize_hover.png");
+	button_maximize->always_on_top=true;
+	button_maximize->selectable=false;
+	add_child_on_window(button_maximize);
+
+	button_minimize=new eButton(ename+".button_minimize",0,0,10,10,"");
+	button_minimize->set_show_text(false);
+	button_minimize->set_custom("gfx/elements/window_button_minimize_normal.png","gfx/elements/window_button_minimize_pushed.png","gfx/elements/window_button_minimize_hover.png");
+	button_minimize->always_on_top=true;
+	button_minimize->selectable=false;
+	add_child_on_window(button_minimize);
+
+	button_shade=new eButton(ename+".button_shade",0,0,10,10,"");
+	button_shade->set_show_text(false);
+	button_shade->set_custom("gfx/elements/window_button_shade_normal.png","gfx/elements/window_button_shade_pushed.png","gfx/elements/window_button_shade_hover.png");
+	button_shade->always_on_top=true;
+	button_shade->selectable=false;
+	add_child_on_window(button_shade);
 
 	//other
 	set_min_size(150,100);
 	set_title(etitle);
 	set_icon("gfx/elements/icon_window.png");
+	refresh_buttons();
 	dirty=true;
 }
 
@@ -76,7 +109,6 @@ void eWindow::loop()
 //***** DRAW
 void eWindow::draw()
 {
-	draw_panel(image,color,false,enabled);
 
 }
 
@@ -245,7 +277,7 @@ void eWindow::remove_child_on_window(Element* child)
 //****************************************************************
 
 
-//SET TITLE
+//***** SET TITLE
 void eWindow::set_title(const Str& etitle,Align::Type align,int offx,int offy)
 {
 	titlebar->set_text(etitle,align,offx,offy);
@@ -253,7 +285,7 @@ void eWindow::set_title(const Str& etitle,Align::Type align,int offx,int offy)
 
 
 
-//SET ICON
+//***** SET ICON
 void eWindow::set_icon(Texture* tex,Align::Type align,int offx,int offy)
 {
 	titlebar->set_tex(tex,align,offx,offy);
@@ -261,7 +293,7 @@ void eWindow::set_icon(Texture* tex,Align::Type align,int offx,int offy)
 
 
 
-//SET ICON
+//***** SET ICON
 void eWindow::set_icon(const Str& filename,Align::Type align,int offx,int offy)
 {
 	titlebar->set_tex(filename,align,offx,offy);
@@ -269,7 +301,7 @@ void eWindow::set_icon(const Str& filename,Align::Type align,int offx,int offy)
 
 
 
-//SET TITLEBAR HEIGHT
+//***** SET TITLEBAR HEIGHT
 void eWindow::set_titlebar_height(int th)
 {
 	titlebar->resize(w,th);
@@ -282,7 +314,7 @@ void eWindow::set_titlebar_height(int th)
 
 
 
-//SET STATUSBAR HEIGHT
+//***** SET STATUSBAR HEIGHT
 void eWindow::set_statusbar_height(int sh)
 {
 	body->resize(w,h-sh-titlebar->h);
@@ -290,6 +322,19 @@ void eWindow::set_statusbar_height(int sh)
 	statusbar->y=h-sh;
 	statusbar->resize(w,sh);
 	statusbar->set_anchor(false,true,true,true);
+}
+
+
+
+//***** SET SHOW BUTTONS
+void eWindow::set_show_buttons(bool bclose,bool bmax,bool bmin,bool bshade)
+{
+	show_button_close=bclose;
+	show_button_maximize=bmax;
+	show_button_minimize=bmin;
+	show_button_shade=bshade;
+
+	refresh_buttons();
 }
 
 
@@ -302,6 +347,57 @@ void eWindow::set_statusbar_height(int sh)
 //****************************************************************
 //OWN INTERNAL FUNCTIONS
 //****************************************************************
+
+
+//***** REFRESH BUTTONS
+void eWindow::refresh_buttons()
+{
+	int offset=5;
+	int buth=(titlebar->h-button_close->h)/2+1;
+
+	//close
+	if(show_button_close)
+	{
+		button_close->visible=true;
+		button_close->set_anchor(true,buth,false,0,false,0,true,offset);
+		offset+=button_close->w;
+	}
+	else
+		button_close->visible=false;
+
+	//maximize
+	if(show_button_maximize)
+	{
+		button_maximize->visible=true;
+		button_maximize->set_anchor(true,buth,false,0,false,0,true,offset);
+		offset+=button_maximize->w;
+	}
+	else
+		button_maximize->visible=false;
+
+	//minimize
+	if(show_button_minimize)
+	{
+		button_minimize->visible=true;
+		button_minimize->set_anchor(true,buth,false,0,false,0,true,offset);
+		offset+=button_minimize->w;
+	}
+	else
+		button_minimize->visible=false;
+
+	//shade
+	if(show_button_shade)
+	{
+		button_shade->visible=true;
+		button_shade->set_anchor(true,buth,false,0,false,0,true,offset);
+		offset+=button_shade->w;
+	}
+	else
+		button_shade->visible=false;
+
+}
+
+
 
 
 

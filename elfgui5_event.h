@@ -1,8 +1,10 @@
 #pragma once
 
 
-class Event
+class Event:public Obj
 {
+	OBJ("Event")
+	
 public:
 	
 	//constructor
