@@ -1,4 +1,3 @@
-WINDOW 			
 MENUBAR 			
 TAB 				
 TABBAR 			

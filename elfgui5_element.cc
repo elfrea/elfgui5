@@ -965,6 +965,15 @@ void Element::apply_anchor()
 void Element::add_to_dead_list()
 {
 	ElfGui5::add_element_in_dead_list(this);
+
+	if(ElfGui5::element_under_mouse==this)
+		ElfGui5::element_under_mouse=NULL;
+
+	if(ElfGui5::current_element==this)
+		ElfGui5::current_element=NULL;
+
+	if(ElfGui5::last_selected==this)
+		ElfGui5::last_selected=NULL;
 }
 
 

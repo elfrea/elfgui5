@@ -29,6 +29,8 @@
 #include "eTimer.h"
 #include "eSpinner.h"
 #include "eTrackbar.h"
+#include "eTabbox.h"
+#include "eTab.h"
 
 
 
