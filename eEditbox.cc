@@ -243,7 +243,17 @@ void eEditbox::on_mouse_down(int but,int mx,int my)
 
 void eEditbox::on_mouse_up(int but,int mx,int my){}
 //void eEditbox::on_mouse_click(int but,int mx,int my){}
-//void eEditbox::on_mouse_doubleclick(int but,int mx,int my){}
+
+
+
+//***** ON MOUSE DOUBLECLICK
+void eEditbox::on_mouse_doubleclick(int but,int mx,int my)
+{
+	select_text();
+}
+
+
+
 //void eEditbox::on_mouse_wheel_down(int mx,int my){}
 //void eEditbox::on_mouse_wheel_up(int mx,int my){}
 void eEditbox::on_mouse_drag_out(){}

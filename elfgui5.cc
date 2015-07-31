@@ -571,9 +571,15 @@ void MyEventHandler::on_key_down(Key& key)
 			
 			//set next selected element
 			if((backward==false && next->tab_index>e->tab_index) || (backward && next->tab_index<e->tab_index))
+			{
 				next->set_selected(true);
+				ElfGui5::current_element=next;
+			}
 			else
+			{
 				first->set_selected(true);
+				ElfGui5::current_element=first;
+			}
 
 		}
 
