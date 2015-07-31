@@ -239,7 +239,7 @@ void eButton::on_key_down(Key& key)
 //***** ON KEY UP
 void eButton::on_key_up(Key& key)
 {
-	if(key.code==KEY_SPACE)
+	if(key.code==KEY_SPACE && pushed)
 	{
 		pushed=false;
 		send_event("trigger");
@@ -253,7 +253,15 @@ void eButton::on_text(const Str& text){}
 void eButton::on_resize(int width,int height){}
 void eButton::on_parent_resize(){}
 void eButton::on_select(){}
-void eButton::on_unselect(){}
+
+
+
+//***** ON UNSELECT
+void eButton::on_unselect()
+{
+	pushed=false;
+	dirty=true;
+}
 
 
 
