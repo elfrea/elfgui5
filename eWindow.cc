@@ -18,6 +18,10 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	move_area_auto_width=true;
 	
 	//own config vars
+	maximized=false;
+	minimized=false;
+	shaded=false;
+
 	selectable=false;
 	show_button_close=true;
 	show_button_maximize=true;
@@ -124,7 +128,36 @@ void eWindow::draw()
 //****************************************************************
 
 
-//void eWindow::on_event(Event* ev){}
+//***** ON EVENT
+void eWindow::on_event(Event* ev)
+{
+	//CLOSE BUTTON
+	if(ev->sender==button_close && ev->command=="trigger")
+	{
+		close();
+	}
+
+	//MAXIMIZE BUTTON
+	else if(ev->sender==button_maximize && ev->command=="trigger")
+	{
+	}
+
+	//MINIMIZE BUTTON
+	else if(ev->sender==button_minimize && ev->command=="trigger")
+	{
+	}
+
+	//SHADE BUTTON
+	else if(ev->sender==button_shade && ev->command=="trigger")
+	{
+	}
+
+
+	delete ev;
+}
+
+
+
 void eWindow::on_mouse_enter(int mx,int my){}
 void eWindow::on_mouse_leave(){}
 void eWindow::on_mouse_move(int mx,int my){}
@@ -143,6 +176,11 @@ void eWindow::on_resize(int width,int height){}
 void eWindow::on_parent_resize(){}
 void eWindow::on_select(){}
 void eWindow::on_unselect(){}
+
+void eWindow::on_close(){}
+void eWindow::on_maximize(){}
+void eWindow::on_minimize(){}
+void eWindow::on_shade(){}
 
 
 
@@ -335,6 +373,37 @@ void eWindow::set_show_buttons(bool bclose,bool bmax,bool bmin,bool bshade)
 	show_button_shade=bshade;
 
 	refresh_buttons();
+}
+
+
+
+//***** CLOSE
+void eWindow::close()
+{
+	on_close();
+	
+	ElfGui5::add_element_in_dead_list(this);
+}
+
+
+
+//***** MAXIMIZE
+void eWindow::maximize()
+{
+}
+
+
+
+//***** MINIMIZE
+void eWindow::minimize()
+{
+}
+
+
+
+//***** SHADE
+void eWindow::shade()
+{
 }
 
 

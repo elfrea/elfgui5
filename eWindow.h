@@ -13,6 +13,10 @@ public:
 	//own config vars
 
 	//own internal config vars (use config functions to modify)
+	bool maximized;
+	bool minimized;
+	bool shaded;
+
 	bool show_button_close;
 	bool show_button_maximize;
 	bool show_button_minimize;
@@ -45,7 +49,7 @@ public:
 	void draw();
 	
 	//event functions
-	//void on_event(Event* ev);
+	void on_event(Event* ev);
 	void on_mouse_enter(int mx,int my);
 	void on_mouse_leave();
 	void on_mouse_move(int mx,int my);
@@ -64,6 +68,10 @@ public:
 	void on_parent_resize();
 	void on_select();
 	void on_unselect();
+	virtual void on_close();
+	virtual void on_maximize();
+	virtual void on_minimize();
+	virtual void on_shade();
 
 	//family functions
 	void add_child(Element* child);
@@ -81,6 +89,11 @@ public:
 	void set_titlebar_height(int th);
 	void set_statusbar_height(int sh);
 	void set_show_buttons(bool bclose,bool bmax,bool bmin,bool bshade);
+
+	void close();
+	void maximize();
+	void minimize();
+	void shade();
 
 	//own internal functions
 	void refresh_buttons();

@@ -74,6 +74,7 @@ public:
 	static List<Event*> events;
 	
 	static eBase* base;
+	static List<Element*> dead_list;
 
 	static int64_t doubleclick_timer;
 
@@ -114,6 +115,8 @@ public:
 
 	//internal functions
 	static void set_mouse_cursor(const Str& cursor);
+	static void add_element_in_dead_list(Element* ele);
+	static void clear_dead_list();
 
 };
 

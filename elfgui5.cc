@@ -10,6 +10,7 @@ MyEventHandler ElfGui5::event_handler;
 List<Event*> ElfGui5::events;
 
 eBase* ElfGui5::base;
+List<Element*> ElfGui5::dead_list;
 
 int64_t ElfGui5::doubleclick_timer;
 int64_t ElfGui5::doubleclick_delay;
@@ -115,6 +116,9 @@ int ElfGui5::loop()
 	//process events
 	event_handler.process_events();
 
+	//clear dead list
+	clear_dead_list();
+
 	//loop elements
 	base->loops();
 
@@ -154,6 +158,7 @@ void ElfGui5::shutdown()
 
 	delete base;
 	events.clear_del();
+	dead_list.clear_del();
 	Theme::kill();
 
 	#ifdef DBG
@@ -270,7 +275,7 @@ void MyEventHandler::on_mouse_up(int but,Mouse& mouse)
 	{
 		//send on_mouse_up event to element
 		eum->on_mouse_up(but,mouse.x-eum->get_true_x(),mouse.y-eum->get_true_y());
-	
+		
 		//check if it's a mouse_click event
 		if(ElfGui5::mouse_is_down==but)
 		{
@@ -732,6 +737,27 @@ void ElfGui5::set_mouse_cursor(const Str& cursor)
 }
 
 
+
+//***** ADD ELEMENT IN DEAD LIST
+void ElfGui5::add_element_in_dead_list(Element* ele)
+{
+	dead_list.add(ele);
+}
+
+
+
+//***** CLEAR DEAD LIST
+void ElfGui5::clear_dead_list()
+{
+	for(int a=0;a<dead_list.size();a++)
+	{
+		Element* ele=dead_list[a];
+		
+		if(ele->parent)
+			ele->parent->remove_child(ele);
+	}
+	dead_list.clear_del();
+}
 
 
 
