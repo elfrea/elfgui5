@@ -6,8 +6,6 @@
 
 class eTrackbar:public Element
 {
-	OBJ("eTrackbar")
-
 public:
 
 	//own config vars

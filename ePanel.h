@@ -6,8 +6,6 @@
 
 class ePanel:public Element
 {
-	OBJ("ePanel")
-
 public:
 	//own config vars
 

@@ -7,8 +7,6 @@
 
 class eGroupbox:public Element
 {
-	OBJ("eGroupbox")
-
 public:
 
 	//own config vars

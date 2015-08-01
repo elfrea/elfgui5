@@ -6,13 +6,14 @@
 
 class eTabbox:public Element
 {
-	OBJ("eTabbox")
-	
 public:
 
 	//own config vars
 
 	//own internal config vars (use config functions to modify)
+	TabsPosition::Type tabs_position;
+	int title_size;
+	class eTab* selected_tab;
 
 	//own internal vars
 
@@ -21,7 +22,7 @@ public:
 
 
 	//constructor
-	eTabbox(const Str& ename,int ex,int ey,int ew,int eh);
+	eTabbox(const Str& ename,int ex,int ey,int ew,int eh,TabsPosition::Type tabs_pos=TabsPosition::Top);
 	//destructor
 	~eTabbox();
 
@@ -52,10 +53,44 @@ public:
 	void on_select();
 	void on_unselect();
 
+	//family functions
+	void add_child(Element* child);
+	void insert_child(Element* child,int index);
+	void remove_child(Element* child,bool del=false);
+
 	//own config functions
+	void insert_tab(class eTab* tab,int index);
+	void add_tab(class eTab* tab);
+	class eTab* add_new_tab(const Str& tname);
+	void remove_tab(class eTab* tab,bool del=false);
+	void remove_tab(int index,bool del=false);
+	void move_tab(class eTab* tab,int index);
+	void move_tab(int index1,int index2);
+	void switch_tab(class eTab* tab1,class eTab* tab2);
+	void switch_tab(int index1,int index2);
+	void transfer_tab(class eTab* tab,eTabbox* tabbox);
+	void transfer_tab(int index,eTabbox* tabbox);
+	class eWindow* undock_tab(class eTab* tab,class Element* eparent,int ex,int ey);
+	class eWindow* undock_tab(int index,class Element* eparent,int ex,int ey);
+	class eTab* dock_tab(class eWindow* win,int index);
+	int get_tab_index(class eTab* tab);
+	void select_tab(class eTab* tab);
+	void select_tab(int index);
+	class eTab* get_selected_tab();
+	int get_selected_index();
+
+	void set_title_size(int sz);
+	void set_tabs_position(TabsPosition::Type pos);
 
 	//own internal functions
-
+	void replace_tabs();
+	void replace_tab(eTab* tab);
+	void show_tab(eTab* tab);
+	void show_tab(int index);
+	int get_tab_tile_x(eTab* tab);
+	int get_tab_tile_y(eTab* tab);
+	int get_tab_tile_w(eTab* tab);
+	int get_tab_tile_h(eTab* tab);
 
 };
 

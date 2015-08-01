@@ -6,10 +6,8 @@
 
 
 
-class Colors:public Obj
+class Colors
 {
-	OBJ("Colors")
-
 public:
 
 	//normal

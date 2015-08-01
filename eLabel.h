@@ -7,8 +7,6 @@
 
 class eLabel:public Element
 {
-	OBJ("eLabel")
-
 public:
 
 	//own config vars

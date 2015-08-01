@@ -6,8 +6,6 @@
 
 class eRadiobutton:public Element
 {
-	OBJ("eRadiobutton")
-
 public:
 
 	//own config vars

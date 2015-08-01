@@ -6,7 +6,7 @@
 //constructor
 eRadiobutton::eRadiobutton(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt,const Str& grp,bool echecked,bool autosize):Element(ename,ex,ey,ew,eh)
 {
-	#define DEFAULT_CHECK_SIZE 17
+	#define DEFAULT_CHECK_SIZE 15
 	#define DEFAULT_CHECK_RADIUS 3
 
 	//parent class vars

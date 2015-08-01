@@ -1,0 +1,4 @@
+vi -S SessionH.vim &&
+vi -S SessionCC.vim &&
+vi -S ElementsH.vim &&
+vi -S ElementsCC.vim

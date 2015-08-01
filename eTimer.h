@@ -6,8 +6,6 @@
 
 class eTimer:public Element
 {
-	OBJ("eTimer")
-
 public:
 
 	//own config vars

@@ -4,10 +4,8 @@
 #include "elfgui5.h"
 
 
-class DragPacket:public Obj
+class DragPacket
 {
-	OBJ("DragPacket")
-	
 public:
 	//constructor
 	DragPacket(const Str& icon_path,int offx=0,int offy=0);

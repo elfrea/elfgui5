@@ -15,3 +15,11 @@ void draw_texture_align(Texture* dest,Align::Type align,int offx,int offy,Textur
 void draw_dotted_hline(Texture* tex,int x,int y,int w,const Color& col,int len=3,int spacing=3);
 void draw_dotted_vline(Texture* tex,int x,int y,int h,const Color& col,int len=3,int spacing=3);
 void draw_dotted_box(Texture* tex,int x,int y,int w,int h,const Color& col,int len=3,int spacing=3);
+
+Texture* rotate_tex90(Texture* src,bool reverse=false);
+Texture* rotate_tex90(const Str& filename,bool reverse=false);
+Texture* rotate_tex180(Texture* src);
+Texture* rotate_tex180(const Str& filename);
+
+
+

@@ -6,8 +6,6 @@
 
 class ePercentbar:public Element
 {
-	OBJ("ePercentbar")
-
 public:
 
 	//own config vars

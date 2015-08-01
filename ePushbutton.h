@@ -6,8 +6,6 @@
 
 class ePushbutton:public Element
 {
-	OBJ("ePushbutton")
-
 public:
 
 	//own config vars

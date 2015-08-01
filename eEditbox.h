@@ -6,8 +6,6 @@
 
 class eEditbox:public Element
 {
-	OBJ("eEditbox")
-
 public:
 
 	//own config vars

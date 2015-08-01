@@ -4,10 +4,8 @@
 #include "elfgui5.h"
 
 
-class eTemplate:public Element
+class eTemplate
 {
-	OBJ("eTemplate")
-	
 public:
 
 	//own config vars

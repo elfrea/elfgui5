@@ -257,9 +257,9 @@ void eWindow::insert_child(Element* child,int index)
 
 
 //***** REMOVE CHILD (OVERRIDE)
-void eWindow::remove_child(Element* child)
+void eWindow::remove_child(Element* child,bool del)
 {
-	body->remove_child(child);
+	body->remove_child(child,del);
 }
 
 
@@ -281,7 +281,7 @@ void eWindow::insert_child_on_window(Element* child,int index)
 	//check if child is NULL
 	if(child==NULL)
 	{
-		#ifdef DGB
+		#ifdef DBG
 			Log::debug("Element '%s' tried to add a child that is NULL!",name);
 		#endif
 		return;
@@ -290,7 +290,7 @@ void eWindow::insert_child_on_window(Element* child,int index)
 	//check if index is valid
 	if(index<0 || index>children.size())
 	{
-		#ifdef DGB
+		#ifdef DBG
 			Log::debug("Element '%s' tried to add a child at an invalid index (%i)!",name,index);
 		#endif
 		return;
@@ -299,7 +299,7 @@ void eWindow::insert_child_on_window(Element* child,int index)
 	//check if child is already added
 	if(children.find(child)!=-1)
 	{
-		#ifdef DGB
+		#ifdef DBG
 			Log::debug("Element '%s' tried to add a child that is already added!",name);
 		#endif
 		return;
@@ -308,7 +308,7 @@ void eWindow::insert_child_on_window(Element* child,int index)
 	//check if child already has a parent
 	if(child->parent!=NULL)
 	{
-		#ifdef DGB
+		#ifdef DBG
 			Log::debug("Element '%s' tried to add a child that already has a parent!",name);
 		#endif
 		return;
@@ -322,12 +322,12 @@ void eWindow::insert_child_on_window(Element* child,int index)
 
 
 //***** REMOVE CHILD (ON WINDOW)
-void eWindow::remove_child_on_window(Element* child)
+void eWindow::remove_child_on_window(Element* child,bool del)
 {
 	//check if child is NULL
 	if(child==NULL)
 	{
-		#ifdef DGB
+		#ifdef DBG
 			Log::debug("Element '%s' tried to remove a child that is NULL!",name);
 		#endif
 		return;
@@ -337,15 +337,19 @@ void eWindow::remove_child_on_window(Element* child)
 	int index=children.find(child);
 	if(index==-1)
 	{
-		#ifdef DGB
+		#ifdef DBG
 			Log::debug("Element '%s' tried to remove a child that is not in the list!",name);
 		#endif
 		return;
 	}
 
 	//remove child
-	children.remove_nodel(index);
 	child->parent=NULL;
+
+	if(del)
+		children.remove_del(index);
+	else
+		children.remove_nodel(index);
 
 }
 
@@ -359,6 +363,14 @@ void eWindow::remove_child_on_window(Element* child)
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** GET TITLE
+Str eWindow::get_title()
+{
+	return titlebar->text;
+}
+
 
 
 //***** SET TITLE

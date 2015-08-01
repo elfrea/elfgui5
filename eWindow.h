@@ -6,8 +6,6 @@
 
 class eWindow:public Element
 {
-	OBJ("eWindow")
-
 public:
 
 	//own config vars
@@ -81,13 +79,14 @@ public:
 	//family functions
 	void add_child(Element* child);
 	void insert_child(Element* child,int index);
-	void remove_child(Element* child);
+	void remove_child(Element* child,bool del=false);
 
 	void add_child_on_window(Element* child);
 	void insert_child_on_window(Element* child,int index);
-	void remove_child_on_window(Element* child);
+	void remove_child_on_window(Element* child,bool del=false);
 
 	//own config functions
+	Str get_title();
 	void set_title(const Str& etitle,Align::Type align=Align::Left,int offx=25,int offy=0);
 	void set_icon(Texture* tex,Align::Type align=Align::Left,int offx=3,int offy=0);
 	void set_icon(const Str& filename,Align::Type align=Align::Left,int offx=3,int offy=0);

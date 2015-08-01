@@ -7,10 +7,8 @@
 
 
 
-class Element:public Obj
+class Element
 {
-	OBJ("Element")
-
 public:
 
 	//config vars
@@ -95,7 +93,7 @@ public:
 	//family functions
 	virtual void add_child(Element* child);
 	virtual void insert_child(Element* child,int index);
-	virtual void remove_child(Element* child);
+	virtual void remove_child(Element* child,bool del=false);
 
 	//config functions
 	void set_selected(bool select);

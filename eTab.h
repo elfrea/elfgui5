@@ -6,8 +6,6 @@
 
 class eTab:public Element
 {
-	OBJ("eTab")
-	
 public:
 
 	//own config vars
@@ -21,7 +19,7 @@ public:
 
 
 	//constructor
-	eTab(const Str& ename,int ex,int ey,int ew,int eh);
+	eTab(const Str& ename);
 	//destructor
 	~eTab();
 

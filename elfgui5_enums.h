@@ -64,6 +64,16 @@ namespace SpinnerMode
 
 
 
+//TABS POSITION
+namespace TabsPosition
+{
+	enum Type
+	{
+		Top,Down,Left,Right
+	};
+}
+
+
 
 
 

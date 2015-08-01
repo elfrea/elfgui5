@@ -2,10 +2,8 @@
 
 
 
-class Anchor:public Obj
+class Anchor
 {
-	OBJ("Anchor")
-	
 public:
 
 	//constructor

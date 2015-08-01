@@ -768,6 +768,7 @@ void ElfGui5::clear_dead_list()
 			ele->parent->remove_child(ele);
 	}
 	dead_list.clear_del();
+
 }
 
 

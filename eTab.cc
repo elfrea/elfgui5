@@ -4,7 +4,7 @@
 
 
 //constructor
-eTab::eTab(const Str& ename,int ex,int ey,int ew,int eh):Element(ename,ex,ey,ew,eh)
+eTab::eTab(const Str& ename):Element(ename,0,0,10,10)
 {
 	//parent class vars
 	type="tab";

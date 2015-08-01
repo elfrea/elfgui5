@@ -6,7 +6,6 @@
 
 class eBase:public Element
 {
-	OBJ("eBase")
 public:
 
 	//own config vars

@@ -2,10 +2,8 @@
 
 
 
-class Clipboard:public Obj
+class Clipboard
 {
-	OBJ("Clipboard")
-	
 public:
 	static Str text;
 	static Str mouse_text;

@@ -6,8 +6,6 @@
 
 class eScrollbar:public Element
 {
-	OBJ("eScrollbar")
-
 public:
 
 	//own config vars

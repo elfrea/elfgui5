@@ -49,7 +49,7 @@ void Theme::set(const Str& theme)
 		font->small=Cache::font("fonts/Vera.ttf",8);
 		font->small_mono=Cache::font("fonts/VeraMono.ttf",8);
 
-		font->normal=Cache::font("fonts/Vera.ttf",11);
+		font->normal=Cache::font("fonts/Vera.ttf",10);
 		font->normal_mono=Cache::font("fonts/VeraMono.ttf",11);
 
 		font->big=Cache::font("fonts/Vera.ttf",16);

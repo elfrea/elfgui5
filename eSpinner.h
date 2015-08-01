@@ -6,8 +6,6 @@
 
 class eSpinner:public Element
 {
-	OBJ("eSpinner")
-
 public:
 
 	//own config vars

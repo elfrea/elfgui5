@@ -212,8 +212,8 @@ void Element::insert_child(Element* child,int index)
 	//check if child is NULL
 	if(child==NULL)
 	{
-		#ifdef DGB
-			Log::debug("Element '%s' tried to add a child that is NULL!",name);
+		#ifdef DBG
+			Log::debug("Element '%s' tried to add a child that is NULL!",name.ptr());
 		#endif
 		return;
 	}
@@ -221,8 +221,8 @@ void Element::insert_child(Element* child,int index)
 	//check if index is valid
 	if(index<0 || index>children.size())
 	{
-		#ifdef DGB
-			Log::debug("Element '%s' tried to add a child at an invalid index (%i)!",name,index);
+		#ifdef DBG
+			Log::debug("Element '%s' tried to add a child at an invalid index (%i)!",name.ptr(),index);
 		#endif
 		return;
 	}
@@ -230,8 +230,8 @@ void Element::insert_child(Element* child,int index)
 	//check if child is already added
 	if(children.find(child)!=-1)
 	{
-		#ifdef DGB
-			Log::debug("Element '%s' tried to add a child that is already added!",name);
+		#ifdef DBG
+			Log::debug("Element '%s' tried to add a child that is already added!",name.ptr());
 		#endif
 		return;
 	}
@@ -239,8 +239,8 @@ void Element::insert_child(Element* child,int index)
 	//check if child already has a parent
 	if(child->parent!=NULL)
 	{
-		#ifdef DGB
-			Log::debug("Element '%s' tried to add a child that already has a parent!",name);
+		#ifdef DBG
+			Log::debug("Element '%s' tried to add a child that already has a parent!",name.ptr());
 		#endif
 		return;
 	}
@@ -257,12 +257,12 @@ void Element::insert_child(Element* child,int index)
 
 
 //***** REMOVE CHILD
-void Element::remove_child(Element* child)
+void Element::remove_child(Element* child,bool del)
 {
 	//check if child is NULL
 	if(child==NULL)
 	{
-		#ifdef DGB
+		#ifdef DBG
 			Log::debug("Element '%s' tried to remove a child that is NULL!",name);
 		#endif
 		return;
@@ -272,15 +272,18 @@ void Element::remove_child(Element* child)
 	int index=children.find(child);
 	if(index==-1)
 	{
-		#ifdef DGB
+		#ifdef DBG
 			Log::debug("Element '%s' tried to remove a child that is not in the list!",name);
 		#endif
 		return;
 	}
 
 	//remove child
-	children.remove_nodel(index);
 	child->parent=NULL;
+	if(del)
+		children.remove_del(index);
+	else
+		children.remove_nodel(index);
 
 }
 
