@@ -156,7 +156,7 @@ void eTabbox::draw()
 			eTab* tab=find_tab_at(m.x-get_true_x(),m.y-get_true_y());
 			if(tab)
 			{
-				if(tab!=dp->element && get_tab_index(tab)!=get_tab_index((eTab*)dp->element)+1)
+				if(tab!=dp->element && (dp->sender!=this || get_tab_index(tab)!=get_tab_index((eTab*)dp->element)+1))
 				{
 					int tx=get_tab_title_x(tab);
 					int ty=get_tab_title_y(tab);
@@ -180,17 +180,13 @@ void eTabbox::draw()
 					//TOP,BOTTOM
 					case TabsPosition::Top:
 					case TabsPosition::Bottom:
-					{
 						image->rect(tx+tw+1,ty,tx+tw+4,ty+th-1,color->text);
-					}
 					break;
 
 					//LEFT,RIGHT
 					case TabsPosition::Left:
 					case TabsPosition::Right:
-					{
-						image->rect(tx,ty+th,tx+tw-1,ty+th+title_size-1,color->text);
-					}
+						image->rect(tx,ty+th+1,tx+tw-1,ty+th+4,color->text);
 					break;
 				}
 			}
