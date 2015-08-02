@@ -516,7 +516,7 @@ void eTabbox::move_tab(eTab* tab,int index)
 	{
 		remove_tab(tab);
 		tab->parent=NULL;
-		insert_tab(tab,index);
+		insert_tab(tab,index-1);
 	}
 	else
 	{
