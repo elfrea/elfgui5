@@ -386,7 +386,7 @@ void eTrackbar::set_custom(Texture* bar,Texture* tracker,Texture* dtracker,bool 
 //***** SET CUSTOM
 void eTrackbar::set_custom(const Str& bar,const Str& tracker,const Str& dtracker,bool autosize)
 {
-	set_custom(Cache::texture(bar),Cache::texture(tracker),Cache::texture(dtracker),autosize);
+	set_custom(Texture::cache(bar),Texture::cache(tracker),Texture::cache(dtracker),autosize);
 }
 
 

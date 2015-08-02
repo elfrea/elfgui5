@@ -41,8 +41,8 @@ public:
 	void on_mouse_up(int but,int mx,int my);
 //	void on_mouse_click(int but,int mx,int my);
 //	void on_mouse_doubleclick(int but,int mx,int my);
-//	void on_mouse_wheel_down(int mx,int my);
-//	void on_mouse_wheel_up(int mx,int my);
+	void on_mouse_wheel_down(int mx,int my);
+	void on_mouse_wheel_up(int mx,int my);
 	void on_mouse_drag_out();
 	void on_mouse_drag_in(DragPacket* dragpacket);
 	void on_key_down(Key& key);
@@ -87,10 +87,16 @@ public:
 	void replace_tab(eTab* tab);
 	void show_tab(eTab* tab);
 	void show_tab(int index);
-	int get_tab_tile_x(eTab* tab);
-	int get_tab_tile_y(eTab* tab);
-	int get_tab_tile_w(eTab* tab);
-	int get_tab_tile_h(eTab* tab);
+	int get_tab_title_x(eTab* tab);
+	int get_tab_title_y(eTab* tab);
+	int get_tab_title_w(eTab* tab);
+	int get_tab_title_h(eTab* tab);
+	Color get_tab_color(eTab* tab);
+	Color get_tab_dcolor(eTab* tab);
+	Font* get_tab_font(eTab* tab);
+	Texture* get_tab_text(eTab* tab);
+
+	class eTab* find_tab_at(int mx,int my);
 
 };
 

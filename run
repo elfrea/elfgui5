@@ -1,1 +1,1 @@
-make -j && ./main
+make -j && ./main_d

@@ -611,7 +611,7 @@ void Element::set_move_area_autosize(bool autow,bool autoh)
 //***** SET CUSTOM CURSOR
 void Element::set_custom_cursor(const Str& filename,int hx,int hy)
 {
-	custom_cursor=Cache::texture(filename);
+	custom_cursor=Texture::cache(filename);
 	custom_cursor_hx=hx;
 	custom_cursor_hy=hy;
 	use_custom_cursor=true;

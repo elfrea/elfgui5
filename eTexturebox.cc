@@ -198,7 +198,7 @@ void eTexturebox::set_texture(Texture* texture,int offx,int offy,bool autosize)
 //***** SET TEXTURE
 void eTexturebox::set_texture(const Str& filename,int offx,int offy,bool autosize)
 {
-	set_texture(Cache::texture(filename),offx,offy,autosize);
+	set_texture(Texture::cache(filename),offx,offy,autosize);
 }
 
 

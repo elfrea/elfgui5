@@ -181,7 +181,7 @@ void ePanel::set_tex(Texture* src,Align::Type align,int offx,int offy)
 //***** SET TEX
 void ePanel::set_tex(const Str& filename,Align::Type align,int offx,int offy)
 {
-	Texture* t=Cache::texture(filename);
+	Texture* t=Texture::cache(filename);
 	set_tex(t,align,offx,offy);
 }
 
@@ -256,7 +256,7 @@ void ePanel::set_custom(Texture* lay,Texture* dlay,bool autosize,bool sh_text,bo
 //***** SET CUSTOM
 void ePanel::set_custom(const Str& lay,const Str& dlay,bool autosize,bool sh_text,bool sh_tex)
 {
-	set_custom(Cache::texture(lay),Cache::texture(dlay),autosize,sh_text,sh_tex);
+	set_custom(Texture::cache(lay),Texture::cache(dlay),autosize,sh_text,sh_tex);
 }
 
 

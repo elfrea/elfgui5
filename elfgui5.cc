@@ -90,10 +90,10 @@ void ElfGui5::init()
 	cursor_custom_hy=0;
 	
 	//internal gfx vars
-	resize_gizmo=Cache::texture("gfx/resize_gizmo.png");
-	cursor_arrow=Cache::texture("gfx/cursor_arrow.png");	//hotspot=0,0
-	cursor_resize=Cache::texture("gfx/cursor_resize.png");	//hotspot=8,8
-	cursor_move=Cache::texture("gfx/cursor_move.png");		//hotspot=8,8
+	resize_gizmo=Texture::cache("gfx/resize_gizmo.png");
+	cursor_arrow=Texture::cache("gfx/cursor_arrow.png");	//hotspot=0,0
+	cursor_resize=Texture::cache("gfx/cursor_resize.png");	//hotspot=8,8
+	cursor_move=Texture::cache("gfx/cursor_move.png");		//hotspot=8,8
 	cursor_custom=NULL;
 
 	//init code
@@ -710,7 +710,7 @@ void ElfGui5::set_mouse_cursor(const Str& cursor)
 	{
 		if(ElfGui5::current_cursor_type!="resize")
 		{
-			Input::set_cursor(ElfGui5::cursor_resize,8,8,true);
+			Display::set_cursor(ElfGui5::cursor_resize,8,8,true);
 			ElfGui5::current_cursor_type="resize";
 		}
 	}
@@ -720,7 +720,7 @@ void ElfGui5::set_mouse_cursor(const Str& cursor)
 	{
 		if(ElfGui5::current_cursor_type!="move")
 		{
-			Input::set_cursor(ElfGui5::cursor_move,8,8,true);
+			Display::set_cursor(ElfGui5::cursor_move,8,8,true);
 			ElfGui5::current_cursor_type="move";
 		}
 	}
@@ -730,7 +730,7 @@ void ElfGui5::set_mouse_cursor(const Str& cursor)
 	{
 		if(ElfGui5::current_cursor_type!="custom")
 		{
-			Input::set_cursor(ElfGui5::cursor_custom,ElfGui5::cursor_custom_hx,ElfGui5::cursor_custom_hy,true);
+			Display::set_cursor(ElfGui5::cursor_custom,ElfGui5::cursor_custom_hx,ElfGui5::cursor_custom_hy,true);
 			ElfGui5::current_cursor_type="custom";
 		}
 	}
@@ -738,7 +738,7 @@ void ElfGui5::set_mouse_cursor(const Str& cursor)
 	//arrow
 	else if(ElfGui5::current_cursor_type!="arrow")
 	{
-		Input::set_cursor(ElfGui5::cursor_arrow,0,0,true);
+		Display::set_cursor(ElfGui5::cursor_arrow,0,0,true);
 		ElfGui5::current_cursor_type="arrow";
 	}
 }

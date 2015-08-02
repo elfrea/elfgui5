@@ -333,7 +333,7 @@ void eRadiobutton::set_tex(Texture* src,Align::Type align,int offx,int offy,bool
 //***** SET TEX
 void eRadiobutton::set_tex(const Str& filename,Align::Type align,int offx,int offy,bool autosize)
 {
-	Texture* t=Cache::texture(filename);
+	Texture* t=Texture::cache(filename);
 	set_tex(t,align,offx,offy);
 	
 	if(autosize)
@@ -442,7 +442,7 @@ void eRadiobutton::set_custom(Texture* box,Texture* mark,Texture* dbox,bool auto
 //***** SET CUSTOM
 void eRadiobutton::set_custom(const Str& box,const Str& mark,const Str& dbox,bool autosize,bool sh_text)
 {
-	set_custom(Cache::texture(box),Cache::texture(mark),Cache::texture(dbox),autosize,sh_text);
+	set_custom(Texture::cache(box),Texture::cache(mark),Texture::cache(dbox),autosize,sh_text);
 }
 
 

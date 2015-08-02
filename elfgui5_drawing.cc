@@ -330,7 +330,7 @@ void draw_dotted_box(Texture* tex,int x,int y,int w,int h,const Color& col,int l
 Texture* rotate_tex90(Texture* src,bool reverse)
 {
 	Texture* dest=Texture::create(src->height(),src->width());
-	Cache::texture("Rotated Texture 90",dest);
+	//dest->add_cache("Rotated Texture 90");
 
 	for(int y=0;y<src->height();y++)
 	{
@@ -351,7 +351,7 @@ Texture* rotate_tex90(Texture* src,bool reverse)
 //ROTATE TEX 90
 Texture* rotate_tex90(const Str& filename,bool reverse)
 {
-	return rotate_tex90(Cache::texture(filename),reverse);
+	return rotate_tex90(Texture::cache(filename),reverse);
 }
 
 
@@ -360,7 +360,7 @@ Texture* rotate_tex90(const Str& filename,bool reverse)
 Texture* rotate_tex180(Texture* src)
 {
 	Texture* dest=Texture::create(src->height(),src->width());
-	Cache::texture("Rotated Texture 180",dest);
+	//dest->add_cache("Rotated Texture 180");
 
 	for(int y=0;y<src->height();y++)
 	{
@@ -378,7 +378,7 @@ Texture* rotate_tex180(Texture* src)
 //ROTATE TEX 90
 Texture* rotate_tex180(const Str& filename)
 {
-	return rotate_tex180(Cache::texture(filename));
+	return rotate_tex180(Texture::cache(filename));
 }
 
 

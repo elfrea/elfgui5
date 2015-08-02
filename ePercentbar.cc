@@ -277,7 +277,7 @@ void ePercentbar::set_custom(Texture* bg,Texture* bar,Texture* border,Texture* d
 //***** SET CUSTOM
 void ePercentbar::set_custom(const Str& bg,const Str& bar,const Str& border,const Str& dbar,bool autosize)
 {
-	set_custom(Cache::texture(bg),Cache::texture(bar),Cache::texture(border),Cache::texture(dbar),autosize);
+	set_custom(Texture::cache(bg),Texture::cache(bar),Texture::cache(border),Texture::cache(dbar),autosize);
 }
 
 

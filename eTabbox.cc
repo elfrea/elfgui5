@@ -7,7 +7,7 @@
 eTabbox::eTabbox(const Str& ename,int ex,int ey,int ew,int eh,TabsPosition::Type tabs_pos):Element(ename,ex,ey,ew,eh)
 {
 	
-	#define DEFAULT_TITLE_SIZE 24
+	#define DEFAULT_TITLE_SIZE 20
 
 	//parent class vars
 	type="tabbox";
@@ -59,45 +59,82 @@ void eTabbox::loop()
 //***** DRAW
 void eTabbox::draw()
 {
+	image->clear(Color(0,0,0,0));
+
 	//show bg
-	draw_panel(image,color,false,enabled,0,title_size,w,h-title_size);
+	switch(tabs_position)
+	{
+		//TOP
+		case TabsPosition::Top:
+			draw_panel(image,color,false,enabled,0,title_size,w,h-title_size);
+		break;
+
+		//BOTTOM
+		case TabsPosition::Bottom:
+			draw_panel(image,color,false,enabled,0,0,w,h-title_size);
+		break;
+
+		//LEFT
+		case TabsPosition::Left:
+			draw_panel(image,color,false,enabled,title_size,0,w-title_size,h);
+		break;
+
+		//Right
+		case TabsPosition::Right:
+			draw_panel(image,color,false,enabled,0,0,w-title_size,h);
+		break;
+	}
 
 	//show tabs title
-	int offset=0;
 	for(int a=0;a<children.size();a++)
 	{
+		int tx=get_tab_title_x((eTab*)children[a]);
+		int ty=get_tab_title_y((eTab*)children[a]);
+		int tw=get_tab_title_w((eTab*)children[a]);
+		int th=get_tab_title_h((eTab*)children[a]);
+		Color tcol=get_tab_color((eTab*)children[a]);
+		Color tdcol=get_tab_dcolor((eTab*)children[a]);
+		Texture* ttext=get_tab_text((eTab*)children[a]);
 
-		//SELECTED
-		if(selected_tab==children[a])
+		//draw panel and hide stuff
+		draw_panel(image,tx,ty,tw,th,false,enabled,color->light,(children[a]==selected_tab?color->medium:tcol),color->dark,color->d_light,(children[a]==selected_tab?color->d_medium:tdcol),color->d_dark);
+		if(children[a]==selected_tab)
 		{
-			int tw=font->len(children[a]->name);
-			int th=font->height();
-			int tabw=tw+10;
-			int tabh=title_size;
+			switch(tabs_position)
+			{
+				//TOP
+				case TabsPosition::Top:
+					image->line(tx+1,th-1,tx+tw-2,th-1,color->medium);
+					image->line(tx+1,th,tx+tw-2,th,color->medium);
+					image->set_pixel(tx,th-1,color->light);
+				break;
 
-			draw_panel(image,color,false,enabled,offset,0,tabw,tabh);
-			image->print(font,offset+5,(tabh-th)/2,color->text,children[a]->name);
+				//BOTTOM
+				case TabsPosition::Bottom:
+					image->line(tx+1,ty-1,tx+tw-2,ty-1,color->medium);
+					image->line(tx+1,ty,tx+tw-2,ty,color->medium);
+					image->set_pixel(tx+tw-1,ty,color->dark);
+				break;
 
-			image->line(offset+1,tabh-1,offset+tabw-2,tabh-1,color->medium);
-			image->line(offset+1,tabh,offset+tabw-1,tabh,color->medium);
-			image->set_pixel_fast(offset,tabh-1,color->light);
-		
-			offset+=tabw;
+				//LEFT
+				case TabsPosition::Left:
+					image->line(tx+tw-1,ty+1,tx+tw-1,ty+th-2,color->medium);
+					image->line(tx+tw,ty+1,tx+tw,ty+th-2,color->medium);
+					image->set_pixel(tx+tw,ty+th-1,color->dark);
+				break;
+
+				//Right
+				case TabsPosition::Right:
+					image->line(tx-1,ty+1,tx-1,ty+th-2,color->medium);
+					image->line(tx,ty+1,tx,ty+th-2,color->medium);
+					image->set_pixel(tx-1,ty,color->light);
+				break;
+			}
 		}
 
-		//NOT SELECTED
-		else
-		{
-			int tw=Theme::font->small->len(children[a]->name);
-			int th=Theme::font->small->height();
-			int tabw=tw+10;
-			int tabh=title_size;
-
-			draw_panel(image,offset,5,tabw,tabh-5,false,enabled,color->light,color->extra,color->dark,color->d_light,color->d_extra,color->d_dark);
-			image->print(Theme::font->small,offset+5,5+(tabh-5-th)/2,color->text,children[a]->name);
-		
-			offset+=tabw;
-		}
+		//show text
+		image->blit(tx+(tw-ttext->width())/2,ty+(th-ttext->height())/2,ttext);
+		delete ttext;
 
 	}
 }
@@ -119,14 +156,93 @@ void eTabbox::on_mouse_enter(int mx,int my){}
 void eTabbox::on_mouse_leave(){}
 void eTabbox::on_mouse_move(int mx,int my){}
 void eTabbox::on_mouse_down(int but,int mx,int my){}
-void eTabbox::on_mouse_up(int but,int mx,int my){}
+
+
+
+//***** ON MOUSE UP
+void eTabbox::on_mouse_up(int but,int mx,int my)
+{
+	eTab* tab=find_tab_at(mx,my);
+	if(tab)
+		select_tab(tab);
+}
+
+
+
 //void eTabbox::on_mouse_click(int but,int mx,int my){}
 //void eTabbox::on_mouse_doubleclick(int but,int mx,int my){}
-//void eTabbox::on_mouse_wheel_down(int mx,int my){}
-//void eTabbox::on_mouse_wheel_up(int mx,int my){}
+
+
+
+//***** ON MOUSE WHEEL DOWN
+void eTabbox::on_mouse_wheel_down(int mx,int my)
+{
+	if(children.size()<2)
+		return;
+
+	int index=get_selected_index()+1;
+
+	if(index>=children.size())
+		index=0;
+	
+	select_tab(index);
+
+}
+
+
+
+//***** ON MOUSE WHEEL UP
+void eTabbox::on_mouse_wheel_up(int mx,int my)
+{
+	if(children.size()<2)
+		return;
+
+	int index=get_selected_index()-1;
+
+	if(index<0)
+		index=children.size()-1;
+	
+	select_tab(index);
+}
+
+
+
 void eTabbox::on_mouse_drag_out(){}
 void eTabbox::on_mouse_drag_in(DragPacket* dragpacket){}
-void eTabbox::on_key_down(Key& key){}
+
+
+
+//***** ON KEY DOWN
+void eTabbox::on_key_down(Key& key)
+{
+	if(children.size()<2)
+		return;
+
+	//LEFT,UP
+	if(key.code==KEY_LEFT || key.code==KEY_UP)
+	{
+		int index=get_selected_index()-1;
+
+		if(index<0)
+			index=children.size()-1;
+		
+		select_tab(index);
+	}
+
+	//RIGHT,DOWN
+	if(key.code==KEY_RIGHT || key.code==KEY_DOWN)
+	{
+		int index=get_selected_index()+1;
+
+		if(index>=children.size())
+			index=0;
+		
+		select_tab(index);
+	}
+}
+
+
+
 void eTabbox::on_key_up(Key& key){}
 void eTabbox::on_text(const Str& text){}
 void eTabbox::on_resize(int width,int height){}
@@ -444,7 +560,7 @@ void eTabbox::select_tab(int index)
 		selected_tab=NULL;
 
 	if(index>=0 && index<children.size())
-		set_selected((eTab*)children[index]);
+		select_tab((eTab*)children[index]);
 		
 }
 
@@ -516,8 +632,8 @@ void eTabbox::replace_tab(eTab* tab)
 			tab->resize(w,h-title_size);
 		break;
 
-		//DOWN
-		case TabsPosition::Down:
+		//BOTTOM
+		case TabsPosition::Bottom:
 			tab->x=0;
 			tab->y=0;
 			tab->resize(w,h-title_size);
@@ -566,34 +682,244 @@ void eTabbox::show_tab(int index)
 
 
 //***** GET TAB TITLE X
-int eTabbox::get_tab_tile_x(eTab* tab)
+int eTabbox::get_tab_title_x(eTab* tab)
 {
-	return 0;
+	int val=0;
+
+	switch(tabs_position)
+	{
+		//TOP
+		//DOWN
+		case TabsPosition::Top:
+		case TabsPosition::Bottom:
+		{
+			for(int a=0;a<children.size();a++)
+			{
+				if(tab==children[a])
+					return val;
+				else
+					val+=get_tab_font((eTab*)children[a])->len(children[a]->name)+10;
+			}
+		}
+		break;
+
+		//LEFT
+		case TabsPosition::Left:
+			if(tab==selected_tab)
+				return 0;
+			else
+				return title_size-get_tab_title_w(tab);
+		break;
+
+		//RIGHT
+		case TabsPosition::Right:
+			return w-title_size;
+		break;
+
+	}
+
+	return val;
 }
 
 
 
 //***** GET TAB TITLE Y
-int eTabbox::get_tab_tile_y(eTab* tab)
+int eTabbox::get_tab_title_y(eTab* tab)
 {
-	return 0;
+	int val=0;
+
+	switch(tabs_position)
+	{
+		//TOP
+		case TabsPosition::Top:
+			if(tab==selected_tab)
+				return 0;
+			else
+				return title_size-get_tab_title_h(tab);
+		break;
+
+		//DOWN
+		case TabsPosition::Bottom:
+			return h-title_size;
+		break;
+
+		//LEFT
+		//RIGHT
+		case TabsPosition::Left:
+		case TabsPosition::Right:
+			for(int a=0;a<children.size();a++)
+			{
+				if(tab==children[a])
+					return val;
+				else
+					val+=get_tab_font((eTab*)children[a])->len(children[a]->name)+10;
+			}
+		break;
+
+	}
+
+	return val;
 }
 
 
 
 //***** GET TAB TITLE W
-int eTabbox::get_tab_tile_w(eTab* tab)
+int eTabbox::get_tab_title_w(eTab* tab)
 {
+	Font* tfont=get_tab_font(tab);
+
+	switch(tabs_position)
+	{
+		//TOP
+		//DOWN
+		case TabsPosition::Top:
+		case TabsPosition::Bottom:
+			return tfont->len(tab->name)+10;
+		break;
+
+		//LEFT
+		//RIGHT
+		case TabsPosition::Left:
+		case TabsPosition::Right:
+			if(tab==selected_tab)
+				return title_size;
+			else
+				return tfont->height();
+		break;
+
+	}
+
 	return 0;
 }
 
 
 
 //***** GET TAB TITLE H
-int eTabbox::get_tab_tile_h(eTab* tab)
+int eTabbox::get_tab_title_h(eTab* tab)
 {
+	Font* tfont=get_tab_font(tab);
+
+	switch(tabs_position)
+	{
+		//TOP
+		//DOWN
+		case TabsPosition::Top:
+		case TabsPosition::Bottom:
+			if(tab==selected_tab)
+				return title_size;
+			else
+				return tfont->height();
+		break;
+
+		//LEFT
+		//RIGHT
+		case TabsPosition::Left:
+		case TabsPosition::Right:
+			return tfont->len(tab->name)+10;
+		break;
+
+	}
+	
 	return 0;
 }
+
+
+
+//***** GET TAB COLOR
+Color eTabbox::get_tab_color(eTab* tab)
+{
+	return color->extra;
+}
+
+
+
+//***** GET TAB DCOLOR
+Color eTabbox::get_tab_dcolor(eTab* tab)
+{
+	return color->d_extra;
+}
+
+
+
+//***** GET TAB FONT
+Font* eTabbox::get_tab_font(eTab* tab)
+{
+	if(tab==selected_tab)
+		return font;
+	else
+		return Theme::font->small;
+}
+
+
+
+//***** GET TAB TEXT
+Texture* eTabbox::get_tab_text(eTab* tab)
+{
+	int tw=get_tab_title_w(tab);
+	int th=get_tab_title_h(tab);
+	Texture* tex=NULL;
+	Font* tfont=get_tab_font(tab);
+
+	int textw=tfont->len(tab->name);
+	int texth=tfont->height();
+	Texture* t=Texture::create(textw,texth);
+	t->clear(Color(0,0,0,0));
+	t->print(tfont,0,0,color->text,tab->name);
+
+	Texture* rotated_t=NULL;
+
+	switch(tabs_position)
+	{
+		//TOP
+		//DOWN
+		case TabsPosition::Top:
+		case TabsPosition::Bottom:
+			rotated_t=Texture::create(tw,th);
+			rotated_t->blit((tw-textw)/2,(th-texth)/2,t,false);
+			tex=Texture::create(tw,th);
+		break;
+
+		//LEFT
+		case TabsPosition::Left:
+			rotated_t=rotate_tex90(t,true);
+			tex=Texture::create(tw,th);
+		break;
+		
+		//RIGHT
+		case TabsPosition::Right:
+			rotated_t=rotate_tex90(t);
+			tex=Texture::create(tw,th);
+		break;
+
+	}
+
+	tex->blit((tw-rotated_t->width())/2,(th-rotated_t->height())/2,rotated_t,false);
+
+	delete t;
+	delete rotated_t;
+
+	return tex;
+}
+
+
+
+//***** FIND TAB AT
+eTab* eTabbox::find_tab_at(int mx,int my)
+{
+	for(int a=0;a<children.size();a++)
+	{
+		int tx=get_tab_title_x((eTab*)children[a]);
+		int ty=get_tab_title_y((eTab*)children[a]);
+		int tw=get_tab_title_w((eTab*)children[a]);
+		int th=get_tab_title_h((eTab*)children[a]);
+
+		if(mx>=tx && mx<tx+tw && my>=ty && my<ty+th)
+			return (eTab*)children[a];
+	}
+
+	return NULL;
+}
+
 
 
 

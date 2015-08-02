@@ -301,7 +301,7 @@ void eRadiopush::set_tex(Texture* src,Align::Type align,int offx,int offy)
 //***** SET TEX
 void eRadiopush::set_tex(const Str& filename,Align::Type align,int offx,int offy)
 {
-	Texture* t=Cache::texture(filename);
+	Texture* t=Texture::cache(filename);
 	set_tex(t,align,offx,offy);
 }
 
@@ -369,7 +369,7 @@ void eRadiopush::set_custom(Texture* lay,Texture* lay_pushed,Texture* lay_hover,
 //***** SET CUSTOM
 void eRadiopush::set_custom(const Str& lay,const Str& lay_pushed,const Str& lay_hover,const Str& dlay,bool autosize,bool sh_text,bool sh_tex)
 {
-	set_custom(Cache::texture(lay),Cache::texture(lay_pushed),Cache::texture(lay_hover),Cache::texture(dlay),autosize,sh_text,sh_tex);
+	set_custom(Texture::cache(lay),Texture::cache(lay_pushed),Texture::cache(lay_hover),Texture::cache(dlay),autosize,sh_text,sh_tex);
 }
 
 

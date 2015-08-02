@@ -1,6 +1,11 @@
-PIXDIR = ../pix5/src
-TARGET = main
 
+
+OUT_BIN = main
+PIXDIR = ../pix5
+
+
+
+CLSS = 
 
 ####################################################################
 HDRS = game.h
@@ -21,21 +26,11 @@ SRCS+= eTexturebox.cc eScrollbar.cc ePercentbar.cc eEditbox.cc eTrackbar.cc eTab
 ####################################################################
 
 
+PIXLIBS = core input gfx
 
- 
-DEPS = Makefile $(HDRS) $(PIXDIR)/libpix5_d.so 
-OBJS = $(patsubst %.cc,%.o,$(SRCS))
- 
-.PHONY: all clean
- 
-all: $(TARGET)
- 
-clean:
-	@rm -f $(OBJS) $(TARGET)
- 
- 
-$(TARGET): $(OBJS) $(DEPS)
-	g++ -o $(TARGET) $(OBJS) -L$(PIXDIR) -lpix5_d -Wl,-rpath=$(PIXDIR)
- 
-$(OBJS): %.o: %.cc $(DEPS)
-	g++ -g -c -o $@ -I$(PIXDIR) -Wall -Werror -DDBG $<
+
+
+
+include $(PIXDIR)/Rules.make
+
+

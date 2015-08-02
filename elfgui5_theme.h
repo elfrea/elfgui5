@@ -29,10 +29,8 @@ public:
 
 
 
-class Fonts:public Obj
+class Fonts
 {
-	OBJ("Fonts")
-
 public:
 
 	Font* tiny;
@@ -51,10 +49,8 @@ public:
 
 
 
-class Theme:public Obj
+class Theme
 {
-	OBJ("Theme")
-	
 public:
 
 	static Colors* color;

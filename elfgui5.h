@@ -40,7 +40,7 @@
 
 
 //***** MY EVENT HANDLER
-class MyEventHandler:public EventHandler
+class MyEventHandler:public GfxEventHandler
 {
 public:
 
@@ -61,10 +61,8 @@ public:
 
 
 
-class ElfGui5:public Obj
+class ElfGui5
 {
-	OBJ("ElfGui5")
-	
 public:
 
 	//config vars

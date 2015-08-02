@@ -69,7 +69,7 @@ namespace TabsPosition
 {
 	enum Type
 	{
-		Top,Down,Left,Right
+		Top,Bottom,Left,Right
 	};
 }
 

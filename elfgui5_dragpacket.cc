@@ -5,7 +5,7 @@
 //constructor
 DragPacket::DragPacket(const Str& icon_path,int offx,int offy)
 {
-	icon=Cache::texture(icon_path);
+	icon=Texture::cache(icon_path);
 	offset_x=offx;
 	offset_y=offy;
 

@@ -43,20 +43,20 @@ void Theme::set(const Str& theme)
 
 
 		//fonts
-		font->tiny=Cache::font("fonts/Vera.ttf",6);
-		font->tiny_mono=Cache::font("fonts/VeraMono.ttf",6);
+		font->tiny=Font::cache("fonts/Vera.ttf",6);
+		font->tiny_mono=Font::cache("fonts/VeraMono.ttf",6);
 
-		font->small=Cache::font("fonts/Vera.ttf",8);
-		font->small_mono=Cache::font("fonts/VeraMono.ttf",8);
+		font->small=Font::cache("fonts/Vera.ttf",8);
+		font->small_mono=Font::cache("fonts/VeraMono.ttf",8);
 
-		font->normal=Cache::font("fonts/Vera.ttf",10);
-		font->normal_mono=Cache::font("fonts/VeraMono.ttf",11);
+		font->normal=Font::cache("fonts/Vera.ttf",10);
+		font->normal_mono=Font::cache("fonts/VeraMono.ttf",11);
 
-		font->big=Cache::font("fonts/Vera.ttf",16);
-		font->big_mono=Cache::font("fonts/VeraMono.ttf",16);
+		font->big=Font::cache("fonts/Vera.ttf",16);
+		font->big_mono=Font::cache("fonts/VeraMono.ttf",16);
 		
-		font->huge=Cache::font("fonts/Vera.ttf",22);
-		font->huge_mono=Cache::font("fonts/VeraMono.ttf",22);
+		font->huge=Font::cache("fonts/Vera.ttf",22);
+		font->huge_mono=Font::cache("fonts/VeraMono.ttf",22);
 	}
 }
 

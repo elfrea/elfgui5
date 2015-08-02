@@ -528,7 +528,7 @@ void eEditbox::set_custom(Texture* tex,Texture* dtex,int borderw,bool autosize)
 //***** SET CUSTOM
 void eEditbox::set_custom(const Str& filename,const Str& dfilename,int borderw,bool autosize)
 {
-	set_custom(Cache::texture(filename),Cache::texture(dfilename),borderw,autosize);
+	set_custom(Texture::cache(filename),Texture::cache(dfilename),borderw,autosize);
 }
 
 

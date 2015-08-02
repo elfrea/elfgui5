@@ -94,7 +94,7 @@ void cGame::init()
 	rpush3=new eRadiopush("radiopush3",190,250,70,50,"RPUSH3");
 	win1->add_child(rpush3);
 
-	tex1=new eTexturebox("texturebox1",10,310,180,180,rotate_tex90("gfx/test/test_tex.png"),1,false);
+	tex1=new eTexturebox("texturebox1",10,310,180,180,Texture::cache("gfx/test/test_tex.png"),1,false);
 	tex1->set_texture_offset(30,30);
 	tex1->set_dynamic(true);
 	win1->add_child(tex1);
@@ -156,15 +156,16 @@ void cGame::init()
 	win3->set_statusbar_message("Juun suce des canards poilus");
 	ElfGui5::base->add_child(win3);
 
-	tabbox1=new eTabbox("tabbox1",20,20,360,300);
+	tabbox1=new eTabbox("tabbox1",20,20,360,500,TabsPosition::Right);
 	win3->add_child(tabbox1);
 		tab1=tabbox1->add_new_tab("tab1");
 		tab2=tabbox1->add_new_tab("tab2");
 		tab3=tabbox1->add_new_tab("Patate Poilue");
 		tab4=tabbox1->add_new_tab("Flagada");
 	tabbox1->undock_tab(tab4,ElfGui5::base,100,100);
-	eTab*t=tabbox1->dock_tab(win1,0);
-	tabbox1->select_tab(t);
+	tabbox1->dock_tab(win1,0);
+
+	tabbox1->select_tab(tab1);
 		
 		
 
