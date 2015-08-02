@@ -229,6 +229,34 @@ void eTabbox::draw()
 						}
 					}
 				}
+
+				//no tab is currently present
+				else if(ElfGui5::base->find_element_under_mouse()==this)
+				{
+
+					switch(tabs_position)
+					{
+						//TOP
+						case TabsPosition::Top:
+							draw_dotted_box(image,10,title_size+10,w-20,h-title_size-20,color->text);
+						break;
+
+						//BOTTOM
+						case TabsPosition::Bottom:
+							draw_panel(image,color,false,enabled,0,0,w,h-title_size);
+						break;
+
+						//LEFT
+						case TabsPosition::Left:
+							draw_panel(image,color,false,enabled,title_size,0,w-title_size,h);
+						break;
+
+						//Right
+						case TabsPosition::Right:
+							draw_panel(image,color,false,enabled,0,0,w-title_size,h);
+						break;
+					}
+				}
 			}
 		}
 	}
