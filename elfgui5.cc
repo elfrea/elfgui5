@@ -20,6 +20,7 @@ Element* ElfGui5::element_under_mouse;
 int ElfGui5::mouse_is_down;
 int ElfGui5::last_mouse_click_but;
 Element* ElfGui5::current_element;
+
 DragPacket* ElfGui5::current_dragpacket;
 
 bool ElfGui5::current_element_is_moving;
@@ -259,7 +260,9 @@ void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 		
 		//send on_mouse_down event
 		else
+		{
 			eum->on_mouse_down(but,mx,my);
+		}
 
 	}
 	
@@ -486,7 +489,7 @@ void MyEventHandler::on_mouse_move(Mouse& mouse)
 				ElfGui5::element_under_mouse->on_mouse_leave();
 
 				//check for mouse dragging
-				if(ElfGui5::element_under_mouse->can_be_dragged && mouse.left() && ElfGui5::current_dragpacket==NULL)
+				if(ElfGui5::current_element==ElfGui5::element_under_mouse && ElfGui5::element_under_mouse->can_be_dragged && mouse.left() && ElfGui5::current_dragpacket==NULL)
 					ElfGui5::element_under_mouse->on_mouse_drag_out();
 			}
 

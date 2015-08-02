@@ -83,6 +83,7 @@ public:
 	static int mouse_is_down;
 	static int last_mouse_click_but;
 	static Element* current_element;
+
 	static DragPacket* current_dragpacket;
 
 	static bool current_element_is_moving;

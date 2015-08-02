@@ -12,6 +12,7 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	//parent class vars
 	type="window";
 	mouse_down_bring_to_front=true;
+	can_be_moved_outside_parent=true;
 	can_be_moved=true;
 	can_be_resized=true;
 	set_move_area(DEFAULT_TITLEBAR_H,0,ew-DEFAULT_TITLEBAR_H,DEFAULT_TITLEBAR_H);

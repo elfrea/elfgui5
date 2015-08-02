@@ -143,6 +143,28 @@ void eTabbox::draw()
 		delete ttext;
 
 	}
+
+	//show indications to where the dragging would go
+	DragPacket* dp=ElfGui5::current_dragpacket;
+	if(dp)
+	{
+		if(dp->command=="#move tab" || dp->command=="#move window")
+		{
+			Mouse& m=Input::get_mouse();
+			eTab* tab=find_tab_at(m.x-get_true_x(),m.y-get_true_y());
+			if(tab)
+			{
+				int tx=get_tab_title_x(tab);
+				int ty=get_tab_title_y(tab);
+				int tw=get_tab_title_w(tab);
+				int th=get_tab_title_h(tab);
+				image->rect(tx,ty,tx+tw-1,ty+th-1,color->text);
+			}
+			else
+			{
+			}
+		}
+	}
 }
 
 
@@ -166,6 +188,7 @@ void eTabbox::on_mouse_enter(int mx,int my){}
 void eTabbox::on_mouse_leave()
 {
 	ready_to_grab=false;
+	dirty=true;
 }
 
 
@@ -173,28 +196,10 @@ void eTabbox::on_mouse_leave()
 //***** ON MOUSE MOVE
 void eTabbox::on_mouse_move(int mx,int my)
 {
-	
-	//check for grabbing
-	if(ready_to_grab)
-	{
-		eTab* tab=find_tab_at(mx,my);
-		if(!tab || tab!=grabbing_tab)
-		{
-			//create grab texture
-			Texture* ttex=get_tab_text(grabbing_tab);
-			Texture* tex=Texture::create(ttex->width()+4,ttex->height()+4,false);
-			draw_panel(tex,color,false,true);
-			tex->blit(2,2,ttex);
-			delete ttex;
+	grab_tab(mx,my);
 
-			//start drag
-			DragPacket* dp=start_drag(tex,0,0);
-			dp->command="#move tab";
-			dp->element=grabbing_tab;
-
-			ready_to_grab=false;
-		}
-	}
+	if(ElfGui5::current_dragpacket!=NULL)
+		dirty=true;
 }
 
 
@@ -212,7 +217,10 @@ void eTabbox::on_mouse_down(int but,int mx,int my)
 			grabbing_tab=tab;
 		}
 		else
+		{
 			ready_to_grab=false;
+			grabbing_tab=NULL;
+		}
 	}
 }
 
@@ -222,6 +230,7 @@ void eTabbox::on_mouse_down(int but,int mx,int my)
 void eTabbox::on_mouse_up(int but,int mx,int my)
 {
 	ready_to_grab=false;
+	grabbing_tab=NULL;
 }
 
 
@@ -264,7 +273,12 @@ void eTabbox::on_mouse_wheel_up(int mx,int my)
 
 
 
-void eTabbox::on_mouse_drag_out(){}
+//***** ON MOUSE DRAG OUT
+void eTabbox::on_mouse_drag_out()
+{
+	ready_to_grab=true;
+	grab_tab(-1,-1);
+}
 
 
 
@@ -1042,7 +1056,35 @@ eTab* eTabbox::find_tab_at(int mx,int my)
 
 
 
+//***** GRAB TAB
+void eTabbox::grab_tab(int mx,int my)
+{
+	//check for grabbing
+	if(ready_to_grab)
+	{
+		eTab* tab=find_tab_at(mx,my);
+		if(grabbing_tab)
+		{
+			if(!tab || tab!=grabbing_tab)
+			{
+				//create grab texture
+				Texture* ttex=get_tab_text(grabbing_tab);
+				Texture* tex=Texture::create(ttex->width()+4,ttex->height()+4,false);
+				draw_panel(tex,color,false,true);
+				tex->blit(2,2,ttex);
+				delete ttex;
 
+				//start drag
+				DragPacket* dp=start_drag(tex,0,0);
+				dp->command="#move tab";
+				dp->element=grabbing_tab;
+
+				ready_to_grab=false;
+				grabbing_tab=NULL;
+			}
+		}
+	}
+}
 
 
 

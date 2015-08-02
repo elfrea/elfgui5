@@ -102,6 +102,8 @@ public:
 
 	class eTab* find_tab_at(int mx,int my);
 
+	void grab_tab(int mx=-1,int my=-1);
+
 };
 
 
