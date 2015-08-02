@@ -156,19 +156,14 @@ void eTabbox::draw()
 			eTab* tab=find_tab_at(m.x-get_true_x(),m.y-get_true_y());
 			if(tab)
 			{
-				if(tab!=dp->element)
+				if(tab!=dp->element && get_tab_index(tab)!=get_tab_index((eTab*)dp->element)+1)
 				{
 					int tx=get_tab_title_x(tab);
 					int ty=get_tab_title_y(tab);
-					int tw=get_tab_title_w(tab);
 					int th=get_tab_title_h(tab);
 							
-					Texture* t=Texture::create(tw-2,th-2);
-					t->clear(color_dragin);
-					image->blit(tx+1,ty+1,t);
-					delete t;
-
 					image->rect(tx,ty,tx+2,ty+th-1,color->text);
+					image->rect(tx-2,ty,tx,ty+th-1,color->text);
 				}
 			}
 
@@ -186,11 +181,7 @@ void eTabbox::draw()
 					case TabsPosition::Top:
 					case TabsPosition::Bottom:
 					{
-						Texture* t=Texture::create(title_size-2,th-2);
-						t->clear(color_dragin);
-						image->blit(tx+tw+1,ty+1,t);
-						delete t;
-						image->rect(tx+tw+1,ty+1,tx+tw+title_size-1,ty+th-1,color->text);
+						image->rect(tx+tw+1,ty,tx+tw+4,ty+th-1,color->text);
 					}
 					break;
 
