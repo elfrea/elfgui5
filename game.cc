@@ -152,11 +152,11 @@ void cGame::init()
 
 
 
-	win3=new eWindow("window3",400,50,400,600,"Test Window 3");
+	win3=new eWindow("window3",400,50,500,700,"Test Window 3");
 	win3->set_statusbar_message("Juun suce des canards poilus");
 	ElfGui5::base->add_child(win3);
 
-	tabbox1=new eTabbox("tabbox1",20,20,360,500,TabsPosition::Right);
+	tabbox1=new eTabbox("tabbox1",20,20,460,630,TabsPosition::Top);
 	win3->add_child(tabbox1);
 		tab1=tabbox1->add_new_tab("tab1");
 		tab2=tabbox1->add_new_tab("tab2");
@@ -165,7 +165,9 @@ void cGame::init()
 	tabbox1->undock_tab(tab4,ElfGui5::base,100,100);
 	tabbox1->dock_tab(win1,0);
 
+	tabbox1->switch_tab(tab1,tab3);
 	tabbox1->select_tab(tab1);
+
 		
 		
 

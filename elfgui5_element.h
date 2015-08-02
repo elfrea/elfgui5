@@ -81,7 +81,7 @@ public:
 	virtual void on_mouse_wheel_down(int mx,int my);
 	virtual void on_mouse_wheel_up(int mx,int my);
 	virtual void on_mouse_drag_out();
-	virtual void on_mouse_drag_in(DragPacket* dragpacket);
+	virtual void on_mouse_drag_in(DragPacket* dragpacket,int mx,int my);
 	virtual void on_key_down(Key& key);
 	virtual void on_key_up(Key& key);
 	virtual void on_text(const Str& text);
@@ -112,6 +112,7 @@ public:
 	void set_move_area(int mx,int my,int mw,int mh);
 	void set_move_area_autosize(bool autow,bool autoh);
 	void set_custom_cursor(const Str& filename,int hx,int hy);
+	DragPacket* start_drag(Texture* picon,int offx=0,int offy=0);
 	DragPacket* start_drag(const Str& icon_path,int offx=0,int offy=0);
 	void send_event(Element* sndr,const Str& cmd);
 	void send_event(Event* ev);

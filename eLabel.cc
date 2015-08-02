@@ -83,7 +83,7 @@ void eLabel::on_mouse_up(int but,int mx,int my){}
 //void eLabel::on_mouse_wheel_down(int mx,int my){}
 //void eLabel::on_mouse_wheel_up(int mx,int my){}
 void eLabel::on_mouse_drag_out(){}
-void eLabel::on_mouse_drag_in(DragPacket* dragpacket){}
+void eLabel::on_mouse_drag_in(DragPacket* dragpacket,int mx,int my){}
 void eLabel::on_key_down(Key& key){}
 void eLabel::on_key_up(Key& key){}
 void eLabel::on_text(const Str& text){}

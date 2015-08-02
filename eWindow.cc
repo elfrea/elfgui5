@@ -14,8 +14,9 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	mouse_down_bring_to_front=true;
 	can_be_moved=true;
 	can_be_resized=true;
-	set_move_area(0,0,ew,DEFAULT_TITLEBAR_H);
-	move_area_auto_width=true;
+	set_move_area(DEFAULT_TITLEBAR_H,0,ew-DEFAULT_TITLEBAR_H,DEFAULT_TITLEBAR_H);
+	//move_area_auto_width=true;
+	can_be_dragged=true;
 	
 	//own config vars
 	maximized=false;
@@ -213,12 +214,44 @@ void eWindow::on_mouse_doubleclick(int but,int mx,int my)
 
 //void eWindow::on_mouse_wheel_down(int mx,int my){}
 //void eWindow::on_mouse_wheel_up(int mx,int my){}
-void eWindow::on_mouse_drag_out(){}
-void eWindow::on_mouse_drag_in(DragPacket* dragpacket){}
+
+
+
+//***** OIN MOUSE DRAG OUT
+void eWindow::on_mouse_drag_out()
+{
+	//create drag texture
+	int tw=font->len(get_title());
+	int th=font->height();
+	Texture* ttex=Texture::create(tw,th);
+	ttex->print(font,0,0,color->text,get_title());
+	Texture* tex=Texture::create(ttex->width()+4,ttex->height()+4,false);
+	draw_panel(tex,color,false,true);
+	tex->blit(2,2,ttex);
+	delete ttex;
+
+	DragPacket* dp=start_drag(tex,0,0);
+	dp->command="#move window";
+//	dp->element=this;
+}
+
+
+
+void eWindow::on_mouse_drag_in(DragPacket* dragpacket,int mx,int my){}
 void eWindow::on_key_down(Key& key){}
 void eWindow::on_key_up(Key& key){}
 void eWindow::on_text(const Str& text){}
-void eWindow::on_resize(int width,int height){}
+
+
+
+//***** ON RESIZE
+void eWindow::on_resize(int width,int height)
+{
+	set_move_area(titlebar->h,0,w-titlebar->h,titlebar->h);
+}
+
+
+
 void eWindow::on_parent_resize(){}
 void eWindow::on_select(){}
 void eWindow::on_unselect(){}

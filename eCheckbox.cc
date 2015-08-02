@@ -180,7 +180,7 @@ void eCheckbox::on_mouse_up(int but,int mx,int my)
 //void eCheckbox::on_mouse_wheel_down(int mx,int my){}
 //void eCheckbox::on_mouse_wheel_up(int mx,int my){}
 void eCheckbox::on_mouse_drag_out(){}
-void eCheckbox::on_mouse_drag_in(DragPacket* dragpacket){}
+void eCheckbox::on_mouse_drag_in(DragPacket* dragpacket,int mx,int my){}
 
 
 

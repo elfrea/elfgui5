@@ -12,17 +12,22 @@ eTabbox::eTabbox(const Str& ename,int ex,int ey,int ew,int eh,TabsPosition::Type
 	//parent class vars
 	type="tabbox";
 	selectable=false;
+	can_be_dragged=true;
 	color->extra=Color::ubyte(150,150,150);
 	color->d_extra=Color::ubyte(100,100,100);
 	
 	//own config vars
+	ready_to_grab=false;
+	can_move_tabs=false;
+	can_drag_tabs=false;
+	
+	//own internal config vars (use config functions to modify)
 	tabs_position=tabs_pos;
 	title_size=DEFAULT_TITLE_SIZE;
 	selected_tab=NULL;
-	
-	//own internal config vars (use config functions to modify)
 
 	//own internal vars
+	grabbing_tab=NULL;
 	
 	//own elements
 
@@ -113,6 +118,7 @@ void eTabbox::draw()
 				case TabsPosition::Bottom:
 					image->line(tx+1,ty-1,tx+tw-2,ty-1,color->medium);
 					image->line(tx+1,ty,tx+tw-2,ty,color->medium);
+					image->set_pixel(tx,ty-1,color->light);
 					image->set_pixel(tx+tw-1,ty,color->dark);
 				break;
 
@@ -153,18 +159,69 @@ void eTabbox::draw()
 
 //void eTabbox::on_event(Event* ev){}
 void eTabbox::on_mouse_enter(int mx,int my){}
-void eTabbox::on_mouse_leave(){}
-void eTabbox::on_mouse_move(int mx,int my){}
-void eTabbox::on_mouse_down(int but,int mx,int my){}
+
+
+
+//***** ON MOUSE LEAVE
+void eTabbox::on_mouse_leave()
+{
+	ready_to_grab=false;
+}
+
+
+
+//***** ON MOUSE MOVE
+void eTabbox::on_mouse_move(int mx,int my)
+{
+	
+	//check for grabbing
+	if(ready_to_grab)
+	{
+		eTab* tab=find_tab_at(mx,my);
+		if(!tab || tab!=grabbing_tab)
+		{
+			//create grab texture
+			Texture* ttex=get_tab_text(grabbing_tab);
+			Texture* tex=Texture::create(ttex->width()+4,ttex->height()+4,false);
+			draw_panel(tex,color,false,true);
+			tex->blit(2,2,ttex);
+			delete ttex;
+
+			//start drag
+			DragPacket* dp=start_drag(tex,0,0);
+			dp->command="#move tab";
+			dp->element=grabbing_tab;
+
+			ready_to_grab=false;
+		}
+	}
+}
+
+
+
+//***** ON MOUSE DOWN
+void eTabbox::on_mouse_down(int but,int mx,int my)
+{
+	if(but==1)
+	{
+		eTab* tab=find_tab_at(mx,my);
+		if(tab)
+		{
+			select_tab(tab);
+			ready_to_grab=true;
+			grabbing_tab=tab;
+		}
+		else
+			ready_to_grab=false;
+	}
+}
 
 
 
 //***** ON MOUSE UP
 void eTabbox::on_mouse_up(int but,int mx,int my)
 {
-	eTab* tab=find_tab_at(mx,my);
-	if(tab)
-		select_tab(tab);
+	ready_to_grab=false;
 }
 
 
@@ -208,7 +265,60 @@ void eTabbox::on_mouse_wheel_up(int mx,int my)
 
 
 void eTabbox::on_mouse_drag_out(){}
-void eTabbox::on_mouse_drag_in(DragPacket* dragpacket){}
+
+
+
+//***** ON MOUSE DRAG IN
+void eTabbox::on_mouse_drag_in(DragPacket* dragpacket,int mx,int my)
+{
+	//MOVE TAB
+	if(dragpacket->command=="#move tab")
+	{
+		//local tab drag and drop
+		if(dragpacket->sender==this)
+		{
+			eTab* tab=find_tab_at(mx,my);
+
+			if(tab)
+				move_tab((eTab*)dragpacket->element,get_tab_index(tab));
+			else
+				move_tab((eTab*)dragpacket->element,children.size()-1);
+		}
+
+		//tab drag and drop from another tabbox
+		else
+		{
+		}
+	}
+	
+	//MOVE WINDOW
+	else if(dragpacket->command=="#move window")
+	{
+		//make sure window is not a parent
+		bool ok=true;
+		Element* p=this;
+		while(p!=NULL)
+		{
+			if(p->parent==dragpacket->sender)
+			{
+				ok=false;
+				break;
+			}
+
+			p=p->parent;
+		}
+
+		//dock window
+		if(ok)
+		{
+			int index=get_tab_index(find_tab_at(mx,my));
+			if(index==-1)
+				index=children.size();
+			eTab* tab=dock_tab((eWindow*)dragpacket->sender,index);
+			select_tab(tab);
+		}
+	}
+}
 
 
 
@@ -268,7 +378,7 @@ void eTabbox::add_child(Element* child)
 	if(child->type!="tab")
 	{
 		#ifdef DBG
-			Log::debug("ERROR: Child '%s' is not supported by the TabBox!",child->name);
+			Log::debug("ERROR: Child '%s' is not supported by the TabBox!",child->name.ptr());
 		#endif
 		return;
 	}
@@ -284,7 +394,7 @@ void eTabbox::insert_child(Element* child,int index)
 	if(child->type!="tab")
 	{
 		#ifdef DBG
-			Log::debug("ERROR: Child '%s' is not supported by the TabBox!",child->name);
+			Log::debug("ERROR: Child '%s' is not supported by the TabBox!",child->name.ptr());
 		#endif
 		return;
 	}
@@ -300,7 +410,7 @@ void eTabbox::remove_child(Element* child,bool del)
 	if(child->type!="tab")
 	{
 		#ifdef DBG
-			Log::debug("ERROR: Child '%s' is not supported by the TabBox!",child->name);
+			Log::debug("ERROR: Child '%s' is not supported by the TabBox!",child->name.ptr());
 		#endif
 		return;
 	}
@@ -390,14 +500,18 @@ void eTabbox::move_tab(eTab* tab,int index)
 
 	if(index>i)
 	{
+		remove_tab(tab);
+		tab->parent=NULL;
 		insert_tab(tab,index);
-		remove_tab(i);
 	}
 	else
 	{
-		remove_tab(i);
+		remove_tab(tab);
+		tab->parent=NULL;
 		insert_tab(tab,index);
 	}
+
+	select_tab(tab);
 }
 
 
@@ -419,13 +533,16 @@ void eTabbox::switch_tab(eTab* tab1,eTab* tab2)
 
 	if(i1==-1 || i2==-1)
 		return;
-	
-	remove_tab(i1);
+
+	tab1->parent=NULL;
+	tab2->parent=NULL;
+
+	remove_tab(tab1);
+	insert_tab(tab1,i2);
+	remove_tab(tab2);
 	insert_tab(tab2,i1);
 
-	remove_tab(i2);
-	insert_tab(tab1,i2);
-
+	dirty=true;
 }
 
 
@@ -443,6 +560,7 @@ void eTabbox::switch_tab(int index1,int index2)
 void eTabbox::transfer_tab(eTab* tab,eTabbox* tabbox)
 {
 	remove_tab(tab);
+	tab->parent=NULL;
 	tabbox->add_tab(tab);
 }
 
@@ -469,14 +587,16 @@ eWindow* eTabbox::undock_tab(eTab* tab,Element* eparent,int ex,int ey)
 	{
 		Element* child=tab->children[a];
 
+		tab->remove_child(child);
 		child->parent=NULL;
 		win->add_child(child);
-		tab->remove_child(child);
-		child->parent=win;
+		//child->parent=win->body;
 	}
 	
 	//send tab to die
 	tab->add_to_dead_list();
+
+	select_tab(0);
 
 	return win;
 }

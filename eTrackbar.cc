@@ -233,7 +233,7 @@ void eTrackbar::on_mouse_wheel_up(int mx,int my)
 
 
 void eTrackbar::on_mouse_drag_out(){}
-void eTrackbar::on_mouse_drag_in(DragPacket* dragpacket){}
+void eTrackbar::on_mouse_drag_in(DragPacket* dragpacket,int mx,int my){}
 
 
 

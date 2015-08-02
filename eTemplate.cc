@@ -77,7 +77,7 @@ void eTemplate::on_mouse_up(int but,int mx,int my){}
 //void eTemplate::on_mouse_wheel_down(int mx,int my){}
 //void eTemplate::on_mouse_wheel_up(int mx,int my){}
 void eTemplate::on_mouse_drag_out(){}
-void eTemplate::on_mouse_drag_in(DragPacket* dragpacket){}
+void eTemplate::on_mouse_drag_in(DragPacket* dragpacket,int mx,int my){}
 void eTemplate::on_key_down(Key& key){}
 void eTemplate::on_key_up(Key& key){}
 void eTemplate::on_text(const Str& text){}

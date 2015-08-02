@@ -60,7 +60,7 @@ public:
 //	void on_mouse_wheel_down(int mx,int my);
 //	void on_mouse_wheel_up(int mx,int my);
 	void on_mouse_drag_out();
-	void on_mouse_drag_in(DragPacket* dragpacket);
+	void on_mouse_drag_in(DragPacket* dragpacket,int mx,int my);
 	void on_key_down(Key& key);
 	void on_key_up(Key& key);
 	void on_text(const Str& text);

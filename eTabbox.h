@@ -9,6 +9,8 @@ class eTabbox:public Element
 public:
 
 	//own config vars
+	bool can_move_tabs;
+	bool can_drag_tabs;
 
 	//own internal config vars (use config functions to modify)
 	TabsPosition::Type tabs_position;
@@ -16,6 +18,8 @@ public:
 	class eTab* selected_tab;
 
 	//own internal vars
+	bool ready_to_grab;
+	eTab* grabbing_tab;
 
 	//own elements
 
@@ -44,7 +48,7 @@ public:
 	void on_mouse_wheel_down(int mx,int my);
 	void on_mouse_wheel_up(int mx,int my);
 	void on_mouse_drag_out();
-	void on_mouse_drag_in(DragPacket* dragpacket);
+	void on_mouse_drag_in(DragPacket* dragpacket,int mx,int my);
 	void on_key_down(Key& key);
 	void on_key_up(Key& key);
 	void on_text(const Str& text);

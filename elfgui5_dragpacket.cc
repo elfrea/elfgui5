@@ -3,11 +3,15 @@
 
 
 //constructor
-DragPacket::DragPacket(const Str& icon_path,int offx,int offy)
+DragPacket::DragPacket(Texture* picon,int offx,int offy)
 {
-	icon=Texture::cache(icon_path);
+	icon=picon;
 	offset_x=offx;
 	offset_y=offy;
+
+	command="";
+	sender=NULL;
+	element=NULL;
 
 	for(int a=0;a<5;a++)
 	{
@@ -20,3 +24,18 @@ DragPacket::DragPacket(const Str& icon_path,int offx,int offy)
 	}
 }
 
+
+
+//constructor
+DragPacket::DragPacket(const Str& icon_path,int offx,int offy)
+{
+	DragPacket(Texture::load(icon_path),offx,offy);
+}
+
+
+
+//destructor
+DragPacket::~DragPacket()
+{
+	delete icon;
+}

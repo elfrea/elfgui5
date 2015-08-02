@@ -308,10 +308,10 @@ void MyEventHandler::on_mouse_up(int but,Mouse& mouse)
 	}
 
 	//send mouse_drag_in event
-	if(ElfGui5::current_dragpacket)
+	if(but==1 && ElfGui5::current_dragpacket)
 	{
 		if(eum && eum->enabled)
-			eum->on_mouse_drag_in(ElfGui5::current_dragpacket);
+			eum->on_mouse_drag_in(ElfGui5::current_dragpacket,mouse.x-eum->get_true_x(),mouse.y-eum->get_true_y());
 			
 		delete ElfGui5::current_dragpacket;
 		ElfGui5::current_dragpacket=NULL;

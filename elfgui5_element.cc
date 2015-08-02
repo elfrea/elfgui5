@@ -177,7 +177,7 @@ void Element::on_mouse_wheel_up(int mx,int my)
 
 
 void Element::on_mouse_drag_out(){}
-void Element::on_mouse_drag_in(DragPacket* dragpacket){}
+void Element::on_mouse_drag_in(DragPacket* dragpacket,int mx,int my){}
 void Element::on_key_down(Key& key){}
 void Element::on_key_up(Key& key){}
 void Element::on_text(const Str& text){}
@@ -263,7 +263,7 @@ void Element::remove_child(Element* child,bool del)
 	if(child==NULL)
 	{
 		#ifdef DBG
-			Log::debug("Element '%s' tried to remove a child that is NULL!",name);
+			Log::debug("Element '%s' tried to remove a child that is NULL!",name.ptr());
 		#endif
 		return;
 	}
@@ -273,7 +273,7 @@ void Element::remove_child(Element* child,bool del)
 	if(index==-1)
 	{
 		#ifdef DBG
-			Log::debug("Element '%s' tried to remove a child that is not in the list!",name);
+			Log::debug("Element '%s' tried to remove a child that is not in the list!",name.ptr());
 		#endif
 		return;
 	}
@@ -620,7 +620,7 @@ void Element::set_custom_cursor(const Str& filename,int hx,int hy)
 
 
 //***** START DRAG
-DragPacket* Element::start_drag(const Str& icon_path,int offx,int offy)
+DragPacket* Element::start_drag(Texture* picon,int offx,int offy)
 {
 	if(can_be_dragged)
 	{
@@ -629,13 +629,22 @@ DragPacket* Element::start_drag(const Str& icon_path,int offx,int offy)
 			delete ElfGui5::current_dragpacket;
 
 		//create new dragpacket
-		DragPacket* dp=new DragPacket(icon_path,offx,offy);
+		DragPacket* dp=new DragPacket(picon,offx,offy);
+		dp->sender=this;
 		ElfGui5::current_dragpacket=dp;
 
 		return dp;
 	}
 
 	return NULL;
+}
+
+
+
+//***** START DRAG
+DragPacket* Element::start_drag(const Str& icon_path,int offx,int offy)
+{
+	return start_drag(Texture::load(icon_path),offx,offy);
 }
 
 

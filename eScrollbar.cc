@@ -237,7 +237,7 @@ void eScrollbar::on_mouse_wheel_up(int mx,int my)
 
 
 void eScrollbar::on_mouse_drag_out(){}
-void eScrollbar::on_mouse_drag_in(DragPacket* dragpacket){}
+void eScrollbar::on_mouse_drag_in(DragPacket* dragpacket,int mx,int my){}
 
 
 
