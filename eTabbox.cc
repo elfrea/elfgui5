@@ -25,6 +25,7 @@ eTabbox::eTabbox(const Str& ename,int ex,int ey,int ew,int eh,TabsPosition::Type
 	tabs_position=tabs_pos;
 	title_size=DEFAULT_TITLE_SIZE;
 	selected_tab=NULL;
+	color_dragin=Color::ubyte(100,100,150,100);
 
 	//own internal vars
 	grabbing_tab=NULL;
@@ -150,18 +151,57 @@ void eTabbox::draw()
 	{
 		if(dp->command=="#move tab" || dp->command=="#move window")
 		{
+			//dragging on a tab
 			Mouse& m=Input::get_mouse();
 			eTab* tab=find_tab_at(m.x-get_true_x(),m.y-get_true_y());
 			if(tab)
 			{
-				int tx=get_tab_title_x(tab);
-				int ty=get_tab_title_y(tab);
-				int tw=get_tab_title_w(tab);
-				int th=get_tab_title_h(tab);
-				image->rect(tx,ty,tx+tw-1,ty+th-1,color->text);
+				if(tab!=dp->element)
+				{
+					int tx=get_tab_title_x(tab);
+					int ty=get_tab_title_y(tab);
+					int tw=get_tab_title_w(tab);
+					int th=get_tab_title_h(tab);
+							
+					Texture* t=Texture::create(tw-2,th-2);
+					t->clear(color_dragin);
+					image->blit(tx+1,ty+1,t);
+					delete t;
+
+					image->rect(tx,ty,tx+2,ty+th-1,color->text);
+				}
 			}
-			else
+
+			//dragging outside tab
+			else if(dp->element!=children[children.size()-1] && ElfGui5::base->find_element_under_mouse()==this)
 			{
+				int tx=get_tab_title_x((eTab*)children[children.size()-1]);
+				int ty=get_tab_title_y((eTab*)children[children.size()-1]);
+				int tw=get_tab_title_w((eTab*)children[children.size()-1]);
+				int th=get_tab_title_h((eTab*)children[children.size()-1]);
+
+				switch(tabs_position)
+				{
+					//TOP,BOTTOM
+					case TabsPosition::Top:
+					case TabsPosition::Bottom:
+					{
+						Texture* t=Texture::create(title_size-2,th-2);
+						t->clear(color_dragin);
+						image->blit(tx+tw+1,ty+1,t);
+						delete t;
+						image->rect(tx+tw+1,ty+1,tx+tw+title_size-1,ty+th-1,color->text);
+					}
+					break;
+
+					//LEFT,RIGHT
+					case TabsPosition::Left:
+					case TabsPosition::Right:
+					{
+						image->rect(tx,ty+th,tx+tw-1,ty+th+title_size-1,color->text);
+					}
+					break;
+				}
 			}
 		}
 	}
@@ -296,7 +336,7 @@ void eTabbox::on_mouse_drag_in(DragPacket* dragpacket,int mx,int my)
 			if(tab)
 				move_tab((eTab*)dragpacket->element,get_tab_index(tab));
 			else
-				move_tab((eTab*)dragpacket->element,children.size()-1);
+				move_tab((eTab*)dragpacket->element,-1);
 		}
 
 		//tab drag and drop from another tabbox
@@ -509,14 +549,18 @@ void eTabbox::move_tab(eTab* tab,int index)
 {
 	int i=get_tab_index(tab);
 
-	if(index==i || index<0 || index>=children.size())
+	if(index==i || index<-1 || index>=children.size())
 		return;
 
-	if(index>i)
+	if(index>i || index==-1)
 	{
 		remove_tab(tab);
 		tab->parent=NULL;
-		insert_tab(tab,index-1);
+
+		if(index>=0)
+			insert_tab(tab,index-1);
+		else
+			insert_tab(tab,children.size());
 	}
 	else
 	{

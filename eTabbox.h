@@ -16,6 +16,7 @@ public:
 	TabsPosition::Type tabs_position;
 	int title_size;
 	class eTab* selected_tab;
+	Color color_dragin;
 
 	//own internal vars
 	bool ready_to_grab;
