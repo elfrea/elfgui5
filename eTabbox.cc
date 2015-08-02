@@ -91,6 +91,12 @@ void eTabbox::draw()
 		break;
 	}
 
+	//show EMPTY if no tab is inside
+	if(!children.size())
+	{
+		draw_text_align(image,Align::Middle,0,0,Theme::font->big,color->text,"Empty");
+	}
+
 	//show tabs title
 	for(int a=0;a<children.size();a++)
 	{
@@ -151,43 +157,77 @@ void eTabbox::draw()
 	{
 		if(dp->command=="#move tab" || dp->command=="#move window")
 		{
-			//dragging on a tab
-			Mouse& m=Input::get_mouse();
-			eTab* tab=find_tab_at(m.x-get_true_x(),m.y-get_true_y());
-			if(tab)
+			//make sure window is not a parent
+			bool ok=true;
+			Element* p=this;
+			while(p!=NULL)
 			{
-				if(tab!=dp->element && (dp->sender!=this || get_tab_index(tab)!=get_tab_index((eTab*)dp->element)+1))
+				if(p->parent==dp->sender)
 				{
-					int tx=get_tab_title_x(tab);
-					int ty=get_tab_title_y(tab);
-					int th=get_tab_title_h(tab);
-							
-					image->rect(tx,ty,tx+2,ty+th-1,color->text);
-					image->rect(tx-2,ty,tx,ty+th-1,color->text);
+					ok=false;
+					break;
 				}
+
+				p=p->parent;
 			}
-
-			//dragging outside tab
-			else if(dp->element!=children[children.size()-1] && ElfGui5::base->find_element_under_mouse()==this)
+			if(ok)
 			{
-				int tx=get_tab_title_x((eTab*)children[children.size()-1]);
-				int ty=get_tab_title_y((eTab*)children[children.size()-1]);
-				int tw=get_tab_title_w((eTab*)children[children.size()-1]);
-				int th=get_tab_title_h((eTab*)children[children.size()-1]);
-
-				switch(tabs_position)
+				//dragging on a tab
+				Mouse& m=Input::get_mouse();
+				eTab* tab=find_tab_at(m.x-get_true_x(),m.y-get_true_y());
+				if(tab)
 				{
-					//TOP,BOTTOM
-					case TabsPosition::Top:
-					case TabsPosition::Bottom:
-						image->rect(tx+tw+1,ty,tx+tw+4,ty+th-1,color->text);
-					break;
+					if(tab!=dp->element && (dp->sender!=this || get_tab_index(tab)!=get_tab_index((eTab*)dp->element)+1))
+					{
+						int tx=get_tab_title_x(tab);
+						int ty=get_tab_title_y(tab);
+						int tw=get_tab_title_w(tab);
+						int th=get_tab_title_h(tab);
+							
+						switch(tabs_position)
+						{
+							//TOP,BOTTOM
+							case TabsPosition::Top:
+							case TabsPosition::Bottom:
+								image->rect(tx,ty,tx+2,ty+th-1,color->text);
+								image->rect(tx-2,ty,tx,ty+th-1,color->text);
+							break;
 
-					//LEFT,RIGHT
-					case TabsPosition::Left:
-					case TabsPosition::Right:
-						image->rect(tx,ty+th+1,tx+tw-1,ty+th+4,color->text);
-					break;
+							//LEFT,RIGHT
+							case TabsPosition::Left:
+							case TabsPosition::Right:
+								image->rect(tx,ty,tx+tw-1,ty+2,color->text);
+								image->rect(tx,ty-2,tx+tw-1,ty,color->text);
+							break;
+						}
+					}
+				}
+
+				//dragging outside tab
+				else if(children.size())
+				{
+					if(dp->element!=children[children.size()-1] && ElfGui5::base->find_element_under_mouse()==this)
+					{
+						int tx=get_tab_title_x((eTab*)children[children.size()-1]);
+						int ty=get_tab_title_y((eTab*)children[children.size()-1]);
+						int tw=get_tab_title_w((eTab*)children[children.size()-1]);
+						int th=get_tab_title_h((eTab*)children[children.size()-1]);
+
+						switch(tabs_position)
+						{
+							//TOP,BOTTOM
+							case TabsPosition::Top:
+							case TabsPosition::Bottom:
+								image->rect(tx+tw+1,ty,tx+tw+4,ty+th-1,color->text);
+							break;
+
+							//LEFT,RIGHT
+							case TabsPosition::Left:
+							case TabsPosition::Right:
+								image->rect(tx,ty+th+1,tx+tw-1,ty+th+4,color->text);
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -315,11 +355,11 @@ void eTabbox::on_mouse_drag_in(DragPacket* dragpacket,int mx,int my)
 	//MOVE TAB
 	if(dragpacket->command=="#move tab")
 	{
+		eTab* tab=find_tab_at(mx,my);
+
 		//local tab drag and drop
 		if(dragpacket->sender==this)
 		{
-			eTab* tab=find_tab_at(mx,my);
-
 			if(tab)
 				move_tab((eTab*)dragpacket->element,get_tab_index(tab));
 			else
@@ -329,6 +369,10 @@ void eTabbox::on_mouse_drag_in(DragPacket* dragpacket,int mx,int my)
 		//tab drag and drop from another tabbox
 		else
 		{
+			if(tab)
+				((eTabbox*)dragpacket->sender)->transfer_tab((eTab*)dragpacket->element,this,get_tab_index(tab));
+			else
+				((eTabbox*)dragpacket->sender)->transfer_tab((eTab*)dragpacket->element,this,-1);
 		}
 	}
 	
@@ -602,20 +646,27 @@ void eTabbox::switch_tab(int index1,int index2)
 
 
 //***** TRANSFER TAB
-void eTabbox::transfer_tab(eTab* tab,eTabbox* tabbox)
+void eTabbox::transfer_tab(eTab* tab,eTabbox* tabbox,int index)
 {
 	remove_tab(tab);
 	tab->parent=NULL;
-	tabbox->add_tab(tab);
+	select_tab(0);
+
+	if(index==-1)
+		index=tabbox->children.size();
+
+	tabbox->insert_tab(tab,index);
+	tabbox->select_tab(index);
+
 }
 
 
 
 //***** TRANSFER TAB
-void eTabbox::transfer_tab(int index,eTabbox* tabbox)
+void eTabbox::transfer_tab(int index,eTabbox* tabbox,int dest_index)
 {
 	if(index>=0 && index<children.size())
-		transfer_tab((eTab*)children[index],tabbox);
+		transfer_tab((eTab*)children[index],tabbox,dest_index);
 }
 
 
@@ -712,8 +763,9 @@ void eTabbox::select_tab(eTab* tab)
 		show_tab(tab);
 
 		send_event("change");
-		dirty=true;
 	}
+	
+	dirty=true;
 }
 
 
@@ -727,6 +779,7 @@ void eTabbox::select_tab(int index)
 	if(index>=0 && index<children.size())
 		select_tab((eTab*)children[index]);
 		
+	dirty=true;
 }
 
 

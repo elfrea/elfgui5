@@ -40,8 +40,9 @@ eTabbox* tabbox1;
 eTab* tab1;
 eTab* tab2;
 eTab* tab3;
-eTab* tab4;
 
+eTabbox* tabbox2;
+eTab* tab21;
 
 //***** INIT
 void cGame::init()
@@ -156,18 +157,19 @@ void cGame::init()
 	win3->set_statusbar_message("Juun suce des canards poilus");
 	ElfGui5::base->add_child(win3);
 
-	tabbox1=new eTabbox("tabbox1",20,20,460,630,TabsPosition::Top);
+	tabbox1=new eTabbox("tabbox1",20,20,460,630,TabsPosition::Right);
 	win3->add_child(tabbox1);
 		tab1=tabbox1->add_new_tab("tab1");
 		tab2=tabbox1->add_new_tab("tab2");
 		tab3=tabbox1->add_new_tab("Patate Poilue");
-		tab4=tabbox1->add_new_tab("Flagada");
-	tabbox1->undock_tab(tab4,ElfGui5::base,100,100);
 	tabbox1->dock_tab(win1,0);
 
 	tabbox1->switch_tab(tab1,tab3);
 	tabbox1->select_tab(tab1);
 
+	tabbox2=new eTabbox("tabbox1",20,20,460,630,TabsPosition::Top);
+		tab21=tabbox2->add_new_tab("tab21");
+	ElfGui5::base->add_child(tabbox2);
 		
 		
 

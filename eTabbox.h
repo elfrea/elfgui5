@@ -73,8 +73,8 @@ public:
 	void move_tab(int index1,int index2);
 	void switch_tab(class eTab* tab1,class eTab* tab2);
 	void switch_tab(int index1,int index2);
-	void transfer_tab(class eTab* tab,eTabbox* tabbox);
-	void transfer_tab(int index,eTabbox* tabbox);
+	void transfer_tab(class eTab* tab,eTabbox* tabbox,int index);
+	void transfer_tab(int index,eTabbox* tabbox,int dest_index);
 	class eWindow* undock_tab(class eTab* tab,class Element* eparent,int ex,int ey);
 	class eWindow* undock_tab(int index,class Element* eparent,int ex,int ey);
 	class eTab* dock_tab(class eWindow* win,int index);
