@@ -316,7 +316,7 @@ void eWindow::insert_child_on_window(Element* child,int index)
 	if(child==NULL)
 	{
 		#ifdef DBG
-			Log::debug("Element '%s' tried to add a child that is NULL!",name);
+			Log::debug("Element '%s' tried to add a child that is NULL!",name.ptr());
 		#endif
 		return;
 	}
@@ -325,7 +325,7 @@ void eWindow::insert_child_on_window(Element* child,int index)
 	if(index<0 || index>children.size())
 	{
 		#ifdef DBG
-			Log::debug("Element '%s' tried to add a child at an invalid index (%i)!",name,index);
+			Log::debug("Element '%s' tried to add a child at an invalid index (%i)!",name.ptr(),index);
 		#endif
 		return;
 	}
@@ -334,7 +334,7 @@ void eWindow::insert_child_on_window(Element* child,int index)
 	if(children.find(child)!=-1)
 	{
 		#ifdef DBG
-			Log::debug("Element '%s' tried to add a child that is already added!",name);
+			Log::debug("Element '%s' tried to add a child that is already added!",name.ptr());
 		#endif
 		return;
 	}
@@ -343,7 +343,7 @@ void eWindow::insert_child_on_window(Element* child,int index)
 	if(child->parent!=NULL)
 	{
 		#ifdef DBG
-			Log::debug("Element '%s' tried to add a child that already has a parent!",name);
+			Log::debug("Element '%s' tried to add a child that already has a parent!",name.ptr());
 		#endif
 		return;
 	}
@@ -362,7 +362,7 @@ void eWindow::remove_child_on_window(Element* child,bool del)
 	if(child==NULL)
 	{
 		#ifdef DBG
-			Log::debug("Element '%s' tried to remove a child that is NULL!",name);
+			Log::debug("Element '%s' tried to remove a child that is NULL!",name.ptr());
 		#endif
 		return;
 	}
@@ -372,7 +372,7 @@ void eWindow::remove_child_on_window(Element* child,bool del)
 	if(index==-1)
 	{
 		#ifdef DBG
-			Log::debug("Element '%s' tried to remove a child that is not in the list!",name);
+			Log::debug("Element '%s' tried to remove a child that is not in the list!",name.ptr());
 		#endif
 		return;
 	}
