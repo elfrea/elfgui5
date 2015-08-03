@@ -1,6 +1,4 @@
 MENUBAR 			
-TAB 				
-TABBAR 			
 SPLITBOX			
 COMBOBOX			
 LISTBOX 			

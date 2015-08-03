@@ -2,6 +2,10 @@
 
 #include <pix5.h>
 
+typedef void (*ACTION)();
+
+
+
 #include "elfgui5_enums.h"
 
 #include "elfgui5_theme.h"
@@ -10,6 +14,9 @@
 #include "elfgui5_event.h"
 #include "elfgui5_anchor.h"
 #include "elfgui5_clipboard.h"
+#include "elfgui5_kshortcut.h"
+#include "elfgui5_kshortcuts.h"
+#include "elfgui5_actions.h"
 
 #include "elfgui5_element.h"
 #include "eBase.h"
@@ -31,7 +38,7 @@
 #include "eTrackbar.h"
 #include "eTabbox.h"
 #include "eTab.h"
-
+#include "eKeybox.h"
 
 
 
@@ -68,6 +75,7 @@ public:
 	//config vars
 	static bool ready_to_quit;
 	static int64_t doubleclick_delay;
+	static bool lock_keyboard_shortcuts;
 
 	//internal vars
 	static MyEventHandler event_handler;
@@ -75,6 +83,8 @@ public:
 	
 	static eBase* base;
 	static List<Element*> dead_list;
+
+	static List<KShortcut*> kshortcuts;
 
 	static int64_t doubleclick_timer;
 

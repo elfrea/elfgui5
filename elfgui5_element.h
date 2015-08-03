@@ -28,6 +28,7 @@ public:
 	bool always_on_top;
 	bool send_keyboard_events_to_parent;
 	bool forward_event_to_parent;
+//	bool use_content_auto_scrollbars;
 	
 	bool use_custom_cursor;
 	bool use_anchor;
@@ -56,6 +57,9 @@ public:
 	List<Element*> children;
 	bool dirty;
 
+	//elements
+//	eScrollbar* auto_scrollbar_h;
+//	eScrollbar* auto_scrollbar_v;
 
 	
 	//constructor
@@ -122,7 +126,7 @@ public:
 
 	//internal functions
 	void loops();
-	void display();
+	void display(Rect cliprect);
 	void replace_elements();
 	int get_true_x();
 	int get_true_y();

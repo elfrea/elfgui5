@@ -754,7 +754,7 @@ void Element::loops()
 
 
 //***** DISPLAY
-void Element::display()
+void Element::display(Rect cliprect)
 {
 	if(visible)
 	{
@@ -769,12 +769,18 @@ void Element::display()
 		bool ok=true;
 		if(parent)
 		{
-			for(int a=0;a<parent->children.size();a++)
+			for(int a=parent->children.size()-1;a>=0;a--)
 			{
+				//break if remaining elements are under current element
 				Element* e=parent->children[a];
 				if(e==this)
+					break;
+
+				//dont bother calculating if element is not visible
+				if(!e->visible)
 					continue;
 
+				//dont draw this element hides the current element
 				if(e->x<=x && (e->x+e->w)>=(x+w) && e->y<=y && (e->y+e->h)>=(y+h))
 				{
 					ok=false;
@@ -789,76 +795,26 @@ void Element::display()
 			//set coordonates
 			int dx=get_true_x();
 			int dy=get_true_y();
-//			int sx=0;
-//			int sy=0;
 			int sw=image->width();
 			int sh=image->height();
 
 
-			if(parent)
+			Rect res;
+			int res_x=0;
+			int res_y=0;
+			if(Rect::clip(Rect(dx,dy,sw,sh),cliprect,res,&res_x,&res_y))
 			{
-				Rect res;
-				int res_x=0;
-				int res_y=0;
-				Rect::clip(Rect(dx,dy,sw,sh),Rect(parent->get_true_x(),parent->get_true_y(),parent->w,parent->h),res,&res_x,&res_y);
 				image->draw(res.x,res.y,Rect(res_x,res_y,res.w,res.h));
+
+				//replace children
+				replace_elements();
+
+				//display children
+				for(int a=0;a<children.size();a++)
+					children[a]->display(res);
 			}
-			else
-				image->draw(dx,dy);
-/*
-
-			//display element
-			if(ok)
-				image->draw(dx,dy,Rect(sx,sy,sw,sh));
-			//adjust coordonates to keep the element in it's parent
-			if(parent)
-			{
-				if(x<0)
-				{
-					dx=parent->get_true_x();
-					sx=-x;
-					sw=image->width()+sx;
-				}
-				else if(x>=parent->w)
-					ok=false;
-
-				if(ok)
-				{
-					if(dx+sw>parent->get_true_x()+parent->w)
-						sw-=(dx+sw)-(parent->get_true_x()+parent->w);
-
-
-					if(y<0)
-					{
-						dy=parent->get_true_y();
-						sy=-y;
-						sh=image->height()+sy;
-					}
-					else if(y>=parent->h)
-						ok=false;
-
-					if(ok)
-					{
-						if(dy+sh>parent->get_true_y()+parent->h)
-							sh-=(dy+sh)-(parent->get_true_y()+parent->h);
-					}
-				}
-			}
-
-			//display resize gizmo if needed
-			if(ok && can_be_resized)
-			{
-				ElfGui5::resize_gizmo->draw(gx,gy,Rect());
-			}
-*/
 		}
 
-		//replace children
-		replace_elements();
-
-		//display children
-		for(int a=0;a<children.size();a++)
-			children[a]->display();
 	}
 }
 

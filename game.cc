@@ -38,11 +38,12 @@ eTrackbar* track2;
 eWindow* win3;
 eTabbox* tabbox1;
 eTab* tab1;
+	eKeybox* keybox1;
 eTab* tab2;
 eTab* tab3;
 
-eTabbox* tabbox2;
-eTab* tab21;
+//eTabbox* tabbox2;
+//eTab* tab21;
 
 //***** INIT
 void cGame::init()
@@ -157,12 +158,14 @@ void cGame::init()
 	win3->set_statusbar_message("Juun suce des canards poilus");
 	ElfGui5::base->add_child(win3);
 
-	tabbox1=new eTabbox("tabbox1",-20,-20,460,630,TabsPosition::Right);
+	tabbox1=new eTabbox("tabbox1",20,20,460,630,TabsPosition::Right);
 	tabbox1->setup_drag(true,false,false);
 
 
 	win3->add_child(tabbox1);
 		tab1=tabbox1->add_new_tab("tab1");
+			keybox1=new eKeybox("keybox1",10,10,150,25);
+			tab1->add_child(keybox1);
 		tab2=tabbox1->add_new_tab("tab2");
 		tab3=tabbox1->add_new_tab("Patate Poilue");
 	tabbox1->dock_tab(win1,0);
@@ -170,10 +173,10 @@ void cGame::init()
 	tabbox1->switch_tab(tab1,tab3);
 	tabbox1->select_tab(tab1);
 
-	tabbox2=new eTabbox("tabbox1",10,10,460,630,TabsPosition::Bottom);
-	tabbox2->setup_drag(true,true,true);
-		tab21=tabbox2->add_new_tab("tab21");
-	ElfGui5::base->add_child(tabbox2);
+//	tabbox2=new eTabbox("tabbox1",10,10,460,630,TabsPosition::Bottom);
+//	tabbox2->setup_drag(true,true,true);
+//		tab21=tabbox2->add_new_tab("tab21");
+//	ElfGui5::base->add_child(tabbox2);
 		
 		
 

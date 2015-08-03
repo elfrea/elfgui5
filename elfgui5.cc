@@ -4,6 +4,7 @@
 
 
 bool ElfGui5::ready_to_quit;
+bool ElfGui5::lock_keyboard_shortcuts;
 
 MyEventHandler ElfGui5::event_handler;
 
@@ -11,6 +12,8 @@ List<Event*> ElfGui5::events;
 
 eBase* ElfGui5::base;
 List<Element*> ElfGui5::dead_list;
+
+List<KShortcut*> ElfGui5::kshortcuts;
 
 int64_t ElfGui5::doubleclick_timer;
 int64_t ElfGui5::doubleclick_delay;
@@ -65,6 +68,7 @@ void ElfGui5::init()
 
 	//config vars
 	ready_to_quit=false;
+	lock_keyboard_shortcuts=false;
 	doubleclick_delay=250;
 
 	//internal vars
@@ -100,6 +104,7 @@ void ElfGui5::init()
 	//init code
 	VideoMode vm=Display::get_mode();
 	Theme::set("default");
+	KShortcuts::init();
 	set_mouse_cursor("arrow");
 	base=new eBase("root base",0,0,vm.width,vm.height);
 
@@ -136,7 +141,7 @@ int ElfGui5::loop()
 void ElfGui5::draw()
 {
 	//draw base
-	base->display();
+	base->display(Rect(base->x,base->y,base->w,base->h));
 
 	//draw image under the mouse if currently mouse dragging
 	if(current_dragpacket)
@@ -161,6 +166,7 @@ void ElfGui5::shutdown()
 	events.clear_del();
 	dead_list.clear_del();
 	Theme::kill();
+	KShortcuts::kill();
 
 	#ifdef DBG
 	Log::debug("ElfGui5 shutdown complete!");
@@ -538,6 +544,13 @@ void MyEventHandler::on_mouse_move(Mouse& mouse)
 //***** ON KEY DOWN
 void MyEventHandler::on_key_down(Key& key)
 {
+	//process "global" keyboard shortcuts
+	if(!ElfGui5::lock_keyboard_shortcuts)
+	{
+		KShortcuts::process("global");
+		KShortcuts::process("custom");
+	}
+
 	//catch TAB key
 	if(key.code==KEY_TAB)
 	{

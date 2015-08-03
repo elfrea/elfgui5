@@ -4,24 +4,26 @@
 #include "elfgui5.h"
 
 
-class eTemplate:public Element
+class eKeybox:public Element
 {
 public:
 
 	//own config vars
+	KShortcut* shortcut;
 
 	//own internal config vars (use config functions to modify)
 
 	//own internal vars
+	bool record_mode;
 
 	//own elements
 
 
 
 	//constructor
-	eTemplate(const Str& ename,int ex,int ey,int ew,int eh);
+	eKeybox(const Str& ename,int ex,int ey,int ew,int eh);
 	//destructor
-	~eTemplate();
+	~eKeybox();
 
 
 
@@ -51,11 +53,19 @@ public:
 	void on_unselect();
 
 	//own config functions
+	void set_shortcut(bool c,bool a,bool s,bool g,KeyCode k);
+	void clear_shortcut();
+	KShortcut* clone_shortcut(bool enable=true);
+	KShortcut* clone_shortcut(const Str& sname,const Str& stype,bool enable=true);
+
+	void stop_recording();
+	void start_recording();
 
 	//own internal functions
 
 
 };
+
 
 
 
