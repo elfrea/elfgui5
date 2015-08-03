@@ -101,19 +101,32 @@ void eKeybox::on_mouse_move(int mx,int my){}
 //***** ON MOUSE DOWN
 void eKeybox::on_mouse_down(int but,int mx,int my)
 {
-	if(record_mode)
-		stop_recording();
-	else
-		start_recording();
-
-	shortcut->clear();
+	if(but==1)
+	{
+		if(record_mode)
+			stop_recording();
+	}
 }
 
 
 
 void eKeybox::on_mouse_up(int but,int mx,int my){}
 //void eKeybox::on_mouse_click(int but,int mx,int my){}
-//void eKeybox::on_mouse_doubleclick(int but,int mx,int my){}
+
+
+
+//ON MOUSE DOUBLECLICK
+void eKeybox::on_mouse_doubleclick(int but,int mx,int my)
+{
+	if(but==1)
+	{
+		if(!record_mode)
+			start_recording();
+	}
+}
+
+
+
 //void eKeybox::on_mouse_wheel_down(int mx,int my){}
 //void eKeybox::on_mouse_wheel_up(int mx,int my){}
 void eKeybox::on_mouse_drag_out(){}
@@ -150,13 +163,14 @@ void eKeybox::on_key_down(Key& key)
 
 		dirty=true;
 	}
-
+	
 	//normal mode
 	else
 	{
 		if(key.code==KEY_SPACE)
 			start_recording();
 	}
+
 }
 
 
@@ -166,6 +180,7 @@ void eKeybox::on_key_up(Key& key)
 {
 	Keyboard& k=Input::get_keyboard();
 
+	//record mode
 	if(record_mode)
 	{
 		shortcut->ctrl=k.ctrl();
@@ -244,6 +259,7 @@ void eKeybox::start_recording()
 {
 	record_mode=true;
 	ElfGui5::lock_keyboard_shortcuts=true;
+	shortcut->clear();
 	dirty=true;
 }
 
