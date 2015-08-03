@@ -9,8 +9,9 @@ class eTabbox:public Element
 public:
 
 	//own config vars
-	bool can_move_tabs;
 	bool can_drag_tabs;
+	bool accept_tabs;
+	bool accept_windows;
 
 	//own internal config vars (use config functions to modify)
 	TabsPosition::Type tabs_position;
@@ -86,6 +87,7 @@ public:
 
 	void set_title_size(int sz);
 	void set_tabs_position(TabsPosition::Type pos);
+	void setup_drag(bool can_drag,bool accept_tab,bool accept_window);
 
 	//own internal functions
 	void replace_tabs();

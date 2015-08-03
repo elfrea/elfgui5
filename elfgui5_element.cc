@@ -765,14 +765,93 @@ void Element::display()
 			dirty=false;
 		}
 			
-		//display self
-		int tx=get_true_x();
-		int ty=get_true_y();
-		image->draw(tx,ty);
+		//dont draw element if it is completely hidden by a brother
+		bool ok=true;
+		if(parent)
+		{
+			for(int a=0;a<parent->children.size();a++)
+			{
+				Element* e=parent->children[a];
+				if(e==this)
+					continue;
 
-		//display resize gizmo if needed
-		if(can_be_resized)
-			ElfGui5::resize_gizmo->draw(tx+w-1-ElfGui5::resize_gizmo->width(),ty+h-1-ElfGui5::resize_gizmo->height());
+				if(e->x<=x && (e->x+e->w)>=(x+w) && e->y<=y && (e->y+e->h)>=(y+h))
+				{
+					ok=false;
+					break;
+				}
+			}
+		}
+
+		//set coordonates and draw if it's not hidden by a brother
+		if(ok)
+		{
+			//set coordonates
+			int dx=get_true_x();
+			int dy=get_true_y();
+//			int sx=0;
+//			int sy=0;
+			int sw=image->width();
+			int sh=image->height();
+
+
+			if(parent)
+			{
+				Rect res;
+				int res_x=0;
+				int res_y=0;
+				Rect::clip(Rect(dx,dy,sw,sh),Rect(parent->get_true_x(),parent->get_true_y(),parent->w,parent->h),res,&res_x,&res_y);
+				image->draw(res.x,res.y,Rect(res_x,res_y,res.w,res.h));
+			}
+			else
+				image->draw(dx,dy);
+/*
+
+			//display element
+			if(ok)
+				image->draw(dx,dy,Rect(sx,sy,sw,sh));
+			//adjust coordonates to keep the element in it's parent
+			if(parent)
+			{
+				if(x<0)
+				{
+					dx=parent->get_true_x();
+					sx=-x;
+					sw=image->width()+sx;
+				}
+				else if(x>=parent->w)
+					ok=false;
+
+				if(ok)
+				{
+					if(dx+sw>parent->get_true_x()+parent->w)
+						sw-=(dx+sw)-(parent->get_true_x()+parent->w);
+
+
+					if(y<0)
+					{
+						dy=parent->get_true_y();
+						sy=-y;
+						sh=image->height()+sy;
+					}
+					else if(y>=parent->h)
+						ok=false;
+
+					if(ok)
+					{
+						if(dy+sh>parent->get_true_y()+parent->h)
+							sh-=(dy+sh)-(parent->get_true_y()+parent->h);
+					}
+				}
+			}
+
+			//display resize gizmo if needed
+			if(ok && can_be_resized)
+			{
+				ElfGui5::resize_gizmo->draw(gx,gy,Rect());
+			}
+*/
+		}
 
 		//replace children
 		replace_elements();

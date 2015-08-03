@@ -201,6 +201,8 @@ Event* ElfGui5::fetch_event()
 //***** ON MOUSE DOWN
 void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 {
+	Keyboard& k=Input::get_keyboard();
+
 	//set mouse_is_down for on_click event
 	ElfGui5::mouse_is_down=but;
 
@@ -211,7 +213,30 @@ void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 	if(eum)
 		eum->send_event("touched");
 
-	if(eum && eum->enabled)
+
+	//check if move with shift
+	if(eum && k.shift())
+	{
+		Element* e=eum;
+		while(e->parent!=NULL)
+		{
+			if(e->can_be_moved && but==1)
+			{
+				//start moving the element
+				ElfGui5::current_element=e;
+				ElfGui5::current_element_is_moving=true;
+				ElfGui5::moving_offx=mouse.x-e->get_true_x();
+				ElfGui5::moving_offy=mouse.y-e->get_true_y();
+
+				break;
+			}
+
+			e=e->parent;
+		}
+	}
+
+	//not moving with shift, doing regular checks
+	else if(eum && eum->enabled)
 	{
 		int mx=mouse.x-eum->get_true_x();
 		int my=mouse.y-eum->get_true_y();
@@ -257,6 +282,7 @@ void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 				ElfGui5::moving_offy=my;
 			}
 		}
+
 		
 		//send on_mouse_down event
 		else

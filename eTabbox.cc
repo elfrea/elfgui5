@@ -17,11 +17,12 @@ eTabbox::eTabbox(const Str& ename,int ex,int ey,int ew,int eh,TabsPosition::Type
 	color->d_extra=Color::ubyte(100,100,100);
 	
 	//own config vars
-	ready_to_grab=false;
-	can_move_tabs=false;
 	can_drag_tabs=false;
+	accept_tabs=false;
+	accept_windows=false;
 	
 	//own internal config vars (use config functions to modify)
+	ready_to_grab=false;
 	tabs_position=tabs_pos;
 	title_size=DEFAULT_TITLE_SIZE;
 	selected_tab=NULL;
@@ -153,7 +154,7 @@ void eTabbox::draw()
 
 	//show indications to where the dragging would go
 	DragPacket* dp=ElfGui5::current_dragpacket;
-	if(dp)
+	if(dp && ((accept_tabs && dp->command=="#move tab") || (accept_windows && dp->command=="#move window")))
 	{
 		if(dp->command=="#move tab" || dp->command=="#move window")
 		{
@@ -243,17 +244,17 @@ void eTabbox::draw()
 
 						//BOTTOM
 						case TabsPosition::Bottom:
-							draw_panel(image,color,false,enabled,0,0,w,h-title_size);
+							draw_dotted_box(image,10,10,w-20,h-title_size-20,color->text);
 						break;
 
 						//LEFT
 						case TabsPosition::Left:
-							draw_panel(image,color,false,enabled,title_size,0,w-title_size,h);
+							draw_dotted_box(image,title_size+10,10,w-title_size-20,h-20,color->text);
 						break;
 
 						//Right
 						case TabsPosition::Right:
-							draw_panel(image,color,false,enabled,0,0,w-title_size,h);
+							draw_dotted_box(image,10,10,w-title_size-20,h-20,color->text);
 						break;
 					}
 				}
@@ -302,7 +303,7 @@ void eTabbox::on_mouse_move(int mx,int my)
 //***** ON MOUSE DOWN
 void eTabbox::on_mouse_down(int but,int mx,int my)
 {
-	if(but==1)
+	if(but==1 && can_drag_tabs)
 	{
 		eTab* tab=find_tab_at(mx,my);
 		if(tab)
@@ -371,8 +372,11 @@ void eTabbox::on_mouse_wheel_up(int mx,int my)
 //***** ON MOUSE DRAG OUT
 void eTabbox::on_mouse_drag_out()
 {
-	ready_to_grab=true;
-	grab_tab(-1,-1);
+	if(can_drag_tabs)
+	{
+		ready_to_grab=true;
+		grab_tab(-1,-1);
+	}
 }
 
 
@@ -381,7 +385,7 @@ void eTabbox::on_mouse_drag_out()
 void eTabbox::on_mouse_drag_in(DragPacket* dragpacket,int mx,int my)
 {
 	//MOVE TAB
-	if(dragpacket->command=="#move tab")
+	if(accept_tabs && dragpacket->command=="#move tab")
 	{
 		eTab* tab=find_tab_at(mx,my);
 
@@ -405,7 +409,7 @@ void eTabbox::on_mouse_drag_in(DragPacket* dragpacket,int mx,int my)
 	}
 	
 	//MOVE WINDOW
-	else if(dragpacket->command=="#move window")
+	else if(accept_windows && dragpacket->command=="#move window")
 	{
 		//make sure window is not a parent
 		bool ok=true;
@@ -685,6 +689,7 @@ void eTabbox::transfer_tab(eTab* tab,eTabbox* tabbox,int index)
 
 	tabbox->insert_tab(tab,index);
 	tabbox->select_tab(index);
+	tabbox->replace_tab(tab);
 
 }
 
@@ -744,6 +749,7 @@ eTab* eTabbox::dock_tab(eWindow* win,int index)
 	//insert new tab
 	eTab* tab=new eTab(win->get_title());
 	insert_tab(tab,index);
+	replace_tab(tab);
 
 	//transfer children
 	for(int a=win->body->children.size()-1;a>=0;a--)
@@ -843,6 +849,16 @@ void eTabbox::set_tabs_position(TabsPosition::Type pos)
 	tabs_position=pos;
 	replace_tabs();
 	dirty=true;
+}
+
+
+
+//***** SETUP DRAG
+void eTabbox::setup_drag(bool can_drag,bool accept_tab,bool accept_window)
+{
+	can_drag_tabs=can_drag;
+	accept_tabs=accept_tab;
+	accept_windows=accept_window;
 }
 
 
