@@ -15,11 +15,16 @@ public:
 	List<eItem*> items;
 	int items_h;
 	bool alternate_items_bg;
+	bool multi_selection;
 
 	//own internal vars
 	class eScrollbar* scrollbar_h;
 	class eScrollbar* scrollbar_v;
 	int current_pos;
+	int selected_base;
+	int selected_min;
+	int selected_max;
+	bool mouse_selecting;
 
 	//own elements
 
@@ -45,8 +50,8 @@ public:
 	void on_mouse_up(int but,int mx,int my);
 //	void on_mouse_click(int but,int mx,int my);
 //	void on_mouse_doubleclick(int but,int mx,int my);
-//	void on_mouse_wheel_down(int mx,int my);
-//	void on_mouse_wheel_up(int mx,int my);
+	void on_mouse_wheel_down(int mx,int my);
+	void on_mouse_wheel_up(int mx,int my);
 	void on_mouse_drag_out();
 	void on_mouse_drag_in(DragPacket* dragpacket,int mx,int my);
 	void on_key_down(Key& key);
@@ -79,9 +84,21 @@ public:
 	void sort_items_by_name(bool reverse=false);
 	void sort_items_by_value(bool reverse=false);
 
+	void select_item(eItem* item);
+	void select_item(int index);
+	void select_items(int index1,int index2);
+
+	eItem* get_selected_item();
+	int get_selected_index();
+	List<eItem*> get_selected_items();
+
+	int get_item_index(eItem* item);
+
 	//own internal functions
 	int get_view_h();
 	void refresh_scrollbars();
+	eItem* find_item_at(int mx,int my);
+	int find_item_index_at(int mx,int my);
 
 };
 

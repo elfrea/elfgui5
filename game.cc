@@ -58,7 +58,7 @@ void cGame::init()
 	Log::debug("************************************");
 	#endif
 	
-	Display::set_mode(VideoMode::resizable(1366,768,false));
+	Display::set_mode(VideoMode::resizable(1366,768,true));
 	ElfGui5::init();
 
 	win1=new eWindow("window1",10,10,300,600,"Test Window");
@@ -169,6 +169,7 @@ void cGame::init()
 			tab1->add_child(keybox1);
 
 			list1=new eListbox("listbox1",10,50,200,130,ListboxStyle::IconText);
+			list1->multi_selection=true;
 				list1->add_new_item("testing",12,"gfx/elements/icon_window.png");
 				list1->add_new_item("Proute",2);
 				list1->add_new_item("yaf",14);

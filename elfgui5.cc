@@ -220,8 +220,8 @@ void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 		eum->send_event("touched");
 
 
-	//check if move with shift
-	if(eum && k.shift())
+	//check if move with GUI
+	if(eum && k.gui())
 	{
 		Element* e=eum;
 		while(e->parent!=NULL)
@@ -241,7 +241,7 @@ void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 		}
 	}
 
-	//not moving with shift, doing regular checks
+	//not moving with GUI, doing regular checks
 	else if(eum && eum->enabled)
 	{
 		int mx=mouse.x-eum->get_true_x();
@@ -254,7 +254,7 @@ void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 		//unselect last element
 		if(ElfGui5::current_element && ElfGui5::last_selected && ElfGui5::last_selected!=eum)
 		{
-			ElfGui5::last_selected->set_selected(false);
+			ElfGui5::last_selected->set_as_selected(false);
 			if(eum->selectable==false)
 				ElfGui5::last_selected=NULL;
 		}
@@ -263,7 +263,7 @@ void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 		ElfGui5::current_element=eum;
 
 		if(eum->selectable)
-			eum->set_selected(true);
+			eum->set_as_selected(true);
 
 		//check if element can be resized
 		if(eum->can_be_resized && mx>=eum->w-ElfGui5::resize_gizmo->width() && my>=eum->h-ElfGui5::resize_gizmo->height() && but==1)
@@ -313,9 +313,9 @@ void MyEventHandler::on_mouse_up(int but,Mouse& mouse)
 	ElfGui5::current_element_is_moving=false;
 	ElfGui5::current_element_is_resizing=false;
 	
-	//check if element is moved with shift key
+	//check if element is moved with GUI key
 	bool ok=true;
-	if(eum && k.shift())
+	if(eum && k.gui())
 	{
 		Element* e=eum;
 		while(e->parent!=NULL)
@@ -643,12 +643,12 @@ void MyEventHandler::on_key_down(Key& key)
 			//set next selected element
 			if((backward==false && next->tab_index>e->tab_index) || (backward && next->tab_index<e->tab_index))
 			{
-				next->set_selected(true);
+				next->set_as_selected(true);
 				ElfGui5::current_element=next;
 			}
 			else
 			{
-				first->set_selected(true);
+				first->set_as_selected(true);
 				ElfGui5::current_element=first;
 			}
 

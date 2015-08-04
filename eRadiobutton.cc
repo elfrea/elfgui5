@@ -236,7 +236,7 @@ void eRadiobutton::on_key_down(Key& key)
 			//set new selected radiobutton
 			if(target)
 			{
-				target->set_selected(true);
+				target->set_as_selected(true);
 				((eRadiobutton*)target)->set_checked();
 			}
 		}

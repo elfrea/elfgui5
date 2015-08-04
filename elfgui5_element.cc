@@ -300,12 +300,12 @@ void Element::remove_child(Element* child,bool del)
 
 
 //***** SET SELECTED
-void Element::set_selected(bool select)
+void Element::set_as_selected(bool select)
 {
 	if(selected!=select && selectable)
 	{
 		if(ElfGui5::last_selected && ElfGui5::last_selected!=this)
-			ElfGui5::last_selected->set_selected(false);
+			ElfGui5::last_selected->set_as_selected(false);
 
 		selected=select;
 		ElfGui5::last_selected=this;

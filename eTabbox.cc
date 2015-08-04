@@ -584,11 +584,11 @@ void eTabbox::remove_tab(eTab* tab,bool del)
 	{
 		int i=get_tab_index(tab);
 		if(i>0)
-			set_selected(i-1);
+			select_tab(i-1);
 		else if(children.size()>1)
-			set_selected(i+1);
+			select_tab(i+1);
 		else
-			set_selected(-1);
+			select_tab(-1);
 	}
 
 	Element::remove_child(tab,del);

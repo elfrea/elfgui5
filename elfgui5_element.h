@@ -100,7 +100,7 @@ public:
 	virtual void remove_child(Element* child,bool del=false);
 
 	//config functions
-	void set_selected(bool select);
+	void set_as_selected(bool select);
 	void set_font(Font* fnt,bool propagate=false);
 	void set_color(Color& col,const Color& newcol);
 	void set_colors_enabled(const Color& c_light,const Color& c_medium,const Color& c_dark,const Color& c_text,const Color& c_editing,const Color& c_selection,const Color& c_extra,bool propagate=false);

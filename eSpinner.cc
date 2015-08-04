@@ -175,7 +175,7 @@ void eSpinner::on_parent_resize(){}
 //***** ON SELECT
 void eSpinner::on_select()
 {
-	editbox->set_selected(true);
+	editbox->set_as_selected(true);
 }
 
 

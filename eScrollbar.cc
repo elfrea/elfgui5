@@ -302,6 +302,9 @@ void eScrollbar::set_value(int val)
 //***** SET VALUE RANGE
 void eScrollbar::set_value_range(int min,int max)
 {
+	if(max<=0)
+		max=1;
+
 	//set range
 	value_min=(min<max?min:max);
 	value_max=(max>min?max:min);
