@@ -39,6 +39,7 @@ eWindow* win3;
 eTabbox* tabbox1;
 eTab* tab1;
 	eKeybox* keybox1;
+	eListbox* list1;
 eTab* tab2;
 eTab* tab3;
 
@@ -159,13 +160,29 @@ void cGame::init()
 	ElfGui5::base->add_child(win3);
 
 	tabbox1=new eTabbox("tabbox1",20,20,460,630,TabsPosition::Right);
-	tabbox1->setup_drag(true,false,false);
+	tabbox1->setup_drag(true,true,true);
 
 
 	win3->add_child(tabbox1);
 		tab1=tabbox1->add_new_tab("tab1");
 			keybox1=new eKeybox("keybox1",10,10,150,25);
 			tab1->add_child(keybox1);
+
+			list1=new eListbox("listbox1",10,50,200,130,ListboxStyle::IconText);
+				list1->add_new_item("testing",12,"gfx/elements/icon_window.png");
+				list1->add_new_item("Proute",2);
+				list1->add_new_item("yaf",14);
+				list1->add_new_item("schnif",16);
+				list1->add_new_item("testing",12);
+				list1->add_new_item("Proute",2);
+				list1->add_new_item("yaf",14);
+				list1->add_new_item("schnif",16);
+				list1->add_new_item("testing",12);
+				list1->add_new_item("Proute",2);
+				list1->add_new_item("yaf",14);
+				list1->add_new_item("schnif",16,"gfx/elements/icon_window.png");
+			tab1->add_child(list1);
+			
 		tab2=tabbox1->add_new_tab("tab2");
 		tab3=tabbox1->add_new_tab("Patate Poilue");
 	tabbox1->dock_tab(win1,0);

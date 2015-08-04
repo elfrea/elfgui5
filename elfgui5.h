@@ -39,6 +39,8 @@ typedef void (*ACTION)();
 #include "eTabbox.h"
 #include "eTab.h"
 #include "eKeybox.h"
+#include "eItem.h"
+#include "eListbox.h"
 
 
 

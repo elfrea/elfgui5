@@ -305,15 +305,32 @@ void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 //***** ON MOUSE UP
 void MyEventHandler::on_mouse_up(int but,Mouse& mouse)
 {
+	Keyboard& k=Input::get_keyboard();
 	
 	Element* eum=ElfGui5::element_under_mouse;
 
 	//stop moving/resizing element
 	ElfGui5::current_element_is_moving=false;
 	ElfGui5::current_element_is_resizing=false;
+	
+	//check if element is moved with shift key
+	bool ok=true;
+	if(eum && k.shift())
+	{
+		Element* e=eum;
+		while(e->parent!=NULL)
+		{
+			if(e->can_be_moved)
+			{
+				ok=false;
+				break;
+			}
+			e=e->parent;
+		}
+	}
 
 	//send mouse_up/mouse_click/mouse_doubleclick events
-	if(eum && eum->enabled)
+	if(eum && eum->enabled && ok)
 	{
 		//send on_mouse_up event to element
 		eum->on_mouse_up(but,mouse.x-eum->get_true_x(),mouse.y-eum->get_true_y());

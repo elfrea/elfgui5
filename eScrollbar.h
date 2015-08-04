@@ -74,6 +74,7 @@ public:
 	int get_slider_size();
 	int get_slider_position();
 	int get_value_from_mouse();
+	void refresh_buttons();
 
 };
 

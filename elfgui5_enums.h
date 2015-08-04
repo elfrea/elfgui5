@@ -77,3 +77,14 @@ namespace TabsPosition
 
 
 
+//LISTBOX STYLE
+namespace ListboxStyle
+{
+	enum Type
+	{
+		Text,IconText
+	};
+}
+
+
+

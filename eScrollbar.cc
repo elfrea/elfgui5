@@ -254,7 +254,17 @@ void eScrollbar::on_key_down(Key& key)
 
 void eScrollbar::on_key_up(Key& key){}
 void eScrollbar::on_text(const Str& text){}
-void eScrollbar::on_resize(int width,int height){}
+
+
+
+//***** ON RESIZE
+void eScrollbar::on_resize(int width,int height)
+{
+	refresh_buttons();
+}
+
+
+
 void eScrollbar::on_parent_resize(){}
 void eScrollbar::on_select(){}
 void eScrollbar::on_unselect(){}
@@ -281,8 +291,8 @@ void eScrollbar::set_value(int val)
 
 	if(value!=val)
 	{
-		send_event("trigger");
 		value=val;
+		send_event("change");
 		dirty=true;
 	}
 }
@@ -296,11 +306,14 @@ void eScrollbar::set_value_range(int min,int max)
 	value_min=(min<max?min:max);
 	value_max=(max>min?max:min);
 
+	if(value_max<=0)
+		value_max=1;
+
 	//set value if out of range
 	if(value<value_min)
-		value=value_min;
+		set_value(value_min);
 	if(value>value_max)
-		value=value_max;
+		set_value(value_max);
 
 	dirty=true;
 }
@@ -311,35 +324,7 @@ void eScrollbar::set_value_range(int min,int max)
 void eScrollbar::set_orientation(Orientation::Type orient)
 {
 	orientation=orient;
-
-	//HORIZONTAL
-	if(orientation==Orientation::Horizontal)
-	{
-		button_dec->set_tex("gfx/elements/arrow_left.png");
-		button_dec->resize(h,h);
-		button_dec->x=0;
-		button_dec->y=0;
-
-		button_inc->set_tex("gfx/elements/arrow_right.png");
-		button_inc->resize(h,h);
-		button_inc->x=w-h;
-		button_inc->y=0;
-	}
-
-	//VERTICAL
-	else
-	{
-		button_dec->set_tex("gfx/elements/arrow_up.png");
-		button_dec->resize(w,w);
-		button_dec->x=0;
-		button_dec->y=0;
-
-		button_inc->set_tex("gfx/elements/arrow_down.png");
-		button_inc->resize(w,w);
-		button_inc->x=0;
-		button_inc->y=h-w;
-	}
-
+	refresh_buttons();
 	dirty=true;
 }
 
@@ -457,3 +442,38 @@ int eScrollbar::get_value_from_mouse()
 }
 
 
+
+
+
+//***** REFRESH BUTTONS
+void eScrollbar::refresh_buttons()
+{
+	//HORIZONTAL
+	if(orientation==Orientation::Horizontal)
+	{
+		button_dec->set_tex("gfx/elements/arrow_left.png");
+		button_dec->resize(h,h);
+		button_dec->x=0;
+		button_dec->y=0;
+
+		button_inc->set_tex("gfx/elements/arrow_right.png");
+		button_inc->resize(h,h);
+		button_inc->x=w-h;
+		button_inc->y=0;
+	}
+
+	//VERTICAL
+	else
+	{
+		button_dec->set_tex("gfx/elements/arrow_up.png");
+		button_dec->resize(w,w);
+		button_dec->x=0;
+		button_dec->y=0;
+
+		button_inc->set_tex("gfx/elements/arrow_down.png");
+		button_inc->resize(w,w);
+		button_inc->x=0;
+		button_inc->y=h-w;
+	}
+
+}
