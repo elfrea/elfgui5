@@ -14,17 +14,23 @@ public:
 	ListboxStyle::Type style;
 	List<eItem*> items;
 	int items_h;
-	bool alternate_items_bg;
+	bool alternate_color;
 	bool multi_selection;
+	bool show_value;
+	int64_t mouse_scroll_delay;
 
 	//own internal vars
-	class eScrollbar* scrollbar_h;
 	class eScrollbar* scrollbar_v;
 	int current_pos;
+
+	List<int> selection;
+
 	int selected_base;
 	int selected_min;
 	int selected_max;
 	bool mouse_selecting;
+
+	int64_t mouse_scroll_timer;
 
 	//own elements
 
@@ -64,7 +70,9 @@ public:
 
 	//own config functions
 	void set_style(ListboxStyle::Type estyle);
-	int get_size();
+	void set_alternate_color(bool alternate);
+	void set_show_value(bool show);
+	void set_current_pos(int index);
 
 	void clear(bool del=true);
 	void insert_item(eItem* item,int index);
@@ -80,25 +88,36 @@ public:
 	void move_item(int index1,int index2);
 	void switch_item(eItem* item1,eItem* item2);
 	void switch_item(int index1,int index2);
-
-	void sort_items_by_name(bool reverse=false);
+	void sort_items_by_text(bool reverse=false);
 	void sort_items_by_value(bool reverse=false);
 
 	void select_item(eItem* item);
 	void select_item(int index);
 	void select_items(int index1,int index2);
+	void add_to_selection(eItem* item);
+	void add_to_selection(int index);
+	void remove_from_selection(eItem* item);
+	void remove_from_selection(int index);
+	void toggle_item_selection(eItem* item);
+	void toggle_item_selection(int index);
 
 	eItem* get_selected_item();
 	int get_selected_index();
 	List<eItem*> get_selected_items();
+	List<int> get_selected_items_index();
 
 	int get_item_index(eItem* item);
+	int get_size();
+
 
 	//own internal functions
 	int get_view_h();
 	void refresh_scrollbars();
 	eItem* find_item_at(int mx,int my);
 	int find_item_index_at(int mx,int my);
+
+	bool compare_selection(int index);
+	bool compare_selection(int index1,int index2);
 
 };
 

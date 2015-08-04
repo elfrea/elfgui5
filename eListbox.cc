@@ -8,30 +8,30 @@ eListbox::eListbox(const Str& ename,int ex,int ey,int ew,int eh,ListboxStyle::Ty
 {
 	
 	#define DEFAULT_ITEMS_H 20
+	#define DEFAULT_MOUSE_SCROLL_DELAY 100
 
 	//parent class vars
 	type="listbox";
-	selectable=false;
+	selectable=true;
 	items_h=DEFAULT_ITEMS_H;
 	color->extra=Color::ubyte(220,220,220);
+	mouse_scroll_delay=DEFAULT_MOUSE_SCROLL_DELAY;
 	
 	//own config vars
 	multi_selection=false;
 	
 	//own internal config vars (use config functions to modify)
-	alternate_items_bg=true;
+	alternate_color=true;
+	show_value=false;
 
 	//own internal vars
 	current_pos=0;
 	selected_min=-1;
 	selected_max=-1;
 	mouse_selecting=false;
+	mouse_scroll_timer=0;
 	
 	//own elements
-	scrollbar_h=new eScrollbar("scrollbar_h",10,10,10,20,0,1,Orientation::Horizontal);
-	scrollbar_h->visible=false;
-	add_child(scrollbar_h);
-
 	scrollbar_v=new eScrollbar("scrollbar_v",10,10,20,10,0,1,Orientation::Vertical);
 	scrollbar_v->visible=false;
 	add_child(scrollbar_v);
@@ -47,6 +47,7 @@ eListbox::eListbox(const Str& ename,int ex,int ey,int ew,int eh,ListboxStyle::Ty
 eListbox::~eListbox()
 {
 	items.clear_del();
+	selection.clear_nodel();
 }
 
 
@@ -68,6 +69,33 @@ void eListbox::loop()
 
 	if(mouse_selecting && m.left()==false)
 		mouse_selecting=false;
+
+
+	//scroll with mouse when multiselecting
+	if(multi_selection && mouse_selecting && scrollbar_v->visible)
+	{
+		int my=m.y-get_true_y();
+		int64_t ms=get_ms();
+
+		if(my<=8)
+		{
+			if(ms>=mouse_scroll_timer+mouse_scroll_delay)
+			{
+				mouse_scroll_timer=ms;
+				scrollbar_v->set_value(scrollbar_v->value-1);
+				on_mouse_move(m.x-get_true_x(),0);
+			}
+		}
+		else if(my>=(h-1-8))
+		{
+			if(ms>=mouse_scroll_timer+mouse_scroll_delay)
+			{
+				mouse_scroll_timer=ms;
+				scrollbar_v->set_value(scrollbar_v->value+1);
+				on_mouse_move(m.x-get_true_x(),h-1);
+			}
+		}
+	}
 }
 
 
@@ -93,21 +121,13 @@ void eListbox::draw()
 		if(y2>=h-1)
 			y2=h-2;
 
-		//alternate bg if needed
-		if(alternate_items_bg && a%2!=0)
+		//alternate bg color if needed
+		if(alternate_color && a%2!=0)
 			image->rect_fill(1,offset+1,w-2,y2,color->extra);
 
 		//show selection
-		if(selected_min<selected_max)
-		{
-			if(a>=selected_min && a<=selected_max)
-				image->rect_fill(1,offset+1,w-2,y2,color->selection);
-		}
-		else
-		{
-			if(a>=selected_max && a<=selected_min)
-				image->rect_fill(1,offset+1,w-2,y2,color->selection);
-		}
+		if(selection.find(a)!=-1)
+			image->rect_fill(1,offset+1,w-2,y2,color->selection);
 
 		//show items
 		switch(style)
@@ -133,8 +153,20 @@ void eListbox::draw()
 			break;
 		}
 
+		//show value
+		if(show_value)
+		{
+			Str t=Str::build("%i",items[a]->value);
+			int tw=font->len(t);
+			image->print(font,w-tw-(scrollbar_v->visible?scrollbar_v->w:0)-5,offset+(items_h-th)/2,color->text,t);
+		}
+
 		offset+=items_h;
 	}
+
+	//selected
+	if(selected)
+		draw_dotted_box(image,2,2,w-4-(scrollbar_v->visible?scrollbar_v->w:0),h-4,color->dark,1,1);
 }
 
 
@@ -152,13 +184,9 @@ void eListbox::draw()
 //***** ON EVENT
 void eListbox::on_event(Event* ev)
 {
-	//scrollbar_h
-	if(ev->sender==scrollbar_h && ev->command=="change")
-	{
-	}
 
 	//scrollbar_v
-	else if(ev->sender==scrollbar_v && ev->command=="change")
+	if(ev->sender==scrollbar_v && ev->command=="change")
 	{
 		current_pos=scrollbar_v->value;
 		dirty=true;
@@ -184,9 +212,10 @@ void eListbox::on_mouse_leave(){}
 //***** ON MOUSE MOVE
 void eListbox::on_mouse_move(int mx,int my)
 {
-	if(mouse_selecting)
+	if(multi_selection && mouse_selecting)
 	{
 		int i=find_item_index_at(mx,my);
+
 
 		if(i<selected_base)
 			select_items(i,selected_base);
@@ -205,8 +234,15 @@ void eListbox::on_mouse_down(int but,int mx,int my)
 
 	if(but==1)
 	{
+		//toggle
+		if(multi_selection && k.ctrl())
+		{
+			int i=find_item_index_at(mx,my);
+			toggle_item_selection(i);
+		}
+
 		//multiple selecting
-		if(multi_selection && k.shift())
+		else if(multi_selection && k.shift())
 		{
 			int i=find_item_index_at(mx,my);
 
@@ -294,6 +330,10 @@ void eListbox::on_key_down(Key& key)
 
 			select_item(i);
 		}
+
+		//check if we need to change the current_pos
+		if(scrollbar_v->visible && get_selected_index()<current_pos)
+			set_current_pos(current_pos-1);
 	}
 	
 	//DOWN,RIGHT
@@ -321,6 +361,10 @@ void eListbox::on_key_down(Key& key)
 
 			select_item(i);
 		}
+		
+		//check if we need to change the current_pos
+		if(scrollbar_v->visible && get_selected_index()>=current_pos+(h/items_h))
+			set_current_pos(current_pos+1);
 	}
 
 	//ESCAPE
@@ -328,6 +372,12 @@ void eListbox::on_key_down(Key& key)
 	{
 		mouse_selecting=false;
 		select_item(-1);
+	}
+
+	//CTRL-A
+	else if(key.code==KEY_A && k.ctrl())
+	{
+		select_items(0,items.size()-1);
 	}
 }
 
@@ -337,8 +387,22 @@ void eListbox::on_key_up(Key& key){}
 void eListbox::on_text(const Str& text){}
 void eListbox::on_resize(int width,int height){}
 void eListbox::on_parent_resize(){}
-void eListbox::on_select(){}
-void eListbox::on_unselect(){}
+
+
+
+//***** ON SELECT
+void eListbox::on_select()
+{
+	Input::set_key_down_repeat(true);
+}
+
+
+
+//***** ON UNSELECT
+void eListbox::on_unselect()
+{
+	Input::set_key_down_repeat(false);
+}
 
 
 
@@ -361,10 +425,35 @@ void eListbox::set_style(ListboxStyle::Type estyle)
 
 
 
-//***** GET SIZE
-inline int eListbox::get_size()
+//***** SET ALTERNATE COLOR
+void eListbox::set_alternate_color(bool alternate)
 {
-	return items.size();
+	alternate_color=alternate;
+	dirty=true;
+}
+
+
+
+//***** SET SHOW VALUE
+void eListbox::set_show_value(bool show)
+{
+	show_value=show;
+	dirty=true;
+}
+
+
+
+//***** SET CURRENT POS
+void eListbox::set_current_pos(int index)
+{
+	if(index<scrollbar_v->value_min)
+		index=scrollbar_v->value_min;
+	else if(index>scrollbar_v->value_max)
+		index=scrollbar_v->value_max;
+
+	current_pos=index;
+	scrollbar_v->set_value(index);
+	dirty=true;
 }
 
 
@@ -509,11 +598,7 @@ eItem* eListbox::add_new_item(const Str& iname,int ival,const Str& ico)
 //***** MOVE ITEM
 void eListbox::move_item(eItem* item,int index)
 {
-	int i=items.find(item);
-	if(i==-1)
-		return;
-
-	move_item(i,index);
+	move_item(get_item_index(item),index);
 }
 
 
@@ -524,6 +609,20 @@ void eListbox::move_item(int index1,int index2)
 	if(index1<0 || index1>items.size() || index2<0 || index2>items.size())
 		return;
 
+	select_item(-1);
+
+	if(index1<index2)
+	{
+		insert_item(items[index1],index2+1);
+		remove_item(index1,false);
+	}
+	else
+	{
+		insert_item(items[index1],index2);
+		remove_item(index1+1,false);
+	}
+
+
 }
 
 
@@ -531,6 +630,10 @@ void eListbox::move_item(int index1,int index2)
 //***** SWITCH ITEM
 void eListbox::switch_item(eItem* item1,eItem* item2)
 {
+	int index1=get_item_index(item1);
+	int index2=get_item_index(item2);
+
+	switch_item(index1,index2);
 }
 
 
@@ -540,14 +643,55 @@ void eListbox::switch_item(int index1,int index2)
 {
 	if(index1<0 || index1>items.size() || index2<0 || index2>items.size())
 		return;
+	
+	select_item(-1);
 
+	eItem* i1=items[index1];
+	eItem* i2=items[index2];
+
+	items[index1]=i2;
+	items[index2]=i1;
 }
 
 
 
-//***** SORT ITEMS BY NAME
-void eListbox::sort_items_by_name(bool reverse)
+//***** SORT ITEMS BY TEXT
+void eListbox::sort_items_by_text(bool reverse)
 {
+	select_item(-1);
+	
+	List<eItem*> lst=items;
+	items.clear_nodel();
+	for(int a=0;a<lst.size();a++)
+	{
+		int pos=items.size();
+		for(int b=0;b<items.size();b++)
+		{
+			//descending
+			if(reverse)
+			{
+				if(lst[a]->text>items[b]->text)
+				{
+					pos=b;
+					break;
+				}
+			}
+			//ascending
+			else
+			{
+				if(lst[a]->text<items[b]->text)
+				{
+					pos=b;
+					break;
+				}
+			}
+		}
+
+		items.insert(lst[a],pos);
+	}
+
+	lst.clear_nodel();
+	dirty=true;
 }
 
 
@@ -555,6 +699,40 @@ void eListbox::sort_items_by_name(bool reverse)
 //***** SORT ITEMS BY VALUE
 void eListbox::sort_items_by_value(bool reverse)
 {
+	select_item(-1);
+	
+	List<eItem*> lst=items;
+	items.clear_nodel();
+	for(int a=0;a<lst.size();a++)
+	{
+		int pos=items.size();
+		for(int b=0;b<items.size();b++)
+		{
+			//descending
+			if(reverse)
+			{
+				if(lst[a]->value>items[b]->value)
+				{
+					pos=b;
+					break;
+				}
+			}
+			//ascending
+			else
+			{
+				if(lst[a]->value<items[b]->value)
+				{
+					pos=b;
+					break;
+				}
+			}
+		}
+
+		items.insert(lst[a],pos);
+	}
+
+	lst.clear_nodel();
+	dirty=true;
 }
 
 
@@ -578,11 +756,20 @@ void eListbox::select_item(eItem* item)
 {
 	int index=items.find(item);
 
-	selected_min=index;
-	selected_max=index;
-	selected_base=index;
+	if(!compare_selection(index))
+	{
+		selected_min=index;
+		selected_max=index;
+		selected_base=index;
 
-	dirty=true;
+		//clear and add selection in list
+		selection.clear_nodel();
+		selection.add(index);
+
+		send_event("change");
+	
+		dirty=true;
+	}
 }
 
 
@@ -590,14 +777,23 @@ void eListbox::select_item(eItem* item)
 //***** SELECT ITEM
 void eListbox::select_item(int index)
 {
-	if(index<0 || index>=items.size())
-		index=-1;
+	if(!compare_selection(index))
+	{
+		if(index<0 || index>=items.size())
+			index=-1;
 
-	selected_min=index;
-	selected_max=index;
-	selected_base=index;
+		selected_min=index;
+		selected_max=index;
+		selected_base=index;
 
-	dirty=true;
+		//clear and add selection in list
+		selection.clear_nodel();
+		selection.add(index);
+
+		send_event("change");
+
+		dirty=true;
+	}
 }
 
 
@@ -608,13 +804,137 @@ void eListbox::select_items(int index1,int index2)
 	int i1=index1<index2?index1:index2;
 	int i2=index2>index1?index2:index1;
 
-	if(i1<0 || i1>=items.size() || i2<0 || i2>=items.size())
-		return;
-	
-	selected_min=i1;
-	selected_max=i2;
+	if(!compare_selection(i1,i2))
+	{
+		if(i1<0 || i1>=items.size() || i2<0 || i2>=items.size())
+			return;
+		
+		selected_min=i1;
+		selected_max=i2;
+		
+		//clear and add selection in list
+		selection.clear_nodel();
+		for(int a=selected_min;a<=selected_max;a++)
+			selection.add(a);
 
-	dirty=true;
+		send_event("change");
+
+		dirty=true;
+	}
+}
+
+
+
+//***** ADD TO SELECTION
+void eListbox::add_to_selection(eItem* item)
+{
+	int index=get_item_index(item);
+	if(index>-1)
+	{
+		if(selection.find(index)==-1)
+		{
+			selection.add(index);
+			dirty=true;
+			selected_base=index;
+			send_event("change");
+
+		}
+	}
+}
+
+
+
+//***** ADD TO SELECTION
+void eListbox::add_to_selection(int index)
+{
+	if(index>=0 && index<items.size())
+	{
+		if(selection.find(index)==-1)
+		{
+			selection.add(index);
+			dirty=true;
+			selected_base=index;
+			send_event("change");
+		}
+	}
+}
+
+
+
+//***** REMOVE FROM SELECTION
+void eListbox::remove_from_selection(eItem* item)
+{
+	int index=get_item_index(item);
+	if(index>-1)
+	{
+		int i=selection.find(index);
+		if(i>-1)
+		{
+			selection.remove_nodel(i);
+			dirty=true;
+			selected_base=index;
+			send_event("change");
+		}
+	}
+		
+		
+}
+
+
+
+//***** REMOVE FROM SELECTION
+void eListbox::remove_from_selection(int index)
+{
+	if(index>-1)
+	{
+		int i=selection.find(index);
+		if(i>-1)
+		{
+			selection.remove_nodel(i);
+			dirty=true;
+			selected_base=index;
+			send_event("change");
+		}
+	}
+}
+
+
+
+//***** TOGGLE ITEM SELECTION
+void eListbox::toggle_item_selection(eItem* item)
+{
+	int index=get_item_index(item);
+	if(index>-1)
+	{
+		int i=selection.find(index);
+		if(i!=-1)
+			selection.remove_nodel(i);
+		else
+			selection.add(index);
+
+		dirty=true;
+		selected_base=index;
+		send_event("change");
+	}
+}
+
+
+
+//***** TOGGLE ITEM SELECTION
+void eListbox::toggle_item_selection(int index)
+{
+	if(index>-1)
+	{
+		int i=selection.find(index);
+		if(i!=-1)
+			selection.remove_nodel(i);
+		else
+			selection.add(index);
+		
+		dirty=true;
+		selected_base=index;
+		send_event("change");
+	}
 }
 
 
@@ -622,10 +942,10 @@ void eListbox::select_items(int index1,int index2)
 //***** GET SELECTED ITEM
 eItem* eListbox::get_selected_item()
 {
-	if(selected_min<0)
+	if(selection.size()==-1)
 		return NULL;
-
-	return items[selected_min];
+	
+	return items[selection[0]];
 }
 
 
@@ -633,7 +953,10 @@ eItem* eListbox::get_selected_item()
 //***** GET SELECTED INDEX
 int eListbox::get_selected_index()
 {
-	return selected_min;
+	if(selection.size()==-1)
+		return -1;
+	
+	return selection[0];
 }
 
 
@@ -643,10 +966,18 @@ List<eItem*> eListbox::get_selected_items()
 {
 	List<eItem*> lst;
 
-	for(int a=selected_min;a<=selected_max;a++)
+	for(int a=0;a<selection.size();a++)
 		lst.add(items[a]);
 
 	return lst;
+}
+
+
+
+//***** GET SELECTED ITEMS INDEX
+List<int> eListbox::get_selected_items_index()
+{
+	return selection;
 }
 
 
@@ -655,6 +986,14 @@ List<eItem*> eListbox::get_selected_items()
 int eListbox::get_item_index(eItem* item)
 {
 	return items.find(item);
+}
+
+
+
+//***** GET SIZE
+inline int eListbox::get_size()
+{
+	return items.size();
 }
 
 
@@ -729,6 +1068,35 @@ int eListbox::find_item_index_at(int mx,int my)
 }
 
 
+
+//***** COMPARE SELECTION
+bool eListbox::compare_selection(int index)
+{
+	if(selection.size()==1 && selection[0]==index)
+		return true;
+	
+	return false;
+}
+
+
+
+//***** COMPARE SELECTION
+bool eListbox::compare_selection(int index1,int index2)
+{
+	int am=index2-index1+1;
+	if(selection.size()==am)
+	{
+		for(int a=index1;a<=index2;a++)
+		{
+			if(selection.find(a)==-1)
+				return false;
+		}
+
+		return true;
+	}
+
+	return false;
+}
 
 
 
