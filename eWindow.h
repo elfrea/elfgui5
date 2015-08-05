@@ -35,8 +35,11 @@ public:
 	class eButton* button_shade;
 	
 	class ePanel* body;
-	
 	class ePanel* statusbar;
+	
+	class eScrollbar* auto_scrollbar_h;
+	class eScrollbar* auto_scrollbar_v;
+	class ePanel* auto_scroll_panel;
 
 
 
@@ -102,7 +105,9 @@ public:
 
 	//own internal functions
 	void refresh_buttons();
+	void refresh_autoscrolling();
 
+	
 };
 
 

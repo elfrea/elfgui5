@@ -78,6 +78,7 @@ public:
 	static bool ready_to_quit;
 	static int64_t doubleclick_delay;
 	static bool lock_keyboard_shortcuts;
+	static bool fix_mouse_wheel_bug;
 
 	//internal vars
 	static MyEventHandler event_handler;

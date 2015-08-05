@@ -9,20 +9,22 @@ eListbox::eListbox(const Str& ename,int ex,int ey,int ew,int eh,ListboxStyle::Ty
 	
 	#define DEFAULT_ITEMS_H 20
 	#define DEFAULT_MOUSE_SCROLL_DELAY 100
+	#define DEFAULT_WHEEL_VALUE 3
 
 	//parent class vars
 	type="listbox";
 	selectable=true;
-	items_h=DEFAULT_ITEMS_H;
 	color->extra=Color::ubyte(220,220,220);
-	mouse_scroll_delay=DEFAULT_MOUSE_SCROLL_DELAY;
 	
 	//own config vars
 	multi_selection=false;
+	mouse_scroll_delay=DEFAULT_MOUSE_SCROLL_DELAY;
+	wheel_value=DEFAULT_WHEEL_VALUE;
 	
 	//own internal config vars (use config functions to modify)
 	alternate_color=true;
 	show_value=false;
+	items_h=DEFAULT_ITEMS_H;
 
 	//own internal vars
 	current_pos=0;
@@ -127,7 +129,7 @@ void eListbox::draw()
 
 		//show selection
 		if(selection.find(a)!=-1)
-			image->rect_fill(1,offset+1,w-2,y2,color->selection);
+			image->rect_fill(3,offset+1,w-4-(scrollbar_v->visible?scrollbar_v->w:0),y2,color->selection);
 
 		//show items
 		switch(style)
@@ -274,7 +276,7 @@ void eListbox::on_mouse_wheel_down(int mx,int my)
 {
 	if(scrollbar_v->visible)
 	{
-		scrollbar_v->set_value(scrollbar_v->value+1);
+		scrollbar_v->set_value(scrollbar_v->value+wheel_value);
 
 		if(mouse_selecting)
 			on_mouse_move(mx,my);
@@ -288,7 +290,7 @@ void eListbox::on_mouse_wheel_up(int mx,int my)
 {
 	if(scrollbar_v->visible)
 	{
-		scrollbar_v->set_value(scrollbar_v->value-1);
+		scrollbar_v->set_value(scrollbar_v->value-wheel_value);
 
 		if(mouse_selecting)
 			on_mouse_move(mx,my);
@@ -453,6 +455,15 @@ void eListbox::set_current_pos(int index)
 
 	current_pos=index;
 	scrollbar_v->set_value(index);
+	dirty=true;
+}
+
+
+
+//***** SET ITEMS HEIGHT
+void eListbox::set_items_height(int ih)
+{
+	items_h=ih;
 	dirty=true;
 }
 

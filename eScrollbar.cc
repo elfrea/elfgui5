@@ -190,8 +190,7 @@ void eScrollbar::on_mouse_down(int but,int mx,int my)
 			else
 			{
 				ready_to_slide=true;
-				sliding_mx=get_true_x()+mx;
-				sliding_my=get_true_y()+my;
+				sliding_mx=mx-sp;
 			}
 		}
 
@@ -205,8 +204,7 @@ void eScrollbar::on_mouse_down(int but,int mx,int my)
 			else
 			{
 				ready_to_slide=true;
-				sliding_mx=get_true_x()+mx;
-				sliding_my=get_true_y()+my;
+				sliding_my=my-sp;
 			}
 		}
 	}
@@ -428,13 +426,13 @@ int eScrollbar::get_value_from_mouse()
 
 	if(orientation==Orientation::Horizontal)
 	{
-		int mx=m.x-get_true_x()-h-(ss/2);
+		int mx=m.x-get_true_x()-h-sliding_mx;
 		spc=w-(h*2);
 		v=(value_min+mx*(value_max-value_min+1)/(spc-ss));
 	}
 	else
 	{
-		int my=m.y-get_true_y()-w-(ss/2);
+		int my=m.y-get_true_y()-w-sliding_my;
 		spc=h-(w*2);
 		v=(value_min+my*(value_max-value_min+1)/(spc-ss));
 	}

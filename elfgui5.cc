@@ -5,6 +5,7 @@
 
 bool ElfGui5::ready_to_quit;
 bool ElfGui5::lock_keyboard_shortcuts;
+bool ElfGui5::fix_mouse_wheel_bug;
 
 MyEventHandler ElfGui5::event_handler;
 
@@ -69,6 +70,7 @@ void ElfGui5::init()
 	//config vars
 	ready_to_quit=false;
 	lock_keyboard_shortcuts=false;
+	fix_mouse_wheel_bug=true;
 	doubleclick_delay=250;
 
 	//internal vars
@@ -207,6 +209,14 @@ Event* ElfGui5::fetch_event()
 //***** ON MOUSE DOWN
 void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 {
+///////////////////
+	if(ElfGui5::fix_mouse_wheel_bug)
+	{
+		if(but==4 || but==5)
+			return;
+	}
+///////////////////
+
 	Keyboard& k=Input::get_keyboard();
 
 	//set mouse_is_down for on_click event
@@ -305,6 +315,16 @@ void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 //***** ON MOUSE UP
 void MyEventHandler::on_mouse_up(int but,Mouse& mouse)
 {
+///////////////////
+	if(ElfGui5::fix_mouse_wheel_bug)
+	{
+		if(but==4)
+			on_mouse_wheel_up(mouse);
+		else if(but==5)
+			on_mouse_wheel_down(mouse);
+	}
+///////////////////
+
 	Keyboard& k=Input::get_keyboard();
 	
 	Element* eum=ElfGui5::element_under_mouse;
@@ -446,34 +466,37 @@ void MyEventHandler::on_mouse_move(Mouse& mouse)
 		}
 
 		//make sure there is enough room for children
-		int maxx=0;
-		int maxy=0;
-		List<Element*> ch;
-		if(ele->type=="window")
-			ch=((eWindow*)ele)->body->children;
-		else
-			ch=ele->children;
-
-		for(int a=0;a<ch.size();a++)
+		if(ele->children_block_resize)
 		{
-			//disregard if child use an anchor
-			if(ch[a]->use_anchor)
-				continue;
+			int maxx=0;
+			int maxy=0;
+			List<Element*> ch;
+			if(ele->type=="window")
+				ch=((eWindow*)ele)->body->children;
+			else
+				ch=ele->children;
 
-			int cx=ch[a]->x+ch[a]->w;
-			int cy=ch[a]->y+ch[a]->h+(ele->type=="window"?((eWindow*)ele)->titlebar->h+((eWindow*)ele)->statusbar->h:0);
+			for(int a=0;a<ch.size();a++)
+			{
+				//disregard if child use an anchor
+				if(ch[a]->use_anchor)
+					continue;
 
-			if(cx>maxx)
-				maxx=cx;
-			if(cy>maxy)
-				maxy=cy;
+				int cx=ch[a]->x+ch[a]->w;
+				int cy=ch[a]->y+ch[a]->h+(ele->type=="window"?((eWindow*)ele)->titlebar->h+((eWindow*)ele)->statusbar->h:0);
+
+				if(cx>maxx)
+					maxx=cx;
+				if(cy>maxy)
+					maxy=cy;
+			}
+			if(nw<maxx)
+				nw=maxx;
+			if(nh<maxy)
+				nh=maxy;
+
+			ch.clear_nodel();
 		}
-		if(nw<maxx)
-			nw=maxx;
-		if(nh<maxy)
-			nh=maxy;
-
-		ch.clear_nodel();
 
 		//make sure element's size is within min/max size
 		if(nw<ele->min_w)

@@ -157,6 +157,7 @@ void cGame::init()
 
 	win3=new eWindow("window3",400,50,500,700,"Test Window 3");
 	win3->set_statusbar_message("Juun suce des canards poilus");
+	win3->children_block_resize=false;
 	ElfGui5::base->add_child(win3);
 
 	tabbox1=new eTabbox("tabbox1",20,20,460,630,TabsPosition::Right);
@@ -168,7 +169,7 @@ void cGame::init()
 			keybox1=new eKeybox("keybox1",10,10,150,25);
 			tab1->add_child(keybox1);
 
-			list1=new eListbox("listbox1",10,50,200,280,ListboxStyle::IconText);
+			list1=new eListbox("listbox1",10,50,200,380,ListboxStyle::IconText);
 			list1->multi_selection=true;
 				list1->add_new_item("testing",121,"gfx/elements/icon_window.png");
 				list1->add_new_item("Proute",2);

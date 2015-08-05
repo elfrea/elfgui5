@@ -746,6 +746,7 @@ eWindow* eTabbox::undock_tab(int index,Element* eparent,int ex,int ey)
 //***** DOCK TAB
 eTab* eTabbox::dock_tab(eWindow* win,int index)
 {
+	win->body->set_virtual_mode_to_children(false);
 	//insert new tab
 	eTab* tab=new eTab(win->get_title());
 	insert_tab(tab,index);

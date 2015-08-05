@@ -9,15 +9,16 @@ class eListbox:public Element
 public:
 
 	//own config vars
+	int wheel_value;
+	int64_t mouse_scroll_delay;
+	bool multi_selection;
 
 	//own internal config vars (use config functions to modify)
 	ListboxStyle::Type style;
 	List<eItem*> items;
 	int items_h;
 	bool alternate_color;
-	bool multi_selection;
 	bool show_value;
-	int64_t mouse_scroll_delay;
 
 	//own internal vars
 	class eScrollbar* scrollbar_v;
@@ -73,6 +74,7 @@ public:
 	void set_alternate_color(bool alternate);
 	void set_show_value(bool show);
 	void set_current_pos(int index);
+	void set_items_height(int ih);
 
 	void clear(bool del=true);
 	void insert_item(eItem* item,int index);

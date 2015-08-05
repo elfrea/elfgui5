@@ -16,6 +16,9 @@ public:
 	Str name;
 	Font* font;
 	int x,y;
+	int autoscroll_x;
+	int autoscroll_y;
+	bool autoscrolling;
 	bool visible;
 	bool selectable;
 	bool mouse_down_bring_to_front;
@@ -24,11 +27,11 @@ public:
 	bool can_be_moved_outside_parent;
 	bool can_be_clicked_through;
 	bool can_be_resized;
+	bool children_block_resize;
 	bool always_on_bottom;
 	bool always_on_top;
 	bool send_keyboard_events_to_parent;
 	bool forward_event_to_parent;
-//	bool use_content_auto_scrollbars;
 	
 	bool use_custom_cursor;
 	bool use_anchor;
@@ -57,9 +60,11 @@ public:
 	List<Element*> children;
 	bool dirty;
 
+	bool virtual_mode;
+	int virtual_x;
+	int virtual_y;
+
 	//elements
-//	eScrollbar* auto_scrollbar_h;
-//	eScrollbar* auto_scrollbar_v;
 
 	
 	//constructor
@@ -134,5 +139,7 @@ public:
 	Element* find_element_under_mouse();
 	void apply_anchor();
 	void add_to_dead_list();
+	void set_virtual_mode_to_children(bool virtualm);
+	void set_virtual_offset_to_children(int offx,int offy);
 
 };

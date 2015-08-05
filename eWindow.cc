@@ -15,6 +15,8 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	can_be_moved_outside_parent=true;
 	can_be_moved=true;
 	can_be_resized=true;
+	autoscrolling=true;
+	children_block_resize=false;
 	set_move_area(DEFAULT_TITLEBAR_H,0,ew-DEFAULT_TITLEBAR_H,DEFAULT_TITLEBAR_H);
 	//move_area_auto_width=true;
 	can_be_dragged=true;
@@ -31,6 +33,10 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	show_button_shade=true;
 
 	//own internal config vars (use config functions to modify)
+	autoscroll_x=0;
+	autoscroll_y=0;
+	autoscrolling=false;
+
 
 	//own internal vars
 	maximized_x=0;
@@ -84,6 +90,21 @@ eWindow::eWindow(const Str& ename,int ex,int ey,int ew,int eh,const Str& etitle)
 	button_shade->selectable=false;
 	add_child_on_window(button_shade);
 
+	auto_scrollbar_h=new eScrollbar("auto-scrollbar h",10,10,10,20,0,1,Orientation::Horizontal);
+	auto_scrollbar_h->visible=false;
+	auto_scrollbar_h->always_on_top=true;
+	add_child_on_window(auto_scrollbar_h);
+
+	auto_scrollbar_v=new eScrollbar("auto-scrollbar v",10,10,20,10,0,1,Orientation::Vertical);
+	auto_scrollbar_v->visible=false;
+	auto_scrollbar_v->always_on_top=true;
+	add_child_on_window(auto_scrollbar_v);
+	
+	auto_scroll_panel=new ePanel("auto-scroll panel",10,10,10,10);
+	auto_scroll_panel->visible=false;
+	auto_scroll_panel->always_on_top=true;
+	add_child_on_window(auto_scroll_panel);
+	
 	//other
 	set_min_size(150,100);
 	set_title(etitle);
@@ -167,6 +188,19 @@ void eWindow::on_event(Event* ev)
 		shade();
 	}
 
+	//AUTO SCROLLBAR_H
+	else if(ev->sender==auto_scrollbar_h && ev->command=="change")
+	{
+		body->set_virtual_offset_to_children(auto_scrollbar_h->value,auto_scrollbar_v->value);
+	}
+
+	//AUTO SCROLLBAR_V
+	else if(ev->sender==auto_scrollbar_v && ev->command=="change")
+	{
+		body->set_virtual_offset_to_children(auto_scrollbar_h->value,auto_scrollbar_v->value);
+	}
+
+
 	//SEND EVENT TO PARENT
 	else
 	{
@@ -249,6 +283,10 @@ void eWindow::on_text(const Str& text){}
 void eWindow::on_resize(int width,int height)
 {
 	set_move_area(titlebar->h,0,w-titlebar->h,titlebar->h);
+	
+	//refresh autoscrolling feature
+	refresh_autoscrolling();
+
 }
 
 
@@ -639,6 +677,99 @@ void eWindow::refresh_buttons()
 		button_shade->visible=false;
 
 }
+
+
+
+//***** REFRESH AUTOSCROLLING
+void eWindow::refresh_autoscrolling()
+{
+	if(!auto_scrollbar_h->visible)
+		auto_scrollbar_h->value=0;
+	if(!auto_scrollbar_v->visible)
+		auto_scrollbar_v->value=0;
+
+	bool h_seems_visible=false;
+	bool v_seems_visible=false;
+	int total_w=0;
+	int total_h=0;
+	int minx=body->w;
+	int maxx=0;
+	int miny=body->h;
+	int maxy=0;
+	
+	//check if any children is outside window
+	for(int a=0;a<body->children.size();a++)
+	{
+		Element* child=body->children[a];
+
+		if(child->y+child->h>=body->h-(auto_scrollbar_h->visible?auto_scrollbar_h->h:0))
+			v_seems_visible=true;
+
+		if(child->x+child->w>=body->w-(auto_scrollbar_v->visible?auto_scrollbar_v->w:0))
+			h_seems_visible=true;
+
+
+		//find minx / maxx
+		if(child->x<minx)
+			minx=child->x;
+		if(child->x+child->w-1>maxx)
+			maxx=child->x+child->w-1;
+
+		//find miny / maxy
+		if(child->y<miny)
+			miny=child->y;
+		if(child->y+child->h-1>maxy)
+			maxy=child->y+child->h-1;
+	}
+
+	auto_scrollbar_h->visible=h_seems_visible;
+	auto_scrollbar_v->visible=v_seems_visible;
+
+	total_w=maxx+1+(auto_scrollbar_v->visible?auto_scrollbar_v->w:0);
+	total_h=maxy+1+(auto_scrollbar_h->visible?auto_scrollbar_h->h:0);
+
+	//check horizontal
+	if(auto_scrollbar_h->visible)
+	{
+		auto_scrollbar_h->x=body->x;
+		auto_scrollbar_h->y=body->y+body->h-auto_scrollbar_h->h;
+		auto_scrollbar_h->resize(body->w-(auto_scrollbar_v->visible?auto_scrollbar_v->w:0),auto_scrollbar_h->h);
+		auto_scrollbar_h->set_page_size(body->w);
+		auto_scrollbar_h->set_value_range(0,total_w-body->w);
+	}
+
+	//check vertical
+	if(auto_scrollbar_v->visible)
+	{
+		auto_scrollbar_v->x=body->x+body->w-auto_scrollbar_v->w;
+		auto_scrollbar_v->y=body->y;
+		auto_scrollbar_v->resize(auto_scrollbar_v->w,body->h-(auto_scrollbar_h->visible?auto_scrollbar_h->h:0));
+		auto_scrollbar_v->set_page_size(body->h);
+		auto_scrollbar_v->set_value_range(0,total_h-body->h);
+	}
+
+	//autoscroll panel
+	if(auto_scrollbar_h->visible && auto_scrollbar_v->visible)
+	{
+		auto_scroll_panel->x=body->x+body->w-auto_scrollbar_v->w;
+		auto_scroll_panel->y=body->y+body->h-auto_scrollbar_h->h;
+		auto_scroll_panel->resize(auto_scrollbar_v->w,auto_scrollbar_h->h);
+		auto_scroll_panel->visible=true;
+	}
+	else
+		auto_scroll_panel->visible=false;
+
+	//set virtual mode
+	if(auto_scrollbar_h->visible || auto_scrollbar_v->visible)
+	{
+		body->set_virtual_mode_to_children(true);
+		body->set_virtual_offset_to_children(auto_scrollbar_h->value,auto_scrollbar_v->value);
+	}
+	else
+		body->set_virtual_mode_to_children(false);
+	
+}
+
 
 
 

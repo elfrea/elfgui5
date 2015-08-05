@@ -1,9 +1,7 @@
 MENUBAR 			
 SPLITBOX			
 COMBOBOX			
-LISTBOX 			
 DIRBOX 			
-ITEM 				
 TASKBAR			
 MODAL 				
 MENU 				

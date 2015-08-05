@@ -22,6 +22,7 @@ Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 	can_be_moved_outside_parent=false;
 	can_be_clicked_through=false;
 	can_be_resized=false;
+	children_block_resize=true;
 	send_keyboard_events_to_parent=false;
 	always_on_top=false;
 	always_on_bottom=false;
@@ -51,6 +52,12 @@ Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 	image=NULL;
 	parent=NULL;
 	dirty=false;
+
+	virtual_mode=false;
+	virtual_x=0;
+	virtual_y=0;
+
+	//elements
 
 	//other
 	resize(ew,eh);
@@ -450,15 +457,15 @@ void Element::resize(int width,int height)
 	w=width;
 	h=height;
 
-	//call on_resize
-	on_resize(width,height);
-
 	//apply children anchors and send on_parent_resize
 	for(int a=0;a<children.size();a++)
 	{
 		children[a]->apply_anchor();
 		children[a]->on_parent_resize();
 	}
+
+	//call on_resize
+	on_resize(w,h);
 
 	//redraw texture
 	dirty=true;
@@ -763,6 +770,12 @@ void Element::display(Rect cliprect)
 		{
 			draw();
 			dirty=false;
+
+			//draw resize gizmo if needed
+			if(can_be_resized)
+			{
+				image->blit(w-ElfGui5::resize_gizmo->width(),h-ElfGui5::resize_gizmo->height(),ElfGui5::resize_gizmo);
+			}
 		}
 			
 		//dont draw element if it is completely hidden by a brother
@@ -780,7 +793,7 @@ void Element::display(Rect cliprect)
 				if(!e->visible)
 					continue;
 
-				//dont draw this element hides the current element
+				//dont draw if this element hides the current element
 				if(e->x<=x && (e->x+e->w)>=(x+w) && e->y<=y && (e->y+e->h)>=(y+h))
 				{
 					ok=false;
@@ -866,12 +879,21 @@ void Element::replace_elements()
 //***** GET TRUE X
 int Element::get_true_x()
 {
-	int tx=x;
+	int tx;
+	
+	if(virtual_mode)
+		tx=x-virtual_x;
+	else
+		tx=x;
+
 	Element* p=parent;
 
 	while(p!=NULL)
 	{
-		tx+=p->x;
+		if(p->virtual_mode)
+			tx+=p->x-p->virtual_x;
+		else
+			tx+=p->x;
 		p=p->parent;
 	}
 
@@ -884,11 +906,20 @@ int Element::get_true_x()
 int Element::get_true_y()
 {
 	int ty=y;
+
+	if(virtual_mode)
+		ty=y-virtual_y;
+	else
+		ty=y;
+
 	Element* p=parent;
 
 	while(p!=NULL)
 	{
-		ty+=p->y;
+		if(p->virtual_mode)
+			ty+=p->y-p->virtual_y;
+		else
+			ty+=p->y;
 		p=p->parent;
 	}
 
@@ -924,10 +955,21 @@ Element* Element::find_element_at(int x,int y)
 				continue;
 
 			//check if the child is under mouse
-			if(x>=e->x && x<(e->x+e->w) && y>=e->y && y<(e->y+e->h))
+			if(e->virtual_mode)
 			{
-				found=true;
-				break;
+				if(x>=e->x-e->virtual_x && x<(e->x-e->virtual_x+e->w) && y>=e->y-e->virtual_y && y<(e->y-e->virtual_y+e->h))
+				{
+					found=true;
+					break;
+				}
+			}
+			else 
+			{
+				if(x>=e->x && x<(e->x+e->w) && y>=e->y && y<(e->y+e->h))
+				{
+					found=true;
+					break;
+				}
 			}
 
 		}
@@ -936,8 +978,16 @@ Element* Element::find_element_at(int x,int y)
 		if(found)
 		{
 			ele=e;
-			x-=ele->x;
-			y-=ele->y;
+			if(ele->virtual_mode)
+			{
+				x-=(ele->x-ele->virtual_x);
+				y-=(ele->y-ele->virtual_y);
+			}
+			else
+			{
+				x-=ele->x;
+				y-=ele->y;
+			}
 		}
 
 		//no child has been found
@@ -1018,6 +1068,30 @@ void Element::add_to_dead_list()
 	ElfGui5::add_element_in_dead_list(this);
 
 }
+
+
+
+//***** SET VIRTUAL MODE TO CHILDREN
+void Element::set_virtual_mode_to_children(bool virtualm)
+{
+	for(int a=0;a<children.size();a++)
+	{
+		children[a]->virtual_mode=virtualm;
+	}
+}
+
+
+
+//***** SET VIRTUAL OFFSET TO CHILDREN
+void Element::set_virtual_offset_to_children(int offx,int offy)
+{
+	for(int a=0;a<children.size();a++)
+	{
+		children[a]->virtual_x=offx;
+		children[a]->virtual_y=offy;
+	}
+}
+
 
 
 
