@@ -11,8 +11,14 @@ void KShortcuts::init()
 {
 	add(new KShortcut("Test","custom",false,false,false,false,KEY_F1,Actions::test));
 
-	add(new KShortcut("Quit program","global",false,false,false,false,KEY_PAUSE,Actions::quit_program));
-	add(new KShortcut("Toggle Fullscreen","global",false,false,false,false,KEY_F12,Actions::toggle_fullscreen));
+	add(new KShortcut("Quit program",			"global",	false,	false,	false,	false,	KEY_PAUSE,	Actions::quit_program));
+	add(new KShortcut("Toggle Fullscreen",		"global",	false,	false,	false,	false,	KEY_F12,	Actions::toggle_fullscreen));
+	add(new KShortcut("Window Close",			"global",	false,	false,	false,	true,	KEY_F4,		Actions::window_close));
+	add(new KShortcut("Window Maximize",		"global",	false,	false,	false,	true,	KEY_RETURN,	Actions::window_maximize));
+	add(new KShortcut("Window Minimize",		"global",	false,	false,	false,	true,	KEY_MINUS,	Actions::window_minimize));
+	add(new KShortcut("Window Shade",			"global",	false,	false,	false,	true,	KEY_GRAVE,	Actions::window_shade));
+	add(new KShortcut("Window Bring to Front",	"global",	false,	false,	false,	true,	KEY_UP,		Actions::window_bring_to_front));
+	add(new KShortcut("Window Send to Back",	"global",	false,	false,	false,	true,	KEY_DOWN,	Actions::window_send_to_back));
 }
 
 

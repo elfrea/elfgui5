@@ -40,6 +40,7 @@ eTabbox* tabbox1;
 eTab* tab1;
 	eKeybox* keybox1;
 	eListbox* list1;
+	eCombobox* combo1;
 eTab* tab2;
 eTab* tab3;
 
@@ -200,6 +201,27 @@ void cGame::init()
 			list1->sort_items_by_value();
 			list1->set_show_value(true);
 			tab1->add_child(list1);
+
+			combo1=new eCombobox("combobox1",10,450,150,25,"");
+			combo1->set_show_value(true);
+			combo1->set_readonly(false);
+			combo1->add_item("Patate",10,"gfx/elements/icon_window.png");
+			combo1->add_item("Poil",5);
+			combo1->add_item("Carotte",2);
+			combo1->add_item("Navet",236);
+			combo1->add_item("Patate",10,"gfx/elements/icon_window.png");
+			combo1->add_item("Poil",5);
+			combo1->add_item("Carotte",2);
+			combo1->add_item("Navet",236);
+			combo1->add_item("Patate",10,"gfx/elements/icon_window.png");
+			combo1->add_item("Poil",5);
+			combo1->add_item("Carotte",2);
+			combo1->add_item("Navet",236);
+			combo1->add_item("Patate",10,"gfx/elements/icon_window.png");
+			combo1->add_item("Poil",5);
+			combo1->add_item("Carotte",2);
+			combo1->add_item("Navet",236);
+			tab1->add_child(combo1);
 			
 		tab2=tabbox1->add_new_tab("tab2");
 		tab3=tabbox1->add_new_tab("Patate Poilue");

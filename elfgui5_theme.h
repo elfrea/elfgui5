@@ -23,6 +23,9 @@ public:
 	Color d_editing;
 	Color d_selection;
 	Color d_extra;
+
+	//tints
+	Color tint[4];
 };
 
 

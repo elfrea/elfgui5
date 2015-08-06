@@ -19,6 +19,9 @@ public:
 	int items_h;
 	bool alternate_color;
 	bool show_value;
+	bool auto_height;
+	int auto_height_min;
+	int auto_height_max;
 
 	//own internal vars
 	class eScrollbar* scrollbar_v;
@@ -75,6 +78,7 @@ public:
 	void set_show_value(bool show);
 	void set_current_pos(int index);
 	void set_items_height(int ih);
+	void set_auto_height(bool autoh,int min=50,int max=100);
 
 	void clear(bool del=true);
 	void insert_item(eItem* item,int index);
@@ -107,6 +111,7 @@ public:
 	int get_selected_index();
 	List<eItem*> get_selected_items();
 	List<int> get_selected_items_index();
+	Str get_selected_text();
 
 	int get_item_index(eItem* item);
 	int get_size();
@@ -120,6 +125,8 @@ public:
 
 	bool compare_selection(int index);
 	bool compare_selection(int index1,int index2);
+
+	void refresh_auto_height();
 
 };
 

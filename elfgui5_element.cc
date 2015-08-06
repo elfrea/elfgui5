@@ -29,6 +29,9 @@ Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 	use_custom_cursor=false;
 	forward_event_to_parent=true;
 	use_anchor=false;
+	use_tint=false;
+	do_not_draw=false;
+	do_not_hide_elements_under=false;
 
 	tab_index=-1;
 
@@ -296,6 +299,15 @@ void Element::remove_child(Element* child,bool del)
 
 
 
+//***** CLEAR CHILDREN
+void Element::clear_children(bool del)
+{
+	for(int a=0;a<children.size();a++)
+		remove_child(children[a],del);
+}
+
+
+
 
 
 
@@ -400,6 +412,26 @@ void Element::set_colors_disabled(const Color& c_light,const Color& c_medium,con
 
 
 
+//***** SET COLORS TINT
+void Element::set_colors_tint(const Color& t0,const Color& t1,const Color& t2,const Color& t3,bool propagate)
+{
+	color->tint[0]=t0;
+	color->tint[1]=t1;
+	color->tint[2]=t2;
+	color->tint[3]=t3;
+
+	dirty=true;
+	
+	//check if we change the colors of all children
+	if(propagate)
+	{
+		for(int a=0;a<children.size();a++)
+			children[a]->set_colors_tint(Color(t0),Color(t1),Color(t2),Color(t3),true);
+	}
+}
+
+
+
 //***** SET THEME COLORS
 void Element::set_theme_colors(bool propagate)
 {
@@ -418,6 +450,11 @@ void Element::set_theme_colors(bool propagate)
 	color->d_editing=Color(Theme::color->d_editing);
 	color->d_selection=Color(Theme::color->d_selection);
 	color->d_extra=Color(Theme::color->d_extra);
+
+	color->tint[0]=Color(Theme::color->tint[0]);
+	color->tint[1]=Color(Theme::color->tint[1]);
+	color->tint[2]=Color(Theme::color->tint[2]);
+	color->tint[3]=Color(Theme::color->tint[3]);
 
 	dirty=true;
 
@@ -657,7 +694,7 @@ DragPacket* Element::start_drag(const Str& icon_path,int offx,int offy)
 
 
 //***** SEND EVENT
-void Element::send_event(Element* sndr,const Str& cmd)
+void Element::send_event(Element* sndr,const Str& cmd,Element* to)
 {
 	//return if element is in the dead list
 	if(ElfGui5::dead_list.find(this)!=-1)
@@ -666,29 +703,17 @@ void Element::send_event(Element* sndr,const Str& cmd)
 	//create new event
 	Event* ev=new Event(sndr,cmd);
 
-	//check if we forward event to parent
-	if(parent && forward_event_to_parent)
-	{
-		#ifdef DBG
-//			Log::debug("New event sent from '%s' of type '%s' forwarded to parent '%s'",name.ptr(),cmd.ptr(),parent->name.ptr());
-		#endif
+	//check if we have a recipient
+	if(to)
+		to->on_event(ev);
 
+	//check if we forward event to parent
+	else if(parent && forward_event_to_parent)
 		parent->on_event(ev);
-	}
 
 	//send event globally
 	else
-	{
-		
-		#ifdef DBG
-//			if(forward_event_to_parent)
-//				Log::debug("New global event sent from '%s' of type '%s' forwarded from '%s'",ev->sender->name.ptr(),cmd.ptr(),name.ptr());
-//			else
-//				Log::debug("New global event sent from '%s' of type '%s'",ev->sender->name.ptr(),cmd.ptr());
-		#endif
-
 		ElfGui5::events.add(ev);
-	}
 
 }
 
@@ -707,6 +732,23 @@ void Element::send_event(Event* ev)
 void Element::send_event(const Str& cmd)
 {
 	send_event(this,cmd);
+}
+
+
+
+//***** SEND EVENT TO
+void Element::send_event_to(Element* dest,Event* ev)
+{
+	send_event(ev->sender,ev->command,dest);
+	delete ev;
+}
+
+
+
+//***** SEND EVENT TO
+void Element::send_event_to(Element* dest,const Str& cmd)
+{
+	send_event(this,cmd,dest);
 }
 
 
@@ -730,6 +772,28 @@ void Element::set_anchor(bool t,int ty,bool b,int by,bool l,int lx,bool r,int rx
 	anchor->set(t,ty,b,by,l,lx,r,rx);
 	use_anchor=use;
 	apply_anchor();
+}
+
+
+
+//***** SET TINT
+void Element::set_tint(const Color& t0)
+{
+	color->tint[0]=t0;
+	color->tint[1]=t0;
+	color->tint[2]=t0;
+	color->tint[3]=t0;
+}
+
+
+
+//***** SET TINT
+void Element::set_tint(const Color& t0,const Color& t1,const Color& t2,const Color& t3)
+{
+	color->tint[0]=t0;
+	color->tint[1]=t1;
+	color->tint[2]=t2;
+	color->tint[3]=t3;
 }
 
 
@@ -780,7 +844,7 @@ void Element::display(Rect cliprect)
 			
 		//dont draw element if it is completely hidden by a brother
 		bool ok=true;
-		if(parent)
+		if(do_not_hide_elements_under && parent)
 		{
 			for(int a=parent->children.size()-1;a>=0;a--)
 			{
@@ -817,7 +881,13 @@ void Element::display(Rect cliprect)
 			int res_y=0;
 			if(Rect::clip(Rect(dx,dy,sw,sh),cliprect,res,&res_x,&res_y))
 			{
-				image->draw(res.x,res.y,Rect(res_x,res_y,res.w,res.h));
+				if(!do_not_draw)
+				{
+					if(use_tint)
+						image->draw(res.x,res.y,Rect(res_x,res_y,res.w,res.h),color->tint[0],color->tint[1],color->tint[2],color->tint[3]);
+					else
+						image->draw(res.x,res.y,Rect(res_x,res_y,res.w,res.h));
+				}
 
 				//replace children
 				replace_elements();

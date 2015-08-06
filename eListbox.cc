@@ -22,9 +22,10 @@ eListbox::eListbox(const Str& ename,int ex,int ey,int ew,int eh,ListboxStyle::Ty
 	wheel_value=DEFAULT_WHEEL_VALUE;
 	
 	//own internal config vars (use config functions to modify)
-	alternate_color=true;
+	alternate_color=false;
 	show_value=false;
 	items_h=DEFAULT_ITEMS_H;
+	auto_height=false;
 
 	//own internal vars
 	current_pos=0;
@@ -195,7 +196,7 @@ void eListbox::on_event(Event* ev)
 	}
 
 	//SEND EVENT TO PARENT
-	else
+	else if(ev->command=="touched")
 	{
 		send_event(ev);
 		return;
@@ -326,11 +327,15 @@ void eListbox::on_key_down(Key& key)
 		//normal select
 		else
 		{
-			int i=get_selected_index()-1;
-			if(items.size()>0 && i<0)
-				i=0;
+			int i=get_selected_index();
+			if(i>-1)
+			{
+				i--;
+				if(items.size()>0 && i<0)
+					i=0;
 
-			select_item(i);
+				select_item(i);
+			}
 		}
 
 		//check if we need to change the current_pos
@@ -357,11 +362,17 @@ void eListbox::on_key_down(Key& key)
 		{
 			selected_min=selected_max;
 
-			int i=get_selected_index()+1;
-			if(items.size()>0 && i>=items.size())
-				i=items.size()-1;
+			int i=get_selected_index();
+			if(i>-1)
+			{
+				i++;
+				if(items.size()>0 && i>=items.size())
+					i=items.size()-1;
 
-			select_item(i);
+				select_item(i);
+			}
+			else
+				select_item(0);
 		}
 		
 		//check if we need to change the current_pos
@@ -381,13 +392,30 @@ void eListbox::on_key_down(Key& key)
 	{
 		select_items(0,items.size()-1);
 	}
+
+	//RETURN
+	else if(key.code==KEY_RETURN || key.code==KEY_SPACE)
+	{
+		send_event("trigger");
+	}
 }
 
 
 
 void eListbox::on_key_up(Key& key){}
 void eListbox::on_text(const Str& text){}
-void eListbox::on_resize(int width,int height){}
+
+
+
+//***** ON RESIZE
+void eListbox::on_resize(int width,int height)
+{
+	set_current_pos(0);
+	refresh_scrollbars();
+}
+
+
+
 void eListbox::on_parent_resize(){}
 
 
@@ -469,6 +497,16 @@ void eListbox::set_items_height(int ih)
 
 
 
+//***** SET AUTO HEIGHT
+void eListbox::set_auto_height(bool autoh,int min,int max)
+{
+	auto_height=autoh;
+	auto_height_max=max;
+	refresh_auto_height();
+}
+
+
+
 //***** CLEAR
 void eListbox::clear(bool del)
 {
@@ -489,6 +527,7 @@ void eListbox::insert_item(eItem* item,int index)
 		return;
 
 	items.insert(item,index);
+	refresh_auto_height();
 	dirty=true;
 }
 
@@ -498,6 +537,7 @@ void eListbox::insert_item(eItem* item,int index)
 void eListbox::add_item(eItem* item)
 {
 	items.add(item);
+	refresh_auto_height();
 	dirty=true;
 }
 
@@ -515,6 +555,7 @@ void eListbox::remove_item(eItem* item,bool del)
 			items.remove_nodel(index);
 	}
 	
+	refresh_auto_height();
 	dirty=true;
 }
 
@@ -530,6 +571,7 @@ void eListbox::remove_item(int index,bool del)
 		items.remove_del(index);
 	else
 		items.remove_nodel(index);
+	refresh_auto_height();
 	dirty=true;
 }
 
@@ -587,22 +629,6 @@ eItem* eListbox::add_new_item(const Str& iname,int ival,const Str& ico)
 
 	return item;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -748,24 +774,16 @@ void eListbox::sort_items_by_value(bool reverse)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //***** SELECT ITEM
 void eListbox::select_item(eItem* item)
 {
-	int index=items.find(item);
+	int index;
+
+	if(item)
+		index=items.find(item);
+	else
+		index=-1;
+
 
 	if(!compare_selection(index))
 	{
@@ -775,7 +793,8 @@ void eListbox::select_item(eItem* item)
 
 		//clear and add selection in list
 		selection.clear_nodel();
-		selection.add(index);
+		if(index>-1)
+			selection.add(index);
 
 		send_event("change");
 	
@@ -788,6 +807,7 @@ void eListbox::select_item(eItem* item)
 //***** SELECT ITEM
 void eListbox::select_item(int index)
 {
+
 	if(!compare_selection(index))
 	{
 		if(index<0 || index>=items.size())
@@ -799,7 +819,8 @@ void eListbox::select_item(int index)
 
 		//clear and add selection in list
 		selection.clear_nodel();
-		selection.add(index);
+		if(index>-1)
+			selection.add(index);
 
 		send_event("change");
 
@@ -953,9 +974,9 @@ void eListbox::toggle_item_selection(int index)
 //***** GET SELECTED ITEM
 eItem* eListbox::get_selected_item()
 {
-	if(selection.size()==-1)
+	if(selection.size()<=0)
 		return NULL;
-	
+
 	return items[selection[0]];
 }
 
@@ -964,7 +985,7 @@ eItem* eListbox::get_selected_item()
 //***** GET SELECTED INDEX
 int eListbox::get_selected_index()
 {
-	if(selection.size()==-1)
+	if(selection.size()<=0)
 		return -1;
 	
 	return selection[0];
@@ -989,6 +1010,18 @@ List<eItem*> eListbox::get_selected_items()
 List<int> eListbox::get_selected_items_index()
 {
 	return selection;
+}
+
+
+
+//***** GET SELECTED TEXT
+Str eListbox::get_selected_text()
+{
+	eItem* item=get_selected_item();
+	if(item)
+		return item->text;
+	else
+		return "";
 }
 
 
@@ -1030,7 +1063,9 @@ int eListbox::get_view_h()
 //***** REFRESH SCROLLBARS
 void eListbox::refresh_scrollbars()
 {
-	if(items.size())
+	scrollbar_v->visible=false;
+
+	if(items.size()>0)
 	{
 		//check if we need the vertical scrollbar
 		if(items.size()*items_h>h)
@@ -1047,9 +1082,6 @@ void eListbox::refresh_scrollbars()
 				scrollbar_v->visible=true;
 			}
 		}
-		else
-			scrollbar_v->visible=false;
-
 
 	}
 }
@@ -1061,7 +1093,7 @@ eItem* eListbox::find_item_at(int mx,int my)
 {
 	int index=my/items_h+current_pos;
 	if(index<0 || index>=items.size())
-		index=-1;
+		return NULL;
 
 	return items[index];
 }
@@ -1083,6 +1115,9 @@ int eListbox::find_item_index_at(int mx,int my)
 //***** COMPARE SELECTION
 bool eListbox::compare_selection(int index)
 {
+	if(index==-1)
+		return false;
+
 	if(selection.size()==1 && selection[0]==index)
 		return true;
 	
@@ -1094,6 +1129,9 @@ bool eListbox::compare_selection(int index)
 //***** COMPARE SELECTION
 bool eListbox::compare_selection(int index1,int index2)
 {
+	if(index1==-1 || index2==-1)
+		return false;
+
 	int am=index2-index1+1;
 	if(selection.size()==am)
 	{
@@ -1107,6 +1145,25 @@ bool eListbox::compare_selection(int index1,int index2)
 	}
 
 	return false;
+}
+
+
+
+//***** REFRESH AUTO HEIGHT
+void eListbox::refresh_auto_height()
+{
+	if(auto_height)
+	{
+		int ih=items.size()*items_h;
+
+		if(ih<auto_height_min)
+			ih=auto_height_min;
+
+		if(ih>auto_height_max)
+			ih=auto_height_max;
+
+		resize(w,ih);
+	}
 }
 
 

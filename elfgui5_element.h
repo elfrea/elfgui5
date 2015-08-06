@@ -32,6 +32,9 @@ public:
 	bool always_on_top;
 	bool send_keyboard_events_to_parent;
 	bool forward_event_to_parent;
+	bool use_tint;
+	bool do_not_draw;
+	bool do_not_hide_elements_under;
 	
 	bool use_custom_cursor;
 	bool use_anchor;
@@ -103,6 +106,7 @@ public:
 	virtual void add_child(Element* child);
 	virtual void insert_child(Element* child,int index);
 	virtual void remove_child(Element* child,bool del=false);
+	void clear_children(bool del);
 
 	//config functions
 	void set_as_selected(bool select);
@@ -110,6 +114,7 @@ public:
 	void set_color(Color& col,const Color& newcol);
 	void set_colors_enabled(const Color& c_light,const Color& c_medium,const Color& c_dark,const Color& c_text,const Color& c_editing,const Color& c_selection,const Color& c_extra,bool propagate=false);
 	void set_colors_disabled(const Color& c_light,const Color& c_medium,const Color& c_dark,const Color& c_text,const Color& c_editing,const Color& c_selection,const Color& c_extra,bool propagate=false);
+	void set_colors_tint(const Color& t0,const Color& t1,const Color& t2,const Color& t3,bool propagate=false);
 	void set_theme_colors(bool propagate=false);
 	void resize(int width,int height);
 	void bring_to_front();
@@ -123,11 +128,15 @@ public:
 	void set_custom_cursor(const Str& filename,int hx,int hy);
 	DragPacket* start_drag(Texture* picon,int offx=0,int offy=0);
 	DragPacket* start_drag(const Str& icon_path,int offx=0,int offy=0);
-	void send_event(Element* sndr,const Str& cmd);
+	void send_event(Element* sndr,const Str& cmd,Element* to=NULL);
 	void send_event(Event* ev);
 	void send_event(const Str& cmd);
+	void send_event_to(Element* dest,Event* ev);
+	void send_event_to(Element* dest,const Str& cmd);
 	void set_anchor(bool t,bool b,bool l,bool r,bool use=true);
 	void set_anchor(bool t,int ty,bool b,int by,bool l,int lx,bool r,int rx,bool use=true);
+	void set_tint(const Color& t0);
+	void set_tint(const Color& t0,const Color& t1,const Color& t2,const Color& t3);
 
 	//internal functions
 	void loops();

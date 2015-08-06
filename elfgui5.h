@@ -41,6 +41,8 @@ typedef void (*ACTION)();
 #include "eKeybox.h"
 #include "eItem.h"
 #include "eListbox.h"
+#include "eCombobox.h"
+#include "eModal.h"
 
 
 
@@ -131,6 +133,7 @@ public:
 	static void set_mouse_cursor(const Str& cursor);
 	static void add_element_in_dead_list(Element* ele);
 	static void clear_dead_list();
+	static class eWindow* get_active_window();
 
 };
 

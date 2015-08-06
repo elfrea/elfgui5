@@ -155,7 +155,7 @@ void eScrollbar::on_event(Event* ev)
 		set_value(value+1);
 
 	//SEND EVENT TO PARENT
-	else
+	else if(ev->command=="touched")
 	{
 		send_event(ev);
 		return;

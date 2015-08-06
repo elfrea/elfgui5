@@ -855,4 +855,27 @@ void ElfGui5::clear_dead_list()
 
 
 
+//***** GET ACTIVE WINDOW
+eWindow* ElfGui5::get_active_window()
+{
+	Element* ele=current_element;
+
+	while(ele)
+	{
+		if(ele->type=="window")
+			return (eWindow*)ele;
+
+		ele=ele->parent;
+	}
+	
+	return NULL;
+}
+
+
+
+
+
+
+
+
 

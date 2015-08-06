@@ -142,6 +142,7 @@ void eWindow::loop()
 //***** DRAW
 void eWindow::draw()
 {
+	image->clear(Color(0,0,0,0));
 
 }
 
@@ -518,8 +519,11 @@ void eWindow::set_show_buttons(bool bclose,bool bmax,bool bmin,bool bshade)
 //***** CLOSE
 void eWindow::close()
 {
-	if(on_close())
-		add_to_dead_list();
+	if(button_close->visible && button_close->enabled)
+	{
+		if(on_close())
+			add_to_dead_list();
+	}
 }
 
 
@@ -527,33 +531,36 @@ void eWindow::close()
 //***** MAXIMIZE
 void eWindow::maximize()
 {
-	if(on_maximize() && parent)
+	if(button_maximize->visible && button_maximize->enabled)
 	{
-		maximized=!maximized;
-
-		//save current position and size and maximize the window
-		if(maximized)
+		if(on_maximize() && parent)
 		{
-			maximized_x=x;
-			maximized_y=y;
-			maximized_w=w;
-			maximized_h=h;
+			maximized=!maximized;
 
-			x=0;
-			y=0;
-			resize(parent->w,parent->h);
-			can_be_moved=false;
-			can_be_resized=false;
-		}
+			//save current position and size and maximize the window
+			if(maximized)
+			{
+				maximized_x=x;
+				maximized_y=y;
+				maximized_w=w;
+				maximized_h=h;
 
-		//fetch old position and size and unmaximize the window
-		else
-		{
-			x=maximized_x;
-			y=maximized_y;
-			resize(maximized_w,maximized_h);
-			can_be_moved=true;
-			can_be_resized=true;
+				x=0;
+				y=0;
+				resize(parent->w,parent->h);
+				can_be_moved=false;
+				can_be_resized=false;
+			}
+
+			//fetch old position and size and unmaximize the window
+			else
+			{
+				x=maximized_x;
+				y=maximized_y;
+				resize(maximized_w,maximized_h);
+				can_be_moved=true;
+				can_be_resized=true;
+			}
 		}
 	}
 }
@@ -563,20 +570,23 @@ void eWindow::maximize()
 //***** MINIMIZE
 void eWindow::minimize()
 {
-	if(on_minimize())
+	if(button_minimize->visible && button_minimize->enabled)
 	{
-		minimized=!minimized;
-
-		//minimize window
-		if(minimized)
+		if(on_minimize())
 		{
-			visible=false;
-		}
+			minimized=!minimized;
 
-		//unminimize window
-		else
-		{
-			visible=true;
+			//minimize window
+			if(minimized)
+			{
+				visible=false;
+			}
+
+			//unminimize window
+			else
+			{
+				visible=true;
+			}
 		}
 	}
 }
@@ -586,34 +596,37 @@ void eWindow::minimize()
 //***** SHADE
 void eWindow::shade()
 {
-	if(on_minimize())
+	if(button_shade->visible && button_shade->enabled)
 	{
-		shaded=!shaded;
-
-		//save current height and shade window
-		if(shaded)
+		if(on_minimize())
 		{
-			shaded_h=h;
+			shaded=!shaded;
 
-			body->visible=false;
-			statusbar->visible=false;
+			//save current height and shade window
+			if(shaded)
+			{
+				shaded_h=h;
 
-			resize(w,titlebar->h);
-			can_be_resized=false;
+				body->visible=false;
+				statusbar->visible=false;
 
-			button_maximize->set_enabled(false);
-		}
+				resize(w,titlebar->h);
+				can_be_resized=false;
 
-		//fetch old height and unshade window
-		else
-		{
-			body->visible=true;
-			statusbar->visible=true;
-			
-			resize(w,shaded_h);
-			can_be_resized=true;
+				button_maximize->set_enabled(false);
+			}
 
-			button_maximize->set_enabled(true);
+			//fetch old height and unshade window
+			else
+			{
+				body->visible=true;
+				statusbar->visible=true;
+				
+				resize(w,shaded_h);
+				can_be_resized=true;
+
+				button_maximize->set_enabled(true);
+			}
 		}
 	}
 }

@@ -39,6 +39,11 @@ void Theme::set(const Str& theme)
 		color->d_selection=Color::ubyte(100,100,100);
 		color->d_extra=Color::ubyte(255,0,0);
 
+		color->tint[0]=Color::ubyte(255,255,255,100);
+		color->tint[1]=Color::ubyte(255,255,255,100);
+		color->tint[2]=Color::ubyte(255,255,255,100);
+		color->tint[3]=Color::ubyte(255,255,255,100);
+
 
 
 

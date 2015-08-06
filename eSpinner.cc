@@ -71,6 +71,7 @@ void eSpinner::loop()
 //***** DRAW
 void eSpinner::draw()
 {
+	image->clear(Color(0,0,0,0));
 }
 
 
@@ -132,7 +133,7 @@ void eSpinner::on_event(Event* ev)
 	}
 
 	//SEND EVENT TO PARENT
-	else
+	else if(ev->command=="touched")
 	{
 		send_event(ev);
 		return;

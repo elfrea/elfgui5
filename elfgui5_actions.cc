@@ -48,6 +48,64 @@ void Actions::toggle_fullscreen()
 
 
 
+//***** WINDOW CLOSE
+void Actions::window_close()
+{
+	eWindow* win=ElfGui5::get_active_window();
+	if(win)
+		win->close();
+}
+
+
+
+//***** WINDOW MAXIMIZE
+void Actions::window_maximize()
+{
+	eWindow* win=ElfGui5::get_active_window();
+	if(win)
+		win->maximize();
+}
+
+
+
+//***** WINDOW MINIMIZE
+void Actions::window_minimize()
+{
+	eWindow* win=ElfGui5::get_active_window();
+	if(win)
+		win->minimize();
+}
+
+
+
+//***** WINDOW SHADE
+void Actions::window_shade()
+{
+	eWindow* win=ElfGui5::get_active_window();
+	if(win)
+		win->shade();
+}
+
+
+
+//***** WINDOW BRING TO FRONT
+void Actions::window_bring_to_front()
+{
+	eWindow* win=ElfGui5::get_active_window();
+	if(win)
+		win->bring_to_front();
+}
+
+
+
+//***** WINDOW SEND TO BACK
+void Actions::window_send_to_back()
+{
+	eWindow* win=ElfGui5::get_active_window();
+	if(win)
+		win->send_to_back();
+}
+
 
 
 
