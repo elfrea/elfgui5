@@ -68,6 +68,8 @@ public:
 	int virtual_y;
 
 	//elements
+	class eModal* context_menu_modal;
+	class eMenu* context_menu;
 
 	
 	//constructor
@@ -101,14 +103,18 @@ public:
 	virtual void on_parent_resize();
 	virtual void on_select();
 	virtual void on_unselect();
+	virtual void on_resolution_change(int width,int height);
 	
 	//family functions
 	virtual void add_child(Element* child);
 	virtual void insert_child(Element* child,int index);
 	virtual void remove_child(Element* child,bool del=false);
+	virtual void remove_child(int index,bool del=false);
 	void clear_children(bool del);
 
 	//config functions
+	virtual void shrink();
+	void set_context_menu(class eMenu* menu);
 	void set_as_selected(bool select);
 	void set_font(Font* fnt,bool propagate=false);
 	void set_color(Color& col,const Color& newcol);
@@ -142,6 +148,7 @@ public:
 	void loops();
 	void display(Rect cliprect);
 	void replace_elements();
+	void send_resolution_change(int width,int height);
 	int get_true_x();
 	int get_true_y();
 	Element* find_element_at(int x,int y);

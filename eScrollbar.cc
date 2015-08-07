@@ -266,6 +266,7 @@ void eScrollbar::on_resize(int width,int height)
 void eScrollbar::on_parent_resize(){}
 void eScrollbar::on_select(){}
 void eScrollbar::on_unselect(){}
+void eScrollbar::on_resolution_change(int width,int height){}
 
 
 
@@ -278,6 +279,13 @@ void eScrollbar::on_unselect(){}
 //OWN CONFIG FUNCTIONS
 //****************************************************************
 
+
+
+
+//***** SHRINK
+void eScrollbar::shrink()
+{
+}
 
 //***** SET VALUE
 void eScrollbar::set_value(int val)

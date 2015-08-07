@@ -58,6 +58,7 @@ public:
 	void on_parent_resize();
 	void on_select();
 	void on_unselect();
+	void on_resolution_change(int width,int height);
 
 	//family functions
 	void add_child(Element* child);
@@ -65,6 +66,7 @@ public:
 	void remove_child(Element* child,bool del=false);
 
 	//own config functions
+	void shrink();
 	void insert_tab(class eTab* tab,int index);
 	void add_tab(class eTab* tab);
 	class eTab* add_new_tab(const Str& tname);

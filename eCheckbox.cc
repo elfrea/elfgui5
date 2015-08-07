@@ -210,6 +210,7 @@ void eCheckbox::on_resize(int width,int height){}
 void eCheckbox::on_parent_resize(){}
 void eCheckbox::on_select(){}
 void eCheckbox::on_unselect(){}
+void eCheckbox::on_resolution_change(int width,int height){}
 
 
 

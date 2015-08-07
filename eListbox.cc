@@ -436,6 +436,10 @@ void eListbox::on_unselect()
 
 
 
+void eListbox::on_resolution_change(int width,int height){}
+
+
+
 
 
 
@@ -444,6 +448,13 @@ void eListbox::on_unselect()
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void eListbox::shrink()
+{
+}
+
 
 
 //***** SET STYLE
@@ -1035,7 +1046,7 @@ int eListbox::get_item_index(eItem* item)
 
 
 //***** GET SIZE
-inline int eListbox::get_size()
+int eListbox::get_size()
 {
 	return items.size();
 }

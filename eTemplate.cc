@@ -85,6 +85,7 @@ void eTemplate::on_resize(int width,int height){}
 void eTemplate::on_parent_resize(){}
 void eTemplate::on_select(){}
 void eTemplate::on_unselect(){}
+void eTemplate::on_resolution_change(int width,int height){}
 
 
 
@@ -96,6 +97,12 @@ void eTemplate::on_unselect(){}
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void eTemplate::shrink()
+{
+}
 
 
 

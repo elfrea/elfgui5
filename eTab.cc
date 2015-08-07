@@ -85,6 +85,7 @@ void eTab::on_resize(int width,int height){}
 void eTab::on_parent_resize(){}
 void eTab::on_select(){}
 void eTab::on_unselect(){}
+void eTab::on_resolution_change(int width,int height){}
 
 
 
@@ -96,6 +97,13 @@ void eTab::on_unselect(){}
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void eTab::shrink()
+{
+}
+
 
 
 

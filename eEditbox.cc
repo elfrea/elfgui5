@@ -480,6 +480,10 @@ void eEditbox::on_unselect()
 
 
 
+void eEditbox::on_resolution_change(int width,int height){}
+
+
+
 
 
 
@@ -488,6 +492,13 @@ void eEditbox::on_unselect()
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void eEditbox::shrink()
+{
+}
+
 
 
 //***** SET TEXT
@@ -866,7 +877,7 @@ int eEditbox::get_view_w()
 
 
 //***** GET VIEW LAST
-inline int eEditbox::get_view_last()
+int eEditbox::get_view_last()
 {
 	return get_view_w()+view_pos;
 }
@@ -874,7 +885,7 @@ inline int eEditbox::get_view_last()
 
 
 //***** GET LAST POS
-inline int eEditbox::get_last_pos()
+int eEditbox::get_last_pos()
 {
 	return get_text().get_utf8_len();
 }

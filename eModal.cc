@@ -78,9 +78,7 @@ void eModal::on_event(Event* ev)
 {
 	//forward event to link
 	if(link)
-	{
 		send_event_to(link,ev);
-	}
 
 	//forward to parent
 	else
@@ -121,6 +119,14 @@ void eModal::on_unselect(){}
 
 
 
+//***** ON RESOLUTION CHANGE
+void eModal::on_resolution_change(int width,int height)
+{
+	resize(width,height);
+}
+
+
+
 
 
 
@@ -129,6 +135,13 @@ void eModal::on_unselect(){}
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void eModal::shrink()
+{
+}
+
 
 
 //***** OPEN

@@ -4,18 +4,16 @@
 #include "elfgui5.h"
 
 
-class eRadiopush:public Element
+class eMenuButton:public Element
 {
 public:
 
 	//own config vars
 
 	//own internal config vars (use config functions to modify)
-	Str group;
-	bool pushed;
-	bool customized;
 	bool show_text;
 	bool show_tex;
+	bool show_selection;
 
 	Align::Type text_align;
 	int text_offx;
@@ -27,23 +25,17 @@ public:
 	int tex_offy;
 	Texture* tex;
 
-	Texture* custom_layout;
-	Texture* custom_layout_pushed;
-	Texture* custom_layout_hover;
-	Texture* custom_layout_disabled;
-
 	//own internal vars
-	Texture* custom_img;
-	bool ready_to_push;
+	bool mouse_on;
 
 	//own elements
 
 
 
 	//constructor
-	eRadiopush(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt,const Str& grp="default",bool epushed=false);
+	eMenuButton(const Str& ename,int ew,int eh,const Str& etext);
 	//destructor
-	~eRadiopush();
+	~eMenuButton();
 
 
 
@@ -75,22 +67,19 @@ public:
 
 	//own config functions
 	void shrink();
-	void set_pushed(bool push);
+	
 	void set_text(const Str& txt,Align::Type align=Align::Middle,int offx=0,int offy=0);
 	void set_tex(Texture* src,Align::Type align=Align::Middle,int offx=0,int offy=0);
 	void set_tex(const Str& filename,Align::Type align=Align::Middle,int offx=0,int offy=0);
 	void set_show_text(bool show);
 	void set_show_tex(bool show);
-	void set_group(const Str& grp);
-
-	void set_customized(bool custom);
-	void set_custom(Texture* lay,Texture* lay_pushed,Texture* lay_hover,Texture* dlay,bool autosize=true,bool sh_text=false,bool sh_tex=false);
-	void set_custom(const Str& lay,const Str& lay_pushed,const Str& lay_hover,const Str& dlay,bool autosize=true,bool sh_text=false,bool sh_tex=false);
+	void set_show_selection(bool show);
 
 	//own internal functions
 
 
 };
+
 
 
 

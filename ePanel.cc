@@ -136,6 +136,7 @@ void ePanel::on_resize(int width,int height){}
 void ePanel::on_parent_resize(){}
 void ePanel::on_select(){}
 void ePanel::on_unselect(){}
+void ePanel::on_resolution_change(int width,int height){}
 
 
 
@@ -148,6 +149,13 @@ void ePanel::on_unselect(){}
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void ePanel::shrink()
+{
+}
+
 
 
 //***** SET TEXT

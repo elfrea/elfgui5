@@ -143,6 +143,7 @@ void ePercentbar::on_resize(int width,int height){}
 void ePercentbar::on_parent_resize(){}
 void ePercentbar::on_select(){}
 void ePercentbar::on_unselect(){}
+void ePercentbar::on_resolution_change(int width,int height){}
 
 
 
@@ -154,6 +155,13 @@ void ePercentbar::on_unselect(){}
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void ePercentbar::shrink()
+{
+}
+
 
 
 //***** GET PERCENT

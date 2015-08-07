@@ -179,6 +179,15 @@ void eCombobox::on_unselect(){}
 
 
 
+//***** ON RESOLUTION CHANGE
+void eCombobox::on_resolution_change(int width,int height)
+{
+	if(!modal->parent)
+		modal->send_resolution_change(width,height);
+}
+
+
+
 
 
 
@@ -187,6 +196,13 @@ void eCombobox::on_unselect(){}
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void eCombobox::shrink()
+{
+}
+
 
 
 //***** SET TEXT
@@ -359,7 +375,7 @@ void eCombobox::open_list()
 	VideoMode vm=Display::get_mode();
 	bool below=true;
 	int lh=vm.height-(get_true_y()+h);
-	if(lh<50)
+	if(lh<100)
 	{
 		lh=get_true_y();
 		below=false;
@@ -371,7 +387,7 @@ void eCombobox::open_list()
 		listbox->x=get_true_x();
 		listbox->y=get_true_y()+h;
 		listbox->w=w;
-		listbox->set_auto_height(true,50,lh);
+		listbox->set_auto_height(true,100,lh);
 	}
 
 	//above
@@ -379,7 +395,7 @@ void eCombobox::open_list()
 	{
 		listbox->x=get_true_x();
 		listbox->w=w;
-		listbox->set_auto_height(true,50,lh);
+		listbox->set_auto_height(true,100,lh);
 		listbox->y=get_true_y()-listbox->h;
 	}
 

@@ -95,6 +95,7 @@ void eTimer::on_resize(int width,int height){}
 void eTimer::on_parent_resize(){}
 void eTimer::on_select(){}
 void eTimer::on_unselect(){}
+void eTimer::on_resolution_change(int width,int height){}
 
 
 
@@ -106,6 +107,12 @@ void eTimer::on_unselect(){}
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void eTimer::shrink()
+{
+}
 
 
 

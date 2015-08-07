@@ -4,26 +4,26 @@
 #include "elfgui5.h"
 
 
-class eTimer:public Element
+class eMenuSub:public Element
 {
 public:
 
 	//own config vars
-	int64_t delay;
 
 	//own internal config vars (use config functions to modify)
+	Str text;
+	class eMenu* link;
 
 	//own internal vars
-	int64_t timer;
 
 	//own elements
 
 
 
 	//constructor
-	eTimer(const Str& ename,int64_t edelay,bool enable=true);
+	eMenuSub(const Str& ename,int ew,int eh,const Str& etext,class eMenu* elink);
 	//destructor
-	~eTimer();
+	~eMenuSub();
 
 
 
@@ -60,6 +60,7 @@ public:
 
 
 };
+
 
 
 

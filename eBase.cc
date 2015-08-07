@@ -19,8 +19,20 @@ eBase::eBase(const Str& ename,int ex,int ey,int ew,int eh):Element(ename,ex,ey,e
 	//own internal vars
 	
 	//own elements
+	cmenu3=new eMenu("base context menu submenu2",10,10,10,10,NULL);
+		cmenu3->add_button("base context menu submenu2 test button",10,20,"This is yet another test");
+		cmenu3->add_separator();
+	cmenu2=new eMenu("base context menu submenu",10,10,10,10,NULL);
+		cmenu2->add_button("base context menu submenu test button",10,20,"This is another test");
+		cmenu2->add_separator();
+		cmenu2->add_sub("base context menu test submenu2",10,20,"Test Submenu2",cmenu3);
+	cmenu=new eMenu("base context menu",10,10,10,10,this);
+		cmenu->add_button("base context menu test button",10,20,"This is a test");
+		cmenu->add_separator();
+		cmenu->add_sub("base context menu test submenu",10,20,"Test Submenu",cmenu2);
 
-	//other	
+	//other
+	set_context_menu(cmenu);
 	dirty=true;
 }
 
@@ -104,6 +116,7 @@ void eBase::on_resize(int width,int height){}
 void eBase::on_parent_resize(){}
 void eBase::on_select(){}
 void eBase::on_unselect(){}
+void eBase::on_resolution_change(int width,int height){}
 
 
 
@@ -115,6 +128,12 @@ void eBase::on_unselect(){}
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void eBase::shrink()
+{
+}
 
 
 

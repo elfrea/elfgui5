@@ -257,6 +257,7 @@ void eTrackbar::on_resize(int width,int height){}
 void eTrackbar::on_parent_resize(){}
 void eTrackbar::on_select(){}
 void eTrackbar::on_unselect(){}
+void eTrackbar::on_resolution_change(int width,int height){}
 
 
 
@@ -268,6 +269,13 @@ void eTrackbar::on_unselect(){}
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void eTrackbar::shrink()
+{
+}
+
 
 
 //***** SET ORIENTATION

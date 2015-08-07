@@ -61,6 +61,8 @@ Element::Element(const Str& ename,int ex,int ey,int ew,int eh)
 	virtual_y=0;
 
 	//elements
+	context_menu_modal=NULL;
+	context_menu=NULL;
 
 	//other
 	resize(ew,eh);
@@ -85,6 +87,13 @@ Element::~Element()
 	//free misc
 	delete anchor;
 	delete color;
+
+	//context_menu_modal
+	if(context_menu_modal && !context_menu_modal->parent)
+		delete context_menu_modal;
+	//context menu
+	if(context_menu && !context_menu->parent)
+		delete context_menu;
 
 	#ifdef DBG
 	Log::debug("##### Element deleted: %s",name.ptr());
@@ -198,6 +207,15 @@ void Element::on_unselect(){}
 
 
 
+//***** ON RESOLUTION CHANGE
+void Element::on_resolution_change(int width,int height)
+{
+	if(context_menu_modal && !context_menu_modal->parent)
+		context_menu_modal->send_resolution_change(width,height);
+}
+
+
+
 
 
 
@@ -294,7 +312,21 @@ void Element::remove_child(Element* child,bool del)
 		children.remove_del(index);
 	else
 		children.remove_nodel(index);
+}
 
+
+
+//***** REMOVE CHILD
+void Element::remove_child(int index,bool del)
+{
+	if(index>=0 && index<children.size())
+	{
+		children[index]->parent=NULL;
+		if(del)
+			children.remove_del(index);
+		else
+			children.remove_nodel(index);
+	}
 }
 
 
@@ -302,7 +334,7 @@ void Element::remove_child(Element* child,bool del)
 //***** CLEAR CHILDREN
 void Element::clear_children(bool del)
 {
-	for(int a=0;a<children.size();a++)
+	for(int a=children.size()-1;a>=0;a--)
 		remove_child(children[a],del);
 }
 
@@ -318,7 +350,25 @@ void Element::clear_children(bool del)
 //****************************************************************
 
 
-//***** SET SELECTED
+//***** SHRINK
+void Element::shrink()
+{
+}
+
+
+
+//***** SET CONTEXT MENU
+void Element::set_context_menu(eMenu* menu)
+{
+	context_menu=menu;
+	
+	VideoMode vm=Display::get_mode();
+	context_menu_modal=new eModal(Str::build("%s context menu modal",name.ptr()),0,0,vm.width,vm.height,true,false,this);
+}
+
+
+
+//***** SET AS SELECTED
 void Element::set_as_selected(bool select)
 {
 	if(selected!=select && selectable)
@@ -942,6 +992,20 @@ void Element::replace_elements()
 		children.add(eles_top[a]);
 	eles_top.clear_nodel();
 
+}
+
+
+
+//***** SEND RESOLUTION CHANGE
+void Element::send_resolution_change(int width,int height)
+{
+	//send event to self
+	on_resolution_change(width,height);
+	dirty=true;
+
+	//send resolution change to children
+	for(int a=0;a<children.size();a++)
+		children[a]->send_resolution_change(width,height);
 }
 
 

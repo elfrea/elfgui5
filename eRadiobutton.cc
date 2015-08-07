@@ -264,6 +264,7 @@ void eRadiobutton::on_resize(int width,int height){}
 void eRadiobutton::on_parent_resize(){}
 void eRadiobutton::on_select(){}
 void eRadiobutton::on_unselect(){}
+void eRadiobutton::on_resolution_change(int width,int height){}
 
 
 

@@ -43,6 +43,12 @@ typedef void (*ACTION)();
 #include "eListbox.h"
 #include "eCombobox.h"
 #include "eModal.h"
+#include "eMenu.h"
+#include "eMenuButton.h"
+#include "eMenuSeparator.h"
+#include "eMenuCheckbox.h"
+#include "eMenuRadio.h"
+#include "eMenuSub.h"
 
 
 

@@ -222,6 +222,7 @@ void cGame::init()
 			combo1->add_item("Carotte",2);
 			combo1->add_item("Navet",236);
 			tab1->add_child(combo1);
+
 			
 		tab2=tabbox1->add_new_tab("tab2");
 		tab3=tabbox1->add_new_tab("Patate Poilue");

@@ -220,6 +220,7 @@ void eRadiopush::on_resize(int width,int height){}
 void eRadiopush::on_parent_resize(){}
 void eRadiopush::on_select(){}
 void eRadiopush::on_unselect(){}
+void eRadiopush::on_resolution_change(int width,int height){}
 
 
 
@@ -231,6 +232,17 @@ void eRadiopush::on_unselect(){}
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void eRadiopush::shrink()
+{
+	int tw=font->len(text,true)+4;
+	int th=font->height()+4;
+
+	resize(tw,th);
+}
+
 
 
 //***** SET PUSHED
@@ -255,17 +267,6 @@ void eRadiopush::set_pushed(bool push)
 	
 	pushed=true;
 	dirty=true;
-}
-
-
-
-//***** SHRINK
-void eRadiopush::shrink()
-{
-	int tw=font->len(text,true)+4;
-	int th=font->height()+4;
-
-	resize(tw,th);
 }
 
 

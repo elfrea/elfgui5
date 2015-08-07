@@ -79,7 +79,7 @@ void KShortcut::set(bool c,bool a,bool s,bool g,KeyCode k)
 
 
 //***** SET
-inline void KShortcut::set(bool c,bool a,bool s,bool g,KeyCode k,ACTION act,bool enable)
+void KShortcut::set(bool c,bool a,bool s,bool g,KeyCode k,ACTION act,bool enable)
 {
 	set("","",c,a,s,g,k,act,enable);
 }
@@ -87,7 +87,7 @@ inline void KShortcut::set(bool c,bool a,bool s,bool g,KeyCode k,ACTION act,bool
 
 
 //***** SET
-inline void KShortcut::set(const Str& kname,bool c,bool a,bool s,bool g,KeyCode k,ACTION act,bool enable)
+void KShortcut::set(const Str& kname,bool c,bool a,bool s,bool g,KeyCode k,ACTION act,bool enable)
 {
 	set(kname,"",c,a,s,g,k,act,enable);
 }
@@ -116,7 +116,7 @@ void KShortcut::set(const Str& kname,const Str& ktype,bool c,bool a,bool s,bool 
 
 
 //***** COMPARE
-inline bool KShortcut::compare(KShortcut* shortcut)
+bool KShortcut::compare(KShortcut* shortcut)
 {
 	return (ctrl==shortcut->ctrl && alt==shortcut->alt && shift==shortcut->shift && gui==shortcut->gui && key==shortcut->key);
 }

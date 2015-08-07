@@ -70,10 +70,11 @@ public:
 	void on_parent_resize();
 	void on_select();
 	void on_unselect();
+	void on_resolution_change(int width,int height);
 
 	//own config functions
-	void set_pushed(bool push);
 	void shrink();
+	void set_pushed(bool push);
 	void set_text(const Str& txt,Align::Type align=Align::Middle,int offx=0,int offy=0);
 	void set_tex(Texture* src,Align::Type align=Align::Middle,int offx=0,int offy=0);
 	void set_tex(const Str& filename,Align::Type align=Align::Middle,int offx=0,int offy=0);

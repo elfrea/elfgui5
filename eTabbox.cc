@@ -476,6 +476,7 @@ void eTabbox::on_resize(int width,int height){}
 void eTabbox::on_parent_resize(){}
 void eTabbox::on_select(){}
 void eTabbox::on_unselect(){}
+void eTabbox::on_resolution_change(int width,int height){}
 
 
 
@@ -545,6 +546,13 @@ void eTabbox::remove_child(Element* child,bool del)
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void eTabbox::shrink()
+{
+}
+
 
 
 //***** INSERT TAB

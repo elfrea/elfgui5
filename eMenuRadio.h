@@ -4,26 +4,35 @@
 #include "elfgui5.h"
 
 
-class eTimer:public Element
+class eMenuRadio:public Element
 {
 public:
 
 	//own config vars
-	int64_t delay;
 
 	//own internal config vars (use config functions to modify)
+	Str text;
+	Str group;
+	bool checked;
+
+	bool show_text;
+	bool show_selection;
+
+	int text_offset;
+	int check_size;
+	int check_radius;
 
 	//own internal vars
-	int64_t timer;
+	bool mouse_on;
 
 	//own elements
 
 
 
 	//constructor
-	eTimer(const Str& ename,int64_t edelay,bool enable=true);
+	eMenuRadio(const Str& ename,int ew,int eh,const Str& etext,const Str& egroup,bool echecked);
 	//destructor
-	~eTimer();
+	~eMenuRadio();
 
 
 
@@ -55,11 +64,20 @@ public:
 
 	//own config functions
 	void shrink();
+	void set_text(const Str& txt);
+	void set_group(const Str& grp);
+	void set_show_text(bool show);
+	void set_show_selection(bool show);
+	void set_checked(bool check);
+	void set_text_offset(int off);
+	void set_check_size(int sz);
+	void set_check_radius(int radius);
 
 	//own internal functions
 
 
 };
+
 
 
 

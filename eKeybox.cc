@@ -199,6 +199,7 @@ void eKeybox::on_resize(int width,int height){}
 void eKeybox::on_parent_resize(){}
 void eKeybox::on_select(){}
 void eKeybox::on_unselect(){}
+void eKeybox::on_resolution_change(int width,int height){}
 
 
 
@@ -210,6 +211,13 @@ void eKeybox::on_unselect(){}
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void eKeybox::shrink()
+{
+}
+
 
 
 //***** SET SHORTCUT

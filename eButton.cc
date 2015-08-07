@@ -263,6 +263,7 @@ void eButton::on_text(const Str& text){}
 void eButton::on_resize(int width,int height){}
 void eButton::on_parent_resize(){}
 void eButton::on_select(){}
+void eButton::on_resolution_change(int width,int height){}
 
 
 

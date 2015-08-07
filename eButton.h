@@ -70,6 +70,7 @@ public:
 	void on_parent_resize();
 	void on_select();
 	void on_unselect();
+	void on_resolution_change(int width,int height);
 
 	//own config functions
 	void shrink();

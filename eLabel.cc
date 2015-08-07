@@ -101,6 +101,7 @@ void eLabel::on_resize(int width,int height)
 void eLabel::on_parent_resize(){}
 void eLabel::on_select(){}
 void eLabel::on_unselect(){}
+void eLabel::on_resolution_change(int width,int height){}
 
 
 
@@ -112,6 +113,13 @@ void eLabel::on_unselect(){}
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void eLabel::shrink()
+{
+}
+
 
 
 //SET TEXT

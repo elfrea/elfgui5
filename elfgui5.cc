@@ -229,6 +229,15 @@ void MyEventHandler::on_mouse_down(int but,Mouse& mouse)
 	if(eum)
 		eum->send_event("touched");
 
+	//check if we need to open a context menu
+	if(but==3 && eum && eum->context_menu)
+	{
+		eum->context_menu->x=mouse.x;
+		eum->context_menu->y=mouse.y;
+
+		eum->context_menu_modal->open();
+		eum->context_menu_modal->add_child(eum->context_menu);
+	}
 
 	//check if move with GUI
 	if(eum && k.gui())
@@ -762,6 +771,7 @@ void MyEventHandler::on_text(const Str& text)
 void MyEventHandler::on_window_resize(int width, int height)
 {
 	ElfGui5::base->resize(width,height);
+	ElfGui5::base->send_resolution_change(width,height);
 }
 
 

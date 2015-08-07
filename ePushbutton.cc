@@ -219,6 +219,7 @@ void ePushbutton::on_resize(int width,int height){}
 void ePushbutton::on_parent_resize(){}
 void ePushbutton::on_select(){}
 void ePushbutton::on_unselect(){}
+void ePushbutton::on_resolution_change(int width,int height){}
 
 
 
@@ -232,16 +233,6 @@ void ePushbutton::on_unselect(){}
 //****************************************************************
 
 
-//***** SET PUSHED
-void ePushbutton::set_pushed(bool push)
-{
-	pushed=push;
-	send_event("trigger");
-	dirty=true;
-}
-
-
-
 //***** SHRINK
 void ePushbutton::shrink()
 {
@@ -249,6 +240,16 @@ void ePushbutton::shrink()
 	int th=font->height()+4;
 
 	resize(tw,th);
+}
+
+
+
+//***** SET PUSHED
+void ePushbutton::set_pushed(bool push)
+{
+	pushed=push;
+	send_event("trigger");
+	dirty=true;
 }
 
 

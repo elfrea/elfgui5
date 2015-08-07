@@ -74,6 +74,7 @@ public:
 	void on_parent_resize();
 	void on_select();
 	void on_unselect();
+	void on_resolution_change(int width,int height);
 	virtual bool on_close();
 	virtual bool on_maximize();
 	virtual bool on_minimize();
@@ -89,6 +90,7 @@ public:
 	void remove_child_on_window(Element* child,bool del=false);
 
 	//own config functions
+	void shrink();
 	Str get_title();
 	void set_title(const Str& etitle,Align::Type align=Align::Left,int offx=25,int offy=0);
 	void set_icon(Texture* tex,Align::Type align=Align::Left,int offx=3,int offy=0);

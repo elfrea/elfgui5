@@ -4,26 +4,24 @@
 #include "elfgui5.h"
 
 
-class eTimer:public Element
+class eMenuSeparator:public Element
 {
 public:
 
 	//own config vars
-	int64_t delay;
 
 	//own internal config vars (use config functions to modify)
 
 	//own internal vars
-	int64_t timer;
 
 	//own elements
 
 
 
 	//constructor
-	eTimer(const Str& ename,int64_t edelay,bool enable=true);
+	eMenuSeparator(int eh);
 	//destructor
-	~eTimer();
+	~eMenuSeparator();
 
 
 
@@ -60,6 +58,7 @@ public:
 
 
 };
+
 
 
 

@@ -165,6 +165,7 @@ void eGroupbox::on_resize(int width,int height){}
 void eGroupbox::on_parent_resize(){}
 void eGroupbox::on_select(){}
 void eGroupbox::on_unselect(){}
+void eGroupbox::on_resolution_change(int width,int height){}
 
 
 
@@ -176,6 +177,13 @@ void eGroupbox::on_unselect(){}
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void eGroupbox::shrink()
+{
+}
+
 
 
 //***** SET APPEARANCE

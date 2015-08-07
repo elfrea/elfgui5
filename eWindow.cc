@@ -295,6 +295,7 @@ void eWindow::on_resize(int width,int height)
 void eWindow::on_parent_resize(){}
 void eWindow::on_select(){}
 void eWindow::on_unselect(){}
+void eWindow::on_resolution_change(int width,int height){}
 
 bool eWindow::on_close(){return true;}
 bool eWindow::on_maximize(){return true;}
@@ -436,6 +437,12 @@ void eWindow::remove_child_on_window(Element* child,bool del)
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void eWindow::shrink()
+{
+}
 
 
 //***** GET TITLE

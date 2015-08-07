@@ -182,6 +182,7 @@ void eSpinner::on_select()
 
 
 void eSpinner::on_unselect(){}
+void eSpinner::on_resolution_change(int width,int height){}
 
 
 
@@ -193,6 +194,13 @@ void eSpinner::on_unselect(){}
 //****************************************************************
 //OWN CONFIG FUNCTIONS
 //****************************************************************
+
+
+//***** SHRINK
+void eSpinner::shrink()
+{
+}
+
 
 
 //***** SET MODE
@@ -343,7 +351,7 @@ void eSpinner::set_value_range(int64_t min,int64_t max)
 
 
 //***** GET DOUBLE
-inline double eSpinner::get_double()
+double eSpinner::get_double()
 {
 	return value;
 }
@@ -351,7 +359,7 @@ inline double eSpinner::get_double()
 
 
 //***** GET FLOAT
-inline float eSpinner::get_float()
+float eSpinner::get_float()
 {
 	return (float)value;
 }
@@ -359,7 +367,7 @@ inline float eSpinner::get_float()
 
 
 //***** GET INT
-inline int eSpinner::get_int()
+int eSpinner::get_int()
 {
 	return (int)value;
 }
@@ -367,7 +375,7 @@ inline int eSpinner::get_int()
 
 
 //***** GET INT64
-inline int64_t eSpinner::get_int64()
+int64_t eSpinner::get_int64()
 {
 	return (int64_t)value;
 }
@@ -375,7 +383,7 @@ inline int64_t eSpinner::get_int64()
 
 
 //***** GET BOOL
-inline bool eSpinner::get_bool()
+bool eSpinner::get_bool()
 {
 	return (bool)value;
 }
@@ -383,7 +391,7 @@ inline bool eSpinner::get_bool()
 
 
 //***** SET BUTTON VALUE (double)
-inline void eSpinner::set_button_value(double val)
+void eSpinner::set_button_value(double val)
 {
 	button_value=val;
 }
@@ -391,7 +399,7 @@ inline void eSpinner::set_button_value(double val)
 
 
 //***** SET BUTTON VALUE (float)
-inline void eSpinner::set_button_value(float val)
+void eSpinner::set_button_value(float val)
 {
 	set_button_value((double)val);
 }

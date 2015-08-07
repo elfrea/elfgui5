@@ -62,8 +62,10 @@ public:
 	void on_parent_resize();
 	void on_select();
 	void on_unselect();
+	void on_resolution_change(int width,int height);
 
 	//own config functions
+	void shrink();
 	void set_mode(SpinnerMode::Type mod);
 	void set_orientation(Orientation::Type orient);
 	void set_value(double val);

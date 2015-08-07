@@ -4,26 +4,34 @@
 #include "elfgui5.h"
 
 
-class eTimer:public Element
+class eMenuCheckbox:public Element
 {
 public:
 
 	//own config vars
-	int64_t delay;
 
 	//own internal config vars (use config functions to modify)
+	Str text;
+	bool checked;
+	
+	bool show_text;
+	bool show_selection;
+
+	int text_offset;
+	int check_size;
+	int check_offset;
 
 	//own internal vars
-	int64_t timer;
+	bool mouse_on;
 
 	//own elements
 
 
 
 	//constructor
-	eTimer(const Str& ename,int64_t edelay,bool enable=true);
+	eMenuCheckbox(const Str& ename,int ew,int eh,const Str& etext,bool echecked);
 	//destructor
-	~eTimer();
+	~eMenuCheckbox();
 
 
 
@@ -55,11 +63,19 @@ public:
 
 	//own config functions
 	void shrink();
+	void set_text(const Str& txt);
+	void set_show_text(bool show);
+	void set_show_selection(bool show);
+	void set_checked(bool check);
+	void set_text_offset(int off);
+	void set_check_size(int sz);
+	void set_check_offset(int off);
 
 	//own internal functions
 
 
 };
+
 
 
 
