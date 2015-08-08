@@ -16,6 +16,8 @@ public:
 
 	//own internal vars
 	bool is_sub_menu;
+	bool is_open;
+	class eMenuSub* sub_opened;
 
 	//own elements
 
@@ -75,6 +77,7 @@ public:
 	//own internal functions
 	void replace_children(bool autosz);
 	void open_submenu(class eMenuSub* sub);
+	void close_submenu(class eMenuSub* sub,bool propagate=true);
 
 
 };

@@ -6,6 +6,9 @@
 //constructor
 eMenuSub::eMenuSub(const Str& ename,int ew,int eh,const Str& etext,eMenu* elink):Element(ename,0,0,ew,eh)
 {
+
+	#define DEFAULT_MENU_DELAY 500
+
 	//parent class vars
 	type="menu_sub";
 	selectable=false;
@@ -15,8 +18,13 @@ eMenuSub::eMenuSub(const Str& ename,int ew,int eh,const Str& etext,eMenu* elink)
 	link=elink;
 	
 	//own internal config vars (use config functions to modify)
+	show_selection=true;
 
 	//own internal vars
+	arrow=Texture::cache("gfx/elements/arrow_right.png");
+	mouseon=false;
+	menu_delay=DEFAULT_MENU_DELAY;
+	menu_timer=0;
 	
 	//own elements
 
@@ -48,6 +56,19 @@ eMenuSub::~eMenuSub()
 //***** LOOP
 void eMenuSub::loop()
 {
+	if(mouseon)
+	{
+		int64_t ms=get_ms();
+		if(ms>=menu_timer+menu_delay)
+		{
+			menu_timer=ms;
+			if(!link->is_open)
+				send_event("open submenu");
+		}
+	}
+
+	if(!link->parent)
+		link->is_open=false;
 }
 
 
@@ -55,7 +76,19 @@ void eMenuSub::loop()
 //***** DRAW
 void eMenuSub::draw()
 {
-	draw_panel(image,color,false,enabled);
+	if(mouseon && show_selection)
+		image->clear(color->selection);
+	else
+		image->clear(Color(0,0,0,0));
+
+	//show text
+	if(enabled)
+		draw_text_align(image,Align::Left,0,0,font,color->text,text);
+	else
+		draw_text_align(image,Align::Left,0,0,font,color->d_text,text);
+
+	//show arrow icon
+	image->blit(w-arrow->width(),(h-arrow->height())/2,arrow);
 }
 
 
@@ -71,8 +104,28 @@ void eMenuSub::draw()
 
 
 //void eMenuSub::on_event(Event* ev){}
-void eMenuSub::on_mouse_enter(int mx,int my){}
-void eMenuSub::on_mouse_leave(){}
+
+
+
+//***** ON MOUSE ENTER
+void eMenuSub::on_mouse_enter(int mx,int my)
+{
+	menu_timer=get_ms();
+	mouseon=true;
+	dirty=true;
+}
+
+
+
+//***** ON MOUSE LEAVE
+void eMenuSub::on_mouse_leave()
+{
+	mouseon=false;
+	dirty=true;
+}
+
+
+
 void eMenuSub::on_mouse_move(int mx,int my){}
 
 
@@ -81,7 +134,14 @@ void eMenuSub::on_mouse_move(int mx,int my){}
 void eMenuSub::on_mouse_down(int but,int mx,int my)
 {
 	if(but==1)
-		send_event("open submenu");
+	{
+		menu_timer=get_ms();
+
+		if(link->is_open)
+			send_event("close submenu");
+		else
+			send_event("open submenu");
+	}
 }
 
 
@@ -117,6 +177,25 @@ void eMenuSub::on_resolution_change(int width,int height){}
 //***** SHRINK
 void eMenuSub::shrink()
 {
+	resize(font->len(text)+10+arrow->width(),h);
+}
+
+
+
+//***** SET TEXT
+void eMenuSub::set_text(const Str& txt)
+{
+	text=txt;
+	dirty=true;
+}
+
+
+
+//***** SHOW SELECTION
+void eMenuSub::set_show_selection(bool show)
+{
+	show_selection=show;
+	dirty=true;
 }
 
 

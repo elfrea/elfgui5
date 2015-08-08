@@ -13,8 +13,13 @@ public:
 	//own internal config vars (use config functions to modify)
 	Str text;
 	class eMenu* link;
+	bool show_selection;
 
 	//own internal vars
+	Texture* arrow;
+	bool mouseon;
+	int64_t menu_delay;
+	int64_t menu_timer;
 
 	//own elements
 
@@ -55,6 +60,8 @@ public:
 
 	//own config functions
 	void shrink();
+	void set_text(const Str& txt);
+	void set_show_selection(bool show);
 
 	//own internal functions
 

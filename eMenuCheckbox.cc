@@ -122,6 +122,7 @@ void eMenuCheckbox::on_mouse_enter(int mx,int my)
 {
 	mouse_on=true;
 	dirty=true;
+	send_event("close submenu");
 }
 
 

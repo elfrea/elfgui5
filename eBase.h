@@ -20,6 +20,7 @@ public:
 	eMenu* cmenu;
 	eMenu* cmenu2;
 	eMenu* cmenu3;
+	eMenu* cmenu4;
 
 
 	//constructor

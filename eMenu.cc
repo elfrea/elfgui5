@@ -20,6 +20,8 @@ eMenu::eMenu(const Str& ename,int ex,int ey,int ew,int eh,Element* elink,bool au
 
 	//own internal vars
 	is_sub_menu=issub;
+	is_open=false;
+	sub_opened=NULL;
 	
 	//own elements
 
@@ -75,21 +77,33 @@ void eMenu::draw()
 //***** ON EVENT
 void eMenu::on_event(Event* ev)
 {
-	//submenu
+	//open submenu
 	if(ev->command=="open submenu")
 	{
 		open_submenu((eMenuSub*)ev->sender);
-		delete ev;
+	}
+
+	//close submenu
+	if(ev->command=="close submenu")
+	{
+		close_submenu(sub_opened);
 	}
 
 	//forward event to link
 	else if(link)
+	{
 		send_event_to(link,ev);
+		return;
+	}
 
 	//forward to parent
 	else
+	{
 		send_event(ev);
+		return;
+	}
 	
+	delete ev;
 }
 
 
@@ -326,10 +340,40 @@ void eMenu::replace_children(bool autosz)
 //***** OPEN SUBMENU
 void eMenu::open_submenu(eMenuSub* sub)
 {
-	sub->link->x=sub->parent->x+sub->parent->w;
-	sub->link->y=sub->parent->y+sub->y-5;
+	if(!sub->link->is_open)
+	{
+		if(sub_opened)
+			close_submenu(sub_opened);
+		sub->link->x=sub->parent->x+sub->parent->w;
+		sub->link->y=sub->parent->y+sub->y-5;
+		sub->link->is_open=true;
 
-	parent->add_child(sub->link);
+		parent->add_child(sub->link);
+
+		sub_opened=sub;
+	}
+}
+
+
+
+//***** CLOSE SUBMENU
+void eMenu::close_submenu(eMenuSub* sub,bool propagate)
+{
+	if(sub && sub->link->is_open)
+	{
+		sub->link->is_open=false;
+		parent->remove_child(sub->link,false);
+		sub_opened=NULL;
+
+		if(propagate)
+		{
+			for(int a=0;a<sub->link->children.size();a++)
+			{
+				if(sub->link->children[a]->type=="menu_sub")
+					((eMenu*)((eMenuSub*)sub->link->children[a])->link)->close_submenu((eMenuSub*)sub->link->children[a],true);
+			}
+		}
+	}
 }
 
 

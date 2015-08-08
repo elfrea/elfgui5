@@ -68,7 +68,17 @@ void eMenuSeparator::draw()
 
 
 //void eMenuSeparator::on_event(Event* ev){}
-void eMenuSeparator::on_mouse_enter(int mx,int my){}
+
+
+
+//***** ON MOUSE ENTER
+void eMenuSeparator::on_mouse_enter(int mx,int my)
+{
+	send_event("close submenu");
+}
+
+
+
 void eMenuSeparator::on_mouse_leave(){}
 void eMenuSeparator::on_mouse_move(int mx,int my){}
 void eMenuSeparator::on_mouse_down(int but,int mx,int my){}

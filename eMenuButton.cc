@@ -15,12 +15,12 @@ eMenuButton::eMenuButton(const Str& ename,int ew,int eh,const Str& etext):Elemen
 	show_tex=false;
 	show_selection=true;
 
-	text_align=Align::Middle;
+	text_align=Align::Left;
 	text_offx=0;
 	text_offy=0;
 	text="";
 
-	tex_align=Align::Middle;
+	tex_align=Align::Left;
 	tex_offx=0;
 	tex_offy=0;
 	tex=NULL;
@@ -108,6 +108,7 @@ void eMenuButton::on_mouse_enter(int mx,int my)
 {
 	mouse_on=true;
 	dirty=true;
+	send_event("close submenu");
 }
 
 

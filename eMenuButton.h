@@ -68,9 +68,9 @@ public:
 	//own config functions
 	void shrink();
 	
-	void set_text(const Str& txt,Align::Type align=Align::Middle,int offx=0,int offy=0);
-	void set_tex(Texture* src,Align::Type align=Align::Middle,int offx=0,int offy=0);
-	void set_tex(const Str& filename,Align::Type align=Align::Middle,int offx=0,int offy=0);
+	void set_text(const Str& txt,Align::Type align=Align::Left,int offx=0,int offy=0);
+	void set_tex(Texture* src,Align::Type align=Align::Left,int offx=0,int offy=0);
+	void set_tex(const Str& filename,Align::Type align=Align::Left,int offx=0,int offy=0);
 	void set_show_text(bool show);
 	void set_show_tex(bool show);
 	void set_show_selection(bool show);
