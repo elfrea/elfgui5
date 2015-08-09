@@ -124,7 +124,14 @@ void eBase::on_resize(int width,int height){}
 void eBase::on_parent_resize(){}
 void eBase::on_select(){}
 void eBase::on_unselect(){}
-void eBase::on_resolution_change(int width,int height){}
+
+
+
+//***** ON RESOLUTION CHANGE
+void eBase::on_resolution_change(int width,int height)
+{
+	resize(width,height);
+}
 
 
 

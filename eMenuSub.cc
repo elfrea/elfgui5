@@ -137,9 +137,7 @@ void eMenuSub::on_mouse_down(int but,int mx,int my)
 	{
 		menu_timer=get_ms();
 
-		if(link->is_open)
-			send_event("close submenu");
-		else
+		if(!link->is_open)
 			send_event("open submenu");
 	}
 }

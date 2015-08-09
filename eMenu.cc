@@ -84,7 +84,7 @@ void eMenu::on_event(Event* ev)
 	}
 
 	//close submenu
-	if(ev->command=="close submenu")
+	else if(ev->command=="close submenu")
 	{
 		close_submenu(sub_opened);
 	}

@@ -3,4 +3,4 @@ vi -S SessionCC.vim &&
 vi -S ElementsH.vim &&
 vi -S ElementsCC.vim &&
 vi -S MenusH.vim &&
-vi -S MenusCC.vim &&
+vi -S MenusCC.vim

@@ -92,8 +92,8 @@ Element::~Element()
 	if(context_menu_modal && !context_menu_modal->parent)
 		delete context_menu_modal;
 	//context menu
-	if(context_menu && !context_menu->parent)
-		delete context_menu;
+	//if(context_menu && !context_menu->parent)
+	//	delete context_menu;
 
 	#ifdef DBG
 	Log::debug("##### Element deleted: %s",name.ptr());
@@ -210,8 +210,6 @@ void Element::on_unselect(){}
 //***** ON RESOLUTION CHANGE
 void Element::on_resolution_change(int width,int height)
 {
-	if(context_menu_modal && !context_menu_modal->parent)
-		context_menu_modal->send_resolution_change(width,height);
 }
 
 
@@ -1000,6 +998,8 @@ void Element::replace_elements()
 void Element::send_resolution_change(int width,int height)
 {
 	//send event to self
+	if(context_menu_modal && !context_menu_modal->parent)
+		context_menu_modal->send_resolution_change(width,height);
 	on_resolution_change(width,height);
 	dirty=true;
 
