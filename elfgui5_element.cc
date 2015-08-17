@@ -92,8 +92,8 @@ Element::~Element()
 	if(context_menu_modal && !context_menu_modal->parent)
 		delete context_menu_modal;
 	//context menu
-	//if(context_menu && !context_menu->parent)
-	//	delete context_menu;
+	if(context_menu && !context_menu->parent)
+		delete context_menu;
 
 	#ifdef DBG
 	Log::debug("##### Element deleted: %s",name.ptr());
@@ -379,9 +379,15 @@ void Element::set_as_selected(bool select)
 		
 		//send on_select and on_unselect event
 		if(select)
+		{
 			on_select();
+			send_event("select");
+		}
 		else
+		{
 			on_unselect();
+			send_event("unselect");
+		}
 
 		dirty=true;
 	}

@@ -53,8 +53,15 @@ eEditbox::eEditbox(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt):
 	mouse_down_at_pos=0;
 	
 	//own elements
+	cmenu=new eMenu("editbox context menu",10,10,10,10,this);
+		cmenu_copy=cmenu->add_button("editbox context menu copy",10,20,"Copy");
+		cmenu_cut=cmenu->add_button("editbox context menu cut",10,20,"Cut");
+		cmenu_paste=cmenu->add_button("editbox context menu paste",10,20,"Paste");
+		cmenu->add_separator();
+		cmenu_select_all=cmenu->add_button("editbox context menu select all",10,20,"Select all");
 
 	//other
+	set_context_menu(cmenu);
 	set_custom_cursor("gfx/elements/cursor_edit.png",2,7);
 	set_text(txt);
 	dirty=true;
@@ -180,27 +187,36 @@ void eEditbox::draw()
 		image->print(font,tx,ty,color->d_text,t,false);
 
 	//show cursor
-	if(selected && !readonly && enabled)
+	if(selected)
 	{
-		if(!cursor_is_gone)
+		//show dotted box
+		if(readonly)
 		{
-			int cx=get_cursor_x();
-			int ch=font->height();
-			int cw=get_char_w(get_text(),cursor_pos)-1;
-			if(cw<1)
-				cw=1;
+			draw_dotted_box(image,2,2,w-4,h-4,color->dark,1,1);
+		}
 
-			//insert mode
-			if(insert_mode)
+		else if(!readonly && enabled)
+		{
+			if(!cursor_is_gone)
 			{
-				if(cx+cw>w-border_w)
+				int cx=get_cursor_x();
+				int ch=font->height();
+				int cw=get_char_w(get_text(),cursor_pos)-1;
+				if(cw<1)
 					cw=1;
-				image->rect(cx,(h-ch)/2,cx+cw,(h-ch)/2+ch-1,color->text);
-			}
 
-			//normal mode
-			else
-				image->line(cx,(h-ch)/2,cx,(h-ch)/2+ch-1,color->text);
+				//insert mode
+				if(insert_mode)
+				{
+					if(cx+cw>w-border_w)
+						cw=1;
+					image->rect(cx,(h-ch)/2,cx+cw,(h-ch)/2+ch-1,color->text);
+				}
+
+				//normal mode
+				else
+					image->line(cx,(h-ch)/2,cx,(h-ch)/2+ch-1,color->text);
+			}
 		}
 	}
 }
@@ -217,7 +233,45 @@ void eEditbox::draw()
 //****************************************************************
 
 
-//void eEditbox::on_event(Event* ev){}
+//ON EVENT
+void eEditbox::on_event(Event* ev)
+{
+	//COPY
+	if(ev->sender==cmenu_copy && ev->command=="trigger")
+	{
+		copy_selected_text();
+	}
+
+	//CUT
+	if(ev->sender==cmenu_cut && ev->command=="trigger")
+	{
+		cut_selected_text();
+	}
+
+	//PASTE
+	if(ev->sender==cmenu_paste && ev->command=="trigger")
+	{
+		paste_text_from_clipboard();
+	}
+
+	//SELECT ALL
+	if(ev->sender==cmenu_select_all && ev->command=="trigger")
+	{
+		select_text();
+	}
+
+	//SEND EVENT TO PARENT
+	else if(ev->command=="touched")
+	{
+		send_event(ev);
+		return;
+	}
+
+	delete ev;
+}
+
+
+
 void eEditbox::on_mouse_enter(int mx,int my){}
 void eEditbox::on_mouse_leave(){}
 void eEditbox::on_mouse_move(int mx,int my){}
@@ -240,6 +294,12 @@ void eEditbox::on_mouse_down(int but,int mx,int my)
 	else if(but==2)
 	{
 		paste_text(Clipboard::mouse_text);
+	}
+
+	//right button
+	else if(but==3)
+	{
+		set_cursor_position(find_pos_at(mx));
 	}
 
 }
@@ -475,7 +535,7 @@ void eEditbox::on_select()
 void eEditbox::on_unselect()
 {
 	Input::set_key_down_repeat(false);
-	selecting=false;
+	//selecting=false;
 }
 
 
@@ -683,6 +743,10 @@ Str eEditbox::get_selected_text()
 void eEditbox::set_readonly(bool read)
 {
 	readonly=read;
+
+	cmenu_cut->enabled=!read;
+	cmenu_paste->enabled=!read;
+
 	dirty=true;
 }
 

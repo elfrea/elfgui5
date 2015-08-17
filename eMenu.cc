@@ -79,14 +79,19 @@ void eMenu::on_event(Event* ev)
 {
 	//open submenu
 	if(ev->command=="open submenu")
-	{
 		open_submenu((eMenuSub*)ev->sender);
-	}
 
 	//close submenu
 	else if(ev->command=="close submenu")
-	{
 		close_submenu(sub_opened);
+
+	//send event and close menu
+	else if(ev->sender->type=="menu_button" && ev->command=="trigger")
+	{
+		send_event(ev);
+		close();
+
+		return;
 	}
 
 	//forward event to link
@@ -376,6 +381,14 @@ void eMenu::close_submenu(eMenuSub* sub,bool propagate)
 	}
 }
 
+
+
+//***** CLOSE
+void eMenu::close()
+{
+	if(parent && parent->type=="modal")
+		((eModal*)parent)->close();
+}
 
 
 

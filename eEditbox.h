@@ -46,6 +46,11 @@ public:
 	int mouse_down_at_pos;
 
 	//own elements
+	eMenu* cmenu;
+	class eMenuButton* cmenu_copy;
+	class eMenuButton* cmenu_cut;
+	class eMenuButton* cmenu_paste;
+	class eMenuButton* cmenu_select_all;
 
 
 
@@ -61,7 +66,7 @@ public:
 	void draw();
 
 	//event functions
-	//void on_event(Event* ev);
+	void on_event(Event* ev);
 	void on_mouse_enter(int mx,int my);
 	void on_mouse_leave();
 	void on_mouse_move(int mx,int my);

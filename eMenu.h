@@ -78,6 +78,7 @@ public:
 	void replace_children(bool autosz);
 	void open_submenu(class eMenuSub* sub);
 	void close_submenu(class eMenuSub* sub,bool propagate=true);
+	void close();
 
 
 };

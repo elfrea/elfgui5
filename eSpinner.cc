@@ -127,7 +127,7 @@ void eSpinner::on_event(Event* ev)
 	}
 
 	//***** EDITBOX TRIGGER
-	else if(ev->sender==editbox && ev->command=="trigger")
+	else if(ev->sender==editbox && (ev->command=="trigger" || ev->command=="unselect"))
 	{
 		set_value(filter_manual_value());
 	}
