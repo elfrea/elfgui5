@@ -37,7 +37,7 @@ eMenuSub::eMenuSub(const Str& ename,int ew,int eh,const Str& etext,eMenu* elink)
 //destructor
 eMenuSub::~eMenuSub()
 {
-	if(!link->parent)
+	if(link)
 		delete link;
 }
 

@@ -727,9 +727,10 @@ eWindow* eTabbox::undock_tab(eTab* tab,Element* eparent,int ex,int ey)
 		tab->remove_child(child);
 		child->parent=NULL;
 		win->add_child(child);
-		//child->parent=win->body;
+		child->apply_anchor();
 	}
 	
+
 	//send tab to die
 	tab->add_to_dead_list();
 

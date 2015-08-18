@@ -56,7 +56,7 @@ public:
 	//own config functions
 	void shrink();
 	void open();
-	void close();
+	void close(bool send_close=true);
 
 	//own internal functions
 

@@ -856,6 +856,10 @@ void ElfGui5::clear_dead_list()
 	{
 		Element* ele=dead_list[a];
 		
+		element_under_mouse=NULL;
+		current_element=NULL;
+		last_selected=NULL;
+
 		if(ele->parent)
 			ele->parent->remove_child(ele);
 	}

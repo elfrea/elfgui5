@@ -81,8 +81,9 @@ Element::~Element()
 	//free non-cached textures
 	delete image;
 
-	//free lists
-	children.clear_del();
+	//free children
+	if(type!="modal")
+		children.clear_del();
 
 	//free misc
 	delete anchor;
@@ -92,7 +93,7 @@ Element::~Element()
 	if(context_menu_modal && !context_menu_modal->parent)
 		delete context_menu_modal;
 	//context menu
-	if(context_menu && !context_menu->parent)
+	if(context_menu)
 		delete context_menu;
 
 	#ifdef DBG

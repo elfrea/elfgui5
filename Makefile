@@ -13,7 +13,7 @@ CLSS+= elfgui5_kshortcut elfgui5_kshortcuts elfgui5_actions
 CLSS+= elfgui5_element
 CLSS+= eBase eWindow ePanel eButton eCheckbox eLabel eGroupbox eRadiobutton ePushbutton eRadiopush eTimer eSpinner
 CLSS+= eTexturebox eScrollbar ePercentbar eEditbox eTrackbar eTabbox eTab eKeybox eItem eListbox eCombobox eModal
-CLSS+= eMenu eMenuButton eMenuSeparator eMenuCheckbox eMenuRadio eMenuSub
+CLSS+= eMenubar eMenu eMenuButton eMenuSeparator eMenuCheckbox eMenuRadio eMenuSub
 ####################################################################
 
 

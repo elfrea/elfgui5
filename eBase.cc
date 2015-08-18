@@ -19,28 +19,8 @@ eBase::eBase(const Str& ename,int ex,int ey,int ew,int eh):Element(ename,ex,ey,e
 	//own internal vars
 	
 	//own elements
-	cmenu4=new eMenu("base context menu submenu2",10,10,10,10,NULL);
-		cmenu4->add_button("base context menu submenu2 test button",10,20,"This is yet another test");
-		cmenu4->add_separator();
-		cmenu4->add_radio("checkbox",10,20,"check me","main",true);
-		cmenu4->add_radio("checkbox2",10,20,"check me too","main",false);
-	cmenu3=new eMenu("base context menu submenu2",10,10,10,10,NULL);
-		cmenu3->add_button("base context menu submenu2 test button",10,20,"This is yet another test");
-		cmenu3->add_separator();
-		cmenu3->add_checkbox("checkbox",10,20,"check me",false);
-		cmenu3->add_checkbox("checkbox2",10,20,"check me too",false);
-	cmenu2=new eMenu("base context menu submenu",10,10,10,10,NULL);
-		cmenu2->add_button("base context menu submenu test button",10,20,"This is another test");
-		cmenu2->add_separator();
-		cmenu2->add_sub("base context menu test submenu2",10,20,"Test Submenu2",cmenu3);
-	cmenu=new eMenu("base context menu",10,10,10,10,this);
-		cmenu->add_button("base context menu test button",10,20,"This is a test");
-		cmenu->add_separator();
-		cmenu->add_sub("base context menu test submenu",10,20,"Test Submenu",cmenu2);
-		cmenu->add_sub("base context menu test submenu",10,20,"Proutshki",cmenu4);
 
 	//other
-	set_context_menu(cmenu);
 	dirty=true;
 }
 

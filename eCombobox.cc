@@ -41,8 +41,7 @@ eCombobox::eCombobox(const Str& ename,int ex,int ey,int ew,int eh,const Str& txt
 //destructor
 eCombobox::~eCombobox()
 {
-	if(!listbox->parent)
-		delete listbox;
+	delete listbox;
 	if(!modal->parent)
 		delete modal;
 }

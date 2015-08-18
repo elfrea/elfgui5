@@ -4,24 +4,29 @@
 #include "elfgui5.h"
 
 
-class eBase:public Element
+class eMenubar:public Element
 {
 public:
 
 	//own config vars
 
 	//own internal config vars (use config functions to modify)
-	bool use_bgcolor;
-	Color bgcolor;
+	List<class eMenu*> menus;
+	class eMenu* selected_menu;
+	int menu_offset;
+	int menu_spacing;
 
 	//own internal vars
 
 	//own elements
+	class eModal* menus_modal;
+
+
 
 	//constructor
-	eBase(const Str& ename,int ex,int ey,int ew,int eh);
+	eMenubar(const Str& ename,int ex,int ey,int ew,int eh);
 	//destructor
-	~eBase();
+	~eMenubar();
 
 
 
@@ -30,7 +35,7 @@ public:
 	void draw();
 
 	//event functions
-	//void on_event(Event* ev);
+	void on_event(Event* ev);
 	void on_mouse_enter(int mx,int my);
 	void on_mouse_leave();
 	void on_mouse_move(int mx,int my);
@@ -53,11 +58,20 @@ public:
 
 	//own config functions
 	void shrink();
+	void set_menu_offset(int offx);
+	void set_menu_spacing(int spacing);
+
+	void add_menu(class eMenu* menu);
+
+	void select_menu(class eMenu* menu);
 
 	//own internal functions
-
+	class eMenu* find_menu_at(int mx,int my);
+	int get_menu_x(class eMenu* menu);
 
 };
+
+
 
 
 

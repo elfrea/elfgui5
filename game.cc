@@ -47,6 +47,22 @@ eTab* tab3;
 //eTabbox* tabbox2;
 //eTab* tab21;
 
+
+eMenubar* menubar;
+	eMenu* menu_file;
+	eMenu* menu_edit;
+	eMenu* menu_help;
+	eMenu* menu_help2;
+
+
+
+
+
+
+
+
+
+
 //***** INIT
 void cGame::init()
 {
@@ -237,7 +253,37 @@ void cGame::init()
 //		tab21=tabbox2->add_new_tab("tab21");
 //	ElfGui5::base->add_child(tabbox2);
 		
-		
+
+
+
+
+
+
+	menubar=new eMenubar("menubar1",0,0,10,25);
+	tab2->add_child(menubar);
+	menubar->set_anchor(true,0,false,0,true,0,true,0);
+
+		menu_file=new eMenu("File",10,10,10,10,NULL);
+		menu_file->add_button("test1",10,20,"Test1");
+		menu_file->add_button("test2",10,20,"Test2");
+
+		menu_edit=new eMenu("Edit",10,10,10,10,NULL);
+		menu_edit->add_button("test1",10,20,"Test1");
+		menu_edit->add_button("test2",10,20,"Test2");
+
+		menu_help2=new eMenu("Help2",10,10,10,10,NULL);
+		menu_help2->add_button("test1",10,20,"Test1");
+		menu_help2->add_button("test2",10,20,"Test2");
+	
+		menu_help=new eMenu("Help",10,10,10,10,NULL);
+		menu_help->add_button("test1",10,20,"Test1");
+		menu_help->add_button("test2",10,20,"Test2");
+		menu_help->add_separator();
+		menu_help->add_sub("help2",10,20,"Help 2",menu_help2);
+	
+	menubar->add_menu(menu_file);
+	menubar->add_menu(menu_edit);
+	menubar->add_menu(menu_help);
 
 
 

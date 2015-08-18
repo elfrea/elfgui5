@@ -722,6 +722,10 @@ void eWindow::refresh_autoscrolling()
 	{
 		Element* child=body->children[a];
 
+		//disregard if children use anchor right or bottom
+		if(child->use_anchor && (child->anchor->right || child->anchor->bottom))
+			continue;
+
 		if(child->y+child->h>=body->h-(auto_scrollbar_h->visible?auto_scrollbar_h->h:0))
 			v_seems_visible=true;
 

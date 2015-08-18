@@ -34,6 +34,7 @@ eModal::eModal(const Str& ename,int ex,int ey,int ew,int eh,bool eclose_with_mou
 //destructor
 eModal::~eModal()
 {
+	children.clear_nodel();
 }
 
 
@@ -157,12 +158,15 @@ void eModal::open()
 
 
 //***** CLOSE
-void eModal::close()
+void eModal::close(bool send_close)
 {
 	clear_children(false);
 	visible=false;
 	ElfGui5::base->remove_child(this,false);
-	send_event_to(link,"close");
+	
+	if(send_close)
+		send_event_to(link,"close");
+
 	if(link)
 		link->set_as_selected(true);
 	else
