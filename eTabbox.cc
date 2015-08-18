@@ -735,6 +735,7 @@ eWindow* eTabbox::undock_tab(eTab* tab,Element* eparent,int ex,int ey)
 	tab->add_to_dead_list();
 
 	select_tab(0);
+	win->bring_to_front();
 
 	return win;
 }
